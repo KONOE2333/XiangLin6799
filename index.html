@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>翔霖小站 · 时间与星光</title>
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/home.css">
+</head>
+<body class="home">
+<canvas id="star-rain"></canvas>
+
+<nav class="nav nav-dark">
+  <div class="nav-logo">✦ 翔霖小站</div>
+  <div class="nav-links">
+    <a href="index.html" class="on">首页</a>
+    <a href="timeline.html">记忆时间轴</a>
+    <a href="stages.html">舞台高光</a>
+    <a href="birthday.html">生日纪念</a>
+    <a href="wall.html">留言墙</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <p class="hero-sub">XIANG LIN · MEMORY &amp; STARLIGHT</p>
+  <h1 class="hero-title">时间会记得<br>瞬间即是永恒</h1>
+  <p class="hero-desc">严浩翔 × 贺峻霖 —— 从 2015 到现在，把每一段同行的时光都收进这里。</p>
+
+  <div class="hero-days">
+    <span>他们相识已经</span>
+    <b id="met-years">0</b><span>年</span>
+    <b id="met-months">0</b><span>个月</span>
+  </div>
+
+  <div class="hero-reunion" id="reunion-line">
+    <span>他们重逢已经</span>
+    <b id="reunion-days">0</b>
+    <span>天</span>
+  </div>
+
+  <button class="hero-btn" id="moments-btn">我们的瞬间 ✦</button>
+</header>
+
+<div class="polaroid-layer" id="polaroid-layer"></div>
+
+<audio id="bgm" src="audio/bgm.mp3" loop preload="auto"></audio>
+<button id="music-btn" class="music-disc" title="背景音乐">♪</button>
+
+<footer class="footer footer-dark">
+  <p>✦ All for XiangLin.</p>
+  <p class="copyright">Copyright © KONOE. All rights reserved.</p>
+</footer>
+
+<script src="js/photos-data.js"></script>
+<script src="js/starrain.js"></script>
+<script src="js/home.js"></script>
+<script src="js/audio.js"></script>
+</body>
+</html>

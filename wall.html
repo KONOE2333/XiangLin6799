@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>留言墙 · 翔霖小站</title>
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/home.css">
+</head>
+<body class="home">
+<canvas id="star-rain"></canvas>
+
+<nav class="nav nav-dark">
+  <div class="nav-logo">✦ 翔霖小站</div>
+  <div class="nav-links">
+    <a href="index.html">首页</a>
+    <a href="timeline.html">记忆时间轴</a>
+    <a href="stages.html">舞台高光</a>
+    <a href="birthday.html">生日纪念</a>
+    <a href="wall.html" class="on">留言墙</a>
+  </div>
+</nav>
+
+<section class="section">
+  <h2 class="section-title">粉丝留言墙 <span id="wall-mode" class="wall-mode"></span></h2>
+  <p class="section-sub">写下你想对翔霖或同担说的话，贴在这面墙上</p>
+  <form class="msg-form" id="msg-form">
+    <input type="text" id="msg-name" maxlength="16" placeholder="你的昵称（必填）" required>
+    <textarea id="msg-text" maxlength="120" placeholder="留言内容，120 字以内…" required></textarea>
+    <button type="submit">贴上便签 ✦</button>
+  </form>
+  <div class="wall" id="wall-body"></div>
+</section>
+
+<footer class="footer footer-dark">
+  <p>✦ All for XiangLin.</p>
+  <p class="copyright">Copyright © KONOE. All rights reserved.</p>
+</footer>
+
+<audio id="bgm" src="audio/bgm.mp3" loop preload="auto"></audio>
+<button id="music-btn" class="music-disc" title="背景音乐">♪</button>
+
+<script src="js/starrain.js"></script>
+<script src="js/wall-config.js"></script>
+<script src="js/wall-backend.js"></script>
+<script src="js/wall.js"></script>
+<script src="js/audio.js"></script>
+</body>
+</html>
