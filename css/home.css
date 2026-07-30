@@ -176,6 +176,63 @@ body.home .tl-card p { color: #b9c0e8; }
 body.home .tl-date { color: #b3a6ff; }
 body.home .tl-item .tl-dot { background: #cdd4ff; }
 
+/* 时间轴：年代分隔（作为中轴上的节点） */
+body.home .tl-era {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  clear: both;
+  text-align: center;
+  margin: 16px 0 36px;
+}
+body.home .tl-era-pill {
+  display: inline-block;
+  padding: 7px 26px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: #fff;
+  background: linear-gradient(100deg, #8b7ff0, #f39ac2);
+  box-shadow: 0 8px 24px rgba(139, 127, 240, 0.35);
+}
+
+/* 时间轴：分类标签 */
+body.home .tl-tags {
+  margin: 9px 0 2px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+body.home .tl-tag {
+  font-size: 11px;
+  padding: 2px 9px;
+  border-radius: 999px;
+  color: #cdd4ff;
+  background: rgba(139, 127, 240, 0.18);
+  border: 1px solid rgba(170, 180, 255, 0.3);
+}
+body.home .tl-item.left .tl-tags { justify-content: flex-end; }
+body.home .tl-item.right .tl-tags { justify-content: flex-start; }
+
+/* 时间轴：跳转链接按钮 */
+body.home .tl-link-wrap { margin-top: 10px; }
+body.home .tl-link {
+  display: inline-block;
+  font-size: 12.5px;
+  padding: 6px 15px;
+  border-radius: 999px;
+  color: #fff;
+  text-decoration: none;
+  background: linear-gradient(100deg, #8b7ff0, #f39ac2);
+  box-shadow: 0 6px 18px rgba(139, 127, 240, 0.3);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+body.home .tl-link:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(243, 154, 194, 0.45);
+}
+
 /* 留言墙表单：深色玻璃 */
 body.home .msg-form input,
 body.home .msg-form textarea {
