@@ -17,9 +17,9 @@
     return d;
   }
 
-  function makeItem(ev, side, showEra) {
+  function makeItem(ev, side) {
     const item = document.createElement("div");
-    item.className = "tl-item " + side + (ev.star ? " star" : "");
+    item.className = "tl-item " + side;
 
     let tags = "";
     if (ev.tag) tags += '<span class="tl-tag">' + ev.tag + "</span>";
@@ -33,9 +33,7 @@
     item.innerHTML =
       '<span class="tl-dot"></span>' +
       '<div class="tl-date">' + ev.date + "</div>" +
-      '<div class="tl-card"><h3>' + ev.title +
-      (ev.star ? '<span class="badge">✦ 名场面</span>' : "") +
-      "</h3>" +
+      '<div class="tl-card"><h3>' + ev.title + "</h3>" +
       (tags ? '<div class="tl-tags">' + tags + "</div>" : "") +
       "<p>" + ev.desc + "</p>" +
       (link ? '<div class="tl-link-wrap">' + link + "</div>" : "") +
@@ -53,7 +51,7 @@
         body.appendChild(makeEra(ev.era));
         lastEra = ev.era;
       }
-      body.appendChild(makeItem(ev, side % 2 === 0 ? "left" : "right", year !== "all"));
+      body.appendChild(makeItem(ev, side % 2 === 0 ? "left" : "right"));
       side++;
     }
     observeItems();
