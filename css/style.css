@@ -1,5 +1,8 @@
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
+/* 童趣手写体：站酷庆科黄油体，用于左上角 Logo */
+@import url('https://fonts.googleapis.com/css2?family=ZCOOL+QingKe+HuangYou&display=swap');
+
 :root {
   --purple: #8b7ff0;
   --pink: #f39ac2;
@@ -52,7 +55,13 @@ body {
   background: rgba(255, 255, 255, 0.45);
   border-bottom: 1px solid rgba(255, 255, 255, 0.6);
 }
-.nav-logo { font-weight: 700; letter-spacing: 2px; color: var(--ink); }
+.nav-logo {
+  font-family: "ZCOOL QingKe HuangYou", "PingFang SC", "Microsoft YaHei", cursive;
+  font-weight: 400;
+  letter-spacing: 1px;
+  font-size: 24px;
+  color: var(--ink);
+}
 .nav-links a {
   margin-left: 26px;
   text-decoration: none;
