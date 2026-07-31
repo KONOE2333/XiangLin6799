@@ -143,7 +143,7 @@ function escapeHtml2(s) {
   });
 })();
 
-// ===================== 今日一句抽签 =====================
+// ===================== 今日一句抽签（逐字弹出 + 随机字号 + 宋体） =====================
 (function () {
   const textEl = document.getElementById("quote-text");
   const fromEl = document.getElementById("quote-from");
@@ -151,6 +151,8 @@ function escapeHtml2(s) {
   if (!textEl || typeof QUOTES === "undefined" || !QUOTES.length) return;
 
   let idx = -1;
+  let typingTimer = null;
+
   function pick() {
     let n;
     do { n = Math.floor(Math.random() * QUOTES.length); }
@@ -158,19 +160,62 @@ function escapeHtml2(s) {
     idx = n;
     return QUOTES[n];
   }
+
+  function renderChars(text) {
+    if (typingTimer) clearInterval(typingTimer);
+    textEl.innerHTML = "";
+    const PUNCT = /[，。！？、；：「」『』“”‘’（）【】…—～·]/;
+    const chars = text.split("");
+    const spans = [];
+
+    // 按字数动态计算基础字号：目标文字区占卡片高度约 2/3
+    const avgPerLine = 7;
+    const lines = Math.max(1, Math.ceil(chars.length / avgPerLine));
+    const targetH = 220; // 约 2/3 卡片高度（px）
+    const base = Math.min(96, Math.max(46, targetH / (lines * 1.42)));
+    // 小屏时按视口比例缩小，大屏不超过计算上限
+    textEl.style.setProperty("--q-base", `clamp(36px, 5.2vw, ${base}px)`);
+
+    chars.forEach((ch) => {
+      // 标点附到前一个字，避免单独换行
+      if (PUNCT.test(ch) && spans.length) {
+        spans[spans.length - 1].textContent += ch;
+        return;
+      }
+      const span = document.createElement("span");
+      span.className = "q-char";
+      span.textContent = ch;
+      // 字号在小范围内随机：0.88 ~ 1.12 倍
+      const r = 0.88 + Math.random() * 0.24;
+      span.style.setProperty("--r", r.toFixed(3));
+      span.style.fontSize = "calc(1em * var(--r))";
+      textEl.appendChild(span);
+      spans.push(span);
+    });
+
+    let i = 0;
+    const baseDelay = 55; // 基础逐字间隔
+    typingTimer = setInterval(() => {
+      if (i >= spans.length) { clearInterval(typingTimer); typingTimer = null; return; }
+      spans[i].classList.add("show");
+      i++;
+    }, baseDelay);
+  }
+
   function render(q, animate) {
     if (animate) {
       textEl.classList.add("swapping");
       setTimeout(() => {
-        textEl.textContent = q.q;
-        fromEl.textContent = q.a || "";
+        renderChars(q.q);
+        if (fromEl) fromEl.textContent = q.a || "";
         textEl.classList.remove("swapping");
       }, 350);
     } else {
-      textEl.textContent = q.q;
-      fromEl.textContent = q.a || "";
+      renderChars(q.q);
+      if (fromEl) fromEl.textContent = q.a || "";
     }
   }
+
   render(pick(), false);
   btn.addEventListener("click", () => render(pick(), true));
 })();

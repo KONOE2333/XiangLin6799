@@ -15,7 +15,13 @@ body.home #star-rain {
   background: rgba(8, 15, 40, 0.55);
   border-bottom: 1px solid rgba(140, 160, 255, 0.14);
 }
-.nav-dark .nav-logo { color: #eef1ff; }
+.nav-dark .nav-logo {
+  background: linear-gradient(100deg, #b3a6ff 0%, #f6a8cd 55%, #ffd6e8 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 0 10px rgba(246, 168, 205, 0.55));
+}
 .nav-dark .nav-links a { color: #9aa5d8; }
 .nav-dark .nav-links a:hover,
 .nav-dark .nav-links a.on { color: #cfc4ff; }
@@ -972,15 +978,37 @@ body.home .bento-status .stat-num { font-size: 26px; }
 
 /* Bento 内的今日一句（大块） */
 body.home .bento-quote .quote-inner {
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  text-align: center; min-height: 200px;
+  display: flex; flex-direction: column;
+  text-align: center; height: 100%; min-height: 300px;
 }
 body.home .bento-quote .q-text {
-  color: #eef1ff; font-size: 19px; line-height: 1.95;
-  margin-bottom: 24px;
+  flex: 4 1 auto;
+  display: flex; flex-wrap: wrap; justify-content: center; align-content: center;
+  gap: 0.16em 0.04em;
+  font-family: "Songti SC", "SimSun", "STSong", serif;
+  font-size: var(--q-base, clamp(44px, 6.5vw, 86px));
+  line-height: 1.42;
+  color: #eef1ff;
+  margin-bottom: 0;
   transition: opacity 0.35s ease;
 }
 body.home .bento-quote .q-text.swapping { opacity: 0; }
+body.home .bento-quote .q-char {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(0.18em) scale(0.92);
+  transition: opacity 0.22s ease, transform 0.22s ease;
+  will-change: opacity, transform;
+}
+body.home .bento-quote .q-char.show {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+body.home .bento-quote .quote-foot {
+  margin-top: auto;
+  padding-top: 18px;
+  display: flex; flex-direction: column; align-items: center; gap: 10px;
+}
 body.home .bento-quote .q-btn {
   border: none; cursor: pointer; font-family: inherit; color: #fff;
   background: var(--grad);
@@ -990,7 +1018,7 @@ body.home .bento-quote .q-btn {
   transition: transform 0.2s;
 }
 body.home .bento-quote .q-btn:hover { transform: translateY(-2px); }
-body.home .bento-quote .q-from { color: #8f9ace; font-size: 11.5px; margin-top: 12px; letter-spacing: 1px; }
+body.home .bento-quote .q-from { color: #8f9ace; font-size: 11.5px; letter-spacing: 1px; }
 
 @media (max-width: 900px) {
   body.home .bento-grid {
