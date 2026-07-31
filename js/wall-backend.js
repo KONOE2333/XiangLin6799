@@ -67,6 +67,17 @@
         body: JSON.stringify({ likes })
       });
       if (!r.ok) throw new Error("like " + r.status);
+    },
+    async remove(id) {
+      const r = await fetch(cfg.supabase.url + "/rest/v1/wall_messages?id=eq." + encodeURIComponent(id), {
+        method: "PATCH",
+        headers: Object.assign(this.headers(), {
+          "Content-Type": "application/json",
+          "Prefer": "return=representation"
+        }),
+        body: JSON.stringify({ deleted: true })
+      });
+      if (!r.ok) throw new Error("remove " + r.status);
     }
   };
 
@@ -104,6 +115,13 @@
         body: JSON.stringify({ likes })
       });
       if (!r.ok) throw new Error("like " + r.status);
+    },
+    async remove(id) {
+      const r = await fetch(this.base() + "/1.1/classes/WallMessage/" + id, {
+        method: "PUT", headers: this.headers(),
+        body: JSON.stringify({ deleted: true })
+      });
+      if (!r.ok) throw new Error("remove " + r.status);
     }
   };
 
@@ -115,6 +133,7 @@
     isConfigured,
     async load() { return active().load(); },
     async add(m) { return active().add(m); },
-    async like(id, likes) { return active().like(id, likes); }
+    async like(id, likes) { return active().like(id, likes); },
+    async remove(id) { return active().remove(id); }
   };
 })();

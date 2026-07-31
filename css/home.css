@@ -750,3 +750,221 @@ body.home .wall .note:nth-child(3) { animation-delay: 0.10s; }
 body.home .wall .note:nth-child(4) { animation-delay: 0.15s; }
 body.home .wall .note:nth-child(5) { animation-delay: 0.20s; }
 body.home .wall .note:nth-child(6) { animation-delay: 0.25s; }
+
+/* ===================== 首页新增板块：欢迎 / 音乐 / 状态 / 日志 ===================== */
+
+/* 入场验证：文字题 */
+body.home .gate-question {
+  color: #dfe4ff; font-size: 15px; font-weight: 600;
+  margin: 6px 0 14px; letter-spacing: 1px;
+}
+body.home .gate-input {
+  width: 100%; box-sizing: border-box;
+  background: rgba(10, 16, 40, 0.7);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  padding: 12px 14px;
+  color: #eef1ff; font-size: 15px; text-align: center; letter-spacing: 2px;
+  outline: none; transition: border-color 0.2s, box-shadow 0.2s;
+}
+body.home .gate-input:focus { border-color: #b3a6ff; box-shadow: 0 0 16px rgba(139, 127, 240, 0.4); }
+body.home .gate-err { color: #ff9bb0; font-size: 12.5px; height: 18px; margin-top: 8px; }
+@keyframes gateShake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-9px); }
+  40% { transform: translateX(8px); }
+  60% { transform: translateX(-6px); }
+  80% { transform: translateX(4px); }
+}
+body.home .gate-card.shake { animation: gateShake 0.4s ease; }
+
+/* 欢迎文案 */
+body.home .welcome-sec { max-width: 820px; margin: 0 auto; }
+body.home .welcome-text {
+  text-align: center;
+  color: #cdd4ff;
+  font-size: clamp(15px, 2.4vw, 17px);
+  line-height: 2.1;
+  letter-spacing: 0.6px;
+  max-width: 720px; margin: 6px auto 0;
+}
+
+/* 音乐播放器 */
+body.home .music-player {
+  display: flex; align-items: center; gap: 22px;
+  background: var(--glass);
+  backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+  box-shadow: var(--glow), var(--glass-hi);
+  padding: 22px 24px;
+  max-width: 760px; margin: 0 auto;
+  flex-wrap: wrap;
+}
+body.home .mp-cover {
+  width: 84px; height: 84px; flex: 0 0 auto;
+  border-radius: 18px;
+  background:
+    radial-gradient(circle at 30% 30%, rgba(255,255,255,0.5), transparent 45%),
+    linear-gradient(135deg, #8b7ff0, #f39ac2);
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.25), var(--glow);
+}
+body.home .mp-main { flex: 1; min-width: 200px; }
+body.home .mp-title { color: #eef1ff; font-size: 18px; font-weight: 700; letter-spacing: 1px; }
+body.home .mp-artist { color: #9aa2d0; font-size: 12.5px; margin-top: 3px; }
+body.home .mp-bar {
+  margin-top: 12px; height: 5px; border-radius: 999px;
+  background: rgba(170, 180, 255, 0.18); overflow: hidden;
+}
+body.home .mp-progress {
+  height: 100%; width: 0;
+  background: linear-gradient(90deg, #8b7ff0, #f39ac2);
+  border-radius: 999px; transition: width 0.25s linear;
+}
+body.home .mp-controls { display: flex; align-items: center; gap: 14px; margin-top: 14px; }
+body.home .mp-btn, body.home .mp-toggle {
+  cursor: pointer; border: 1px solid var(--glass-border);
+  background: rgba(16, 26, 60, 0.6); color: #dfe4ff;
+  display: flex; align-items: center; justify-content: center;
+  transition: transform 0.2s, background 0.2s, box-shadow 0.2s;
+}
+body.home .mp-btn { width: 42px; height: 42px; border-radius: 50%; font-size: 15px; }
+body.home .mp-toggle {
+  width: 54px; height: 54px; border-radius: 50%; font-size: 18px;
+  background: var(--grad); color: #fff; border: none;
+  box-shadow: 0 8px 24px rgba(139, 127, 240, 0.35);
+}
+body.home .mp-btn:hover { transform: translateY(-2px); background: rgba(139, 127, 240, 0.3); }
+body.home .mp-toggle:hover { transform: translateY(-2px); box-shadow: var(--glow-strong); }
+body.home .mp-list {
+  list-style: none; padding: 0; margin: 0;
+  flex: 1 1 100%; display: grid; gap: 4px;
+  border-top: 1px solid rgba(170, 180, 255, 0.15);
+  padding-top: 12px;
+}
+body.home .mp-list li {
+  display: flex; align-items: center; gap: 12px;
+  padding: 9px 12px; border-radius: 10px; cursor: pointer;
+  color: #b9c0e8; font-size: 14px;
+  transition: background 0.2s, color 0.2s;
+}
+body.home .mp-list li:hover { background: rgba(139, 127, 240, 0.16); color: #eef1ff; }
+body.home .mp-list li.active { background: rgba(139, 127, 240, 0.26); color: #fff; }
+body.home .mp-li-no {
+  width: 22px; height: 22px; flex: 0 0 auto;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 6px; font-size: 12px;
+  background: rgba(170, 180, 255, 0.15); color: #b3a6ff;
+}
+
+/* 状态面板 */
+body.home .status-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;
+  max-width: 820px; margin: 0 auto;
+}
+body.home .stat {
+  background: var(--glass);
+  backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+  border: 1px solid var(--glass-border);
+  border-radius: 18px;
+  box-shadow: var(--glow), var(--glass-hi);
+  padding: 22px 14px; text-align: center;
+}
+body.home .stat-num {
+  font-size: 30px; font-weight: 800; letter-spacing: 1px;
+  background: var(--grad-soft);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+body.home .stat-label { color: #9aa2d0; font-size: 12.5px; margin-top: 8px; letter-spacing: 2px; }
+
+/* 更新日志 */
+body.home .changelog {
+  list-style: none; padding: 0; margin: 0 auto; max-width: 760px;
+  display: grid; gap: 12px;
+}
+body.home .log-item {
+  display: flex; gap: 16px; align-items: baseline;
+  background: var(--glass);
+  backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+  border: 1px solid var(--glass-border);
+  border-left: 3px solid #b3a6ff;
+  border-radius: 12px;
+  box-shadow: var(--glow);
+  padding: 14px 18px;
+}
+body.home .log-date {
+  flex: 0 0 auto; color: #b3a6ff; font-size: 13px;
+  font-family: ui-monospace, "SFMono-Regular", Menlo, monospace; letter-spacing: 1px;
+}
+body.home .log-text { color: #c7cdf2; font-size: 14px; line-height: 1.7; }
+
+/* ===================== 生日倒计时 ===================== */
+body.home .bd-countdown {
+  max-width: 560px; margin: 0 auto 26px;
+  text-align: center;
+  background: var(--glass);
+  backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+  border: 1px solid var(--glass-border);
+  border-radius: 999px;
+  box-shadow: var(--glow), var(--glass-hi);
+  padding: 13px 22px;
+  color: #c7cdf2; font-size: 14.5px; letter-spacing: 0.5px;
+}
+body.home .bd-countdown .cd-label { color: #9aa2d0; }
+body.home .bd-countdown .cd-name {
+  color: #fff; font-weight: 700; margin: 0 6px;
+  background: var(--grad-soft);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+body.home .bd-countdown .cd-num {
+  font-size: 22px; font-weight: 800; margin: 0 6px;
+  background: var(--grad-soft);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+body.home .bd-countdown .cd-text { color: #c7cdf2; }
+
+/* ===================== 留言墙 · 站长模式 ===================== */
+body.home .admin-bar {
+  display: flex; align-items: center; gap: 10px; justify-content: center;
+  flex-wrap: wrap;
+  margin: 0 auto 22px; max-width: 520px;
+  background: rgba(16, 26, 60, 0.4);
+  border: 1px solid rgba(170, 180, 255, 0.18);
+  border-radius: 14px; padding: 10px 14px;
+}
+body.home .admin-bar.on { border-color: rgba(246, 168, 205, 0.5); box-shadow: 0 0 18px rgba(243, 154, 194, 0.3); }
+body.home .admin-code {
+  flex: 1; min-width: 140px;
+  background: rgba(10, 16, 40, 0.7);
+  border: 1px solid var(--glass-border);
+  border-radius: 10px; padding: 9px 12px;
+  color: #eef1ff; font-size: 13px; outline: none; text-align: center;
+}
+body.home .admin-code:focus { border-color: #b3a6ff; }
+body.home .admin-enter {
+  border: none; cursor: pointer; font-family: inherit; color: #fff;
+  background: var(--grad);
+  padding: 9px 18px; border-radius: 10px; font-size: 13px; letter-spacing: 1px;
+  transition: transform 0.2s;
+}
+body.home .admin-enter:hover { transform: translateY(-2px); }
+body.home .admin-hint { color: #f6a8cd; font-size: 12.5px; width: 100%; text-align: center; }
+body.home .note-del {
+  position: absolute; top: 8px; right: 8px;
+  border: 1px solid rgba(255, 155, 176, 0.6);
+  background: rgba(255, 155, 176, 0.16);
+  color: #ffb3c4; font-size: 11px;
+  padding: 3px 9px; border-radius: 999px; cursor: pointer;
+  transition: background 0.2s;
+}
+body.home .note-del:hover { background: rgba(255, 155, 176, 0.34); }
+body.home .note.admin { padding-top: 26px; }
+
+@media (max-width: 720px) {
+  body.home .status-grid { grid-template-columns: repeat(2, 1fr); }
+  body.home .music-player { justify-content: center; }
+}
+@media (max-width: 460px) {
+  body.home .portal-grid { grid-template-columns: 1fr; }
+  body.home .twin { max-width: 320px; }
+}

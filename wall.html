@@ -25,6 +25,11 @@
 <section class="section">
   <h2 class="section-title reveal">粉丝留言墙 <span id="wall-mode" class="wall-mode"></span></h2>
   <p class="section-sub reveal">写下你想对翔霖或同担说的话，贴在这面墙上</p>
+  <div class="admin-bar" id="admin-bar">
+    <input id="admin-code" class="admin-code" type="password" placeholder="站长口令" maxlength="32" autocomplete="off">
+    <button id="admin-enter" class="admin-enter" type="button">进入站长模式</button>
+    <span id="admin-hint" class="admin-hint"></span>
+  </div>
   <form class="msg-form" id="msg-form">
     <input type="text" id="msg-name" maxlength="16" placeholder="你的昵称（必填）" required>
     <textarea id="msg-text" maxlength="120" placeholder="留言内容，120 字以内…" required></textarea>

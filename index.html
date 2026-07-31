@@ -50,34 +50,49 @@
   <div class="twin-node"><span class="twin-dot"></span><span class="twin-name">贺峻霖</span></div>
 </div>
 
-<!-- 板块入口卡片带 -->
-<section class="portal">
-  <div class="portal-grid">
-    <a class="portal-card reveal d1" href="timeline.html">
-      <div class="pc-ico">01</div>
-      <div class="pc-title">记忆时间轴</div>
-      <div class="pc-sub">从 2015 到现在的同行时光</div>
-      <div class="pc-arrow">→</div>
-    </a>
-    <a class="portal-card reveal d2" href="stages.html">
-      <div class="pc-ico">02</div>
-      <div class="pc-title">舞台高光</div>
-      <div class="pc-sub">出圈舞台与合作曲合集</div>
-      <div class="pc-arrow">→</div>
-    </a>
-    <a class="portal-card reveal d3" href="birthday.html">
-      <div class="pc-ico">03</div>
-      <div class="pc-title">生日纪念</div>
-      <div class="pc-sub">岁岁年年的生日祝福</div>
-      <div class="pc-arrow">→</div>
-    </a>
-    <a class="portal-card reveal d4" href="wall.html">
-      <div class="pc-ico">04</div>
-      <div class="pc-title">留言墙</div>
-      <div class="pc-sub">写给翔霖与同担的话</div>
-      <div class="pc-arrow">→</div>
-    </a>
+<!-- 欢迎文案 -->
+<section class="section welcome-sec reveal">
+  <h2 class="section-title">欢迎来到翔霖小站</h2>
+  <p class="welcome-text">欢迎来到本站，这里主要记录小严♡小贺的照片、舞台、物料等，欢迎每一位爱他们的你的来访，也感谢你对翔霖的爱。网站不定时更新，多多期待吧～</p>
+</section>
+
+<!-- 音乐播放板块 -->
+<section class="section music-sec reveal">
+  <h2 class="section-title">此刻旋律</h2>
+  <p class="section-sub">戴上耳机，和我们一起听 · 可播放 / 暂停 / 切换</p>
+  <div class="music-player" id="music-player">
+    <div class="mp-cover" id="mp-cover"></div>
+    <div class="mp-main">
+      <div class="mp-title" id="mp-title">—</div>
+      <div class="mp-artist" id="mp-artist"></div>
+      <div class="mp-bar"><div class="mp-progress" id="mp-progress"></div></div>
+      <div class="mp-controls">
+        <button id="mp-prev" class="mp-btn" title="上一首">⏮</button>
+        <button id="mp-toggle" class="mp-toggle" title="播放/暂停">▶</button>
+        <button id="mp-next" class="mp-btn" title="下一首">⏭</button>
+      </div>
+    </div>
+    <ul class="mp-list" id="mp-list"></ul>
   </div>
+</section>
+
+<!-- 网页状态面板 -->
+<section class="section status-sec reveal">
+  <h2 class="section-title">小站状态</h2>
+  <p class="section-sub">这盏灯，为每一个到来的你亮着</p>
+  <div class="status-grid">
+    <div class="stat"><div class="stat-num" id="stat-visits">··</div><div class="stat-label">累计访客</div></div>
+    <div class="stat"><div class="stat-num" id="stat-msgs">··</div><div class="stat-label">留言条数</div></div>
+    <div class="stat"><div class="stat-num" id="stat-days">··</div><div class="stat-label">建站天数</div></div>
+    <div class="stat"><div class="stat-num">07-31</div><div class="stat-label">最近更新</div></div>
+  </div>
+</section>
+
+<!-- 更新日志 -->
+<section class="section log-sec reveal">
+  <h2 class="section-title">更新日志</h2>
+  <p class="section-sub">小站一点点长起来的痕迹</p>
+  <ul class="changelog" id="changelog"></ul>
 </section>
 
 <!-- 今日一句抽签 -->
@@ -103,10 +118,13 @@
 
 <script src="js/photos-data.js"></script>
 <script src="js/quotes-data.js"></script>
+<script src="js/changelog-data.js"></script>
 <script src="js/starrain.js"></script>
-<script src="js/home.js"></script>
 <script src="js/audio.js"></script>
+<script src="js/home.js"></script>
 <script src="js/reveal.js"></script>
 <script src="js/gate.js"></script>
+<script src="js/wall-config.js"></script>
+<script src="js/stats.js"></script>
 </body>
 </html>

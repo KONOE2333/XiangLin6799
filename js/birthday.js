@@ -5,6 +5,36 @@
 
   const fmt = (d) => { const p = d.split("-"); return p[0] + "." + p[1]; };
 
+  // 生日倒计时：在 6/15（贺峻霖）与 8/16（严浩翔）中取离今天最近的一个
+  (function renderCountdown() {
+    const box = document.getElementById("bd-countdown");
+    if (!box) return;
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const events = [
+      { name: "贺峻霖", m: 5, d: 15 },   // 6/15
+      { name: "严浩翔", m: 7, d: 16 }    // 8/16
+    ];
+    // 计算每个生日今年/明年的日期，取 >= 今天 中最近者
+    let best = null;
+    events.forEach((ev) => {
+      let year = now.getFullYear();
+      let date = new Date(year, ev.m, ev.d);
+      if (date < today) { date = new Date(year + 1, ev.m, ev.d); }
+      const diff = Math.round((date - today) / 86400000);
+      if (!best || diff < best.diff) best = { name: ev.name, date, diff, md: (ev.m + 1) + "/" + ev.d };
+    });
+    if (best.diff === 0) {
+      box.innerHTML = '<span class="cd-label">🎂 今天是</span><b class="cd-name">' + best.name +
+        '</b><span class="cd-text">的生日，一起说声生日快乐吧～</span>';
+    } else {
+      box.innerHTML = '<span class="cd-label">距离</span><b class="cd-name">' + best.name +
+        '</b><span class="cd-text">的生日还有</span><b class="cd-num">' + best.diff + '</b>' +
+        '<span class="cd-text">天 · ' + best.md + '</span>';
+    }
+  })();
+
+
   function escapeHtml(s) {
     return s.replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
   }

@@ -17,6 +17,11 @@
 window.WALL_CONFIG = {
   provider: "supabase", // "supabase" 或 "leancloud"
 
+  // —— 站长模式口令（用于留言墙删除权限）——
+  // 仅前端校验，适合粉丝站这种非高安全场景；请改成只有你知道的口令。
+  // 站长模式开启后，每条留言会出现「删除」按钮，删除为软删除（全员不可见）。
+  adminCode: "xianglin2026",
+
   supabase: {
     url: "https://czmokdtlxwayqyjtsnwp.supabase.co",           // 项目根地址（不带 /rest/v1/）
     anonKey: "sb_publishable_T0lk0lKqgImYz2BoexeeAQ_gTJeeCP1"  // publishable key（新版 anon key，可公开）
@@ -51,4 +56,20 @@ insert into wall_messages (name, text, likes, created_at) values (
   0,
   '2026-07-28 00:00:00+08'
 );
+
+-- 站长删除：新增 deleted 字段（软删除，删除后全员不可见）
+alter table wall_messages add column deleted boolean not null default false;
+-- 查询策略改为「未删除才可见」，并重建（先删旧策略）
+drop policy if exists "public read" on wall_messages;
+create policy "public read" on wall_messages for select using (deleted is not true);
+-- 删除走 update 权限（已有 public update 策略），由前端把 deleted 置 true
+
+-- ============ 首页状态面板：累计访客计数表 ============
+create table site_visits (
+  id uuid primary key default gen_random_uuid(),
+  created_at timestamptz not null default now()
+);
+alter table site_visits enable row level security;
+create policy "public read visits" on site_visits for select using (true);
+create policy "public insert visits" on site_visits for insert with check (true);
 */

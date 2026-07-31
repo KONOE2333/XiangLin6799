@@ -1,3 +1,8 @@
+// 通用转义（供音乐列表 / 日志渲染使用）
+function escapeHtml2(s) {
+  return (s || "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+}
+
 // ===================== 相识 xx 年 xx 月 → 重逢 xx 天 =====================
 (function () {
   const yEl = document.getElementById("met-years");
@@ -168,6 +173,51 @@
   }
   render(pick(), false);
   btn.addEventListener("click", () => render(pick(), true));
+})();
+
+// ===================== 更新日志 =====================
+(function () {
+  const ul = document.getElementById("changelog");
+  if (!ul || typeof CHANGELOG === "undefined" || !CHANGELOG.length) return;
+  CHANGELOG.forEach((it) => {
+    const li = document.createElement("li");
+    li.className = "log-item";
+    li.innerHTML = '<span class="log-date">' + it.date + '</span><span class="log-text">' + escapeHtml2(it.text) + "</span>";
+    ul.appendChild(li);
+  });
+})();
+
+// ===================== 音乐播放器 UI =====================
+(function () {
+  const titleEl = document.getElementById("mp-title");
+  const artistEl = document.getElementById("mp-artist");
+  const btnToggle = document.getElementById("mp-toggle");
+  const btnPrev = document.getElementById("mp-prev");
+  const btnNext = document.getElementById("mp-next");
+  const progress = document.getElementById("mp-progress");
+  const list = document.getElementById("mp-list");
+  if (!titleEl || !window.XLAudio) return;
+  const A = window.XLAudio;
+
+  (window.MUSIC_PLAYLIST || []).forEach((t, i) => {
+    const li = document.createElement("li");
+    li.innerHTML = '<span class="mp-li-no">' + (i + 1) + "</span>" + escapeHtml2(t.title);
+    li.addEventListener("click", () => A.play(i));
+    list.appendChild(li);
+  });
+
+  function update(info) {
+    titleEl.textContent = info.title;
+    if (artistEl) artistEl.textContent = info.artist || "";
+    if (btnToggle) btnToggle.textContent = info.playing ? "⏸" : "▶";
+    if (progress) progress.style.width = (info.duration ? (info.time / info.duration * 100) : 0) + "%";
+    Array.prototype.forEach.call(list.children, (li, i) => li.classList.toggle("active", i === info.index));
+  }
+  A.onChange(update);
+  update(A.getInfo());
+  if (btnToggle) btnToggle.addEventListener("click", () => A.toggle());
+  if (btnNext) btnNext.addEventListener("click", () => A.next());
+  if (btnPrev) btnPrev.addEventListener("click", () => A.prev());
 })();
 
 // （背景音乐逻辑已统一移至 js/audio.js，全站三页共用，跳转不重播）

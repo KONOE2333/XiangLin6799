@@ -1,26 +1,33 @@
-// ===================== 全站背景音乐（跨页面续播，不从头重播） =====================
+// ===================== 全站背景音乐（播放列表 · 跨页面续播） =====================
 (function () {
   const KEY = "xl_bgm";
   const audio = document.getElementById("bgm");
   const btn = document.getElementById("music-btn");
-  if (!audio || !btn) return;
+  if (!audio) return;
 
+  // 播放列表：想加歌时，把 mp3 放进 site/audio/ 然后在这里加一项即可
+  const PLAYLIST = (window.MUSIC_PLAYLIST && window.MUSIC_PLAYLIST.length)
+    ? window.MUSIC_PLAYLIST
+    : [{ title: "站点主题曲", src: "audio/bgm.mp3", artist: "XiangLin" }];
+  window.MUSIC_PLAYLIST = PLAYLIST;
+
+  let cur = 0;
   let hasFile = true;
-  audio.addEventListener("error", () => { hasFile = false; });
+  let suspendedByVideo = false;
+  let wasPlayingBeforeVideo = false;
+  const listeners = [];
 
-  function loadState() {
-    try { return JSON.parse(localStorage.getItem(KEY)); } catch { return null; }
+  function notify() {
+    const info = {
+      index: cur,
+      title: PLAYLIST[cur].title,
+      artist: PLAYLIST[cur].artist || "",
+      playing: !audio.paused,
+      duration: audio.duration || 0,
+      time: audio.currentTime || 0
+    };
+    listeners.forEach((fn) => { try { fn(info); } catch (e) {} });
   }
-  function saveState() {
-    try {
-      localStorage.setItem(KEY, JSON.stringify({ playing: !audio.paused, time: audio.currentTime }));
-    } catch {}
-  }
-
-  // 首次访问默认播放；之后读取上次的播放状态与进度
-  let state = loadState();
-  if (!state) state = { playing: true, time: 0 };
-
   function toast(msg) {
     const old = document.querySelector(".music-toast");
     if (old) old.remove();
@@ -30,64 +37,88 @@
     document.body.appendChild(t);
     setTimeout(() => t.remove(), 4200);
   }
-
+  function loadState() {
+    try { return JSON.parse(localStorage.getItem(KEY)); } catch { return null; }
+  }
+  function saveState() {
+    try {
+      localStorage.setItem(KEY, JSON.stringify({ playing: !audio.paused, time: audio.currentTime, index: cur }));
+    } catch {}
+  }
   function tryPlay() {
     return audio.play()
-      .then(() => { btn.classList.add("playing"); })
+      .then(() => { if (btn) btn.classList.add("playing"); notify(); })
       .catch(() => {
-        if (!hasFile) toast("还没有背景音乐哦～把音乐文件命名为 bgm.mp3 放进 site/audio/ 文件夹即可。");
+        if (!hasFile) toast("还没有背景音乐哦～把音乐文件命名为 bgm.mp3 放进 site/audio/ 即可。");
       });
   }
-
-  // 进入页面：若上次在播放，恢复到上次进度（浏览器限制需用户手势才会真正出声）
-  if (state.playing && hasFile) {
-    try { audio.currentTime = state.time || 0; } catch {}
-    btn.classList.add("playing");
-    tryPlay();
+  function setTrack(i, autoplay) {
+    cur = (i % PLAYLIST.length + PLAYLIST.length) % PLAYLIST.length;
+    audio.src = PLAYLIST[cur].src;
+    if (autoplay) tryPlay(); else notify();
+    saveState();
   }
 
-  // 跳转后用户第一次交互时补播（点按钮 / 看视频期间除外）
+  audio.addEventListener("error", () => { hasFile = false; });
+
+  let state = loadState();
+  if (!state) state = { playing: true, time: 0, index: 0 };
+  cur = state.index || 0;
+  audio.src = PLAYLIST[cur].src;
+
+  if (state.playing && hasFile) {
+    try { audio.currentTime = state.time || 0; } catch {}
+    if (btn) btn.classList.add("playing");
+    tryPlay();
+  }
+  notify();
+
+  // 进入页面后首次交互补播（点音乐按钮 / 播放器控件除外）
   const resume = (e) => {
     if (e.target.closest && e.target.closest("#music-btn")) return;
+    if (e.target.closest && e.target.closest(".mp-toggle")) return;
     if (!audio.paused) { document.removeEventListener("pointerdown", resume); return; }
-    if (suspendedByVideo) return;            // 看视频时保持静音
-    if (!state.playing) return;              // 用户上次本就关了音乐
+    if (suspendedByVideo) return;
+    if (!state.playing) return;
     tryPlay().then(() => document.removeEventListener("pointerdown", resume));
   };
   if (state.playing && hasFile) document.addEventListener("pointerdown", resume);
 
-  btn.addEventListener("click", () => {
-    if (audio.paused) {
-      tryPlay().then(saveState);
-    } else {
-      audio.pause();
-      btn.classList.remove("playing");
-      saveState();
-    }
+  if (btn) btn.addEventListener("click", () => {
+    if (audio.paused) tryPlay().then(saveState);
+    else { audio.pause(); if (btn) btn.classList.remove("playing"); saveState(); }
+    notify();
   });
 
-  // 离开页面时保存进度与状态，跳到别的板块后不会从头播放
+  audio.addEventListener("timeupdate", notify);
+  audio.addEventListener("ended", () => setTrack(cur + 1, true));
+
+  // ---- 暴露控制接口（供首页音乐播放器与各页视频暂停恢复使用） ----
+  window.XLAudio = window.XLAudio || {};
+  window.XLAudio.onChange = function (fn) { listeners.push(fn); };
+  window.XLAudio.play = function (i) { if (typeof i === "number") setTrack(i, true); else tryPlay(); };
+  window.XLAudio.toggle = function () {
+    if (audio.paused) tryPlay().then(saveState);
+    else { audio.pause(); if (btn) btn.classList.remove("playing"); saveState(); }
+    notify();
+  };
+  window.XLAudio.next = function () { setTrack(cur + 1, true); };
+  window.XLAudio.prev = function () { setTrack(cur - 1, true); };
+  window.XLAudio.getInfo = function () {
+    return { index: cur, title: PLAYLIST[cur].title, artist: PLAYLIST[cur].artist || "", playing: !audio.paused };
+  };
+  window.XLAudio.pauseForVideo = function () {
+    suspendedByVideo = true;
+    wasPlayingBeforeVideo = !audio.paused;
+    if (!audio.paused) { audio.pause(); if (btn) btn.classList.remove("playing"); saveState(); notify(); }
+  };
+  window.XLAudio.resumeAfterVideo = function () {
+    suspendedByVideo = false;
+    if (wasPlayingBeforeVideo) tryPlay().then(saveState);
+  };
+  window.XLAudio.isPlaying = function () { return !audio.paused; };
+
   function persist() { saveState(); }
   window.addEventListener("pagehide", persist);
   document.addEventListener("visibilitychange", () => { if (document.hidden) persist(); });
-
-  // ---- 供其它脚本调用：看视频时暂停 BGM，关闭后恢复 ----
-  let suspendedByVideo = false;
-  let wasPlayingBeforeVideo = false;
-  window.XLAudio = {
-    pauseForVideo() {
-      suspendedByVideo = true;
-      wasPlayingBeforeVideo = !audio.paused;
-      if (!audio.paused) {
-        audio.pause();
-        btn.classList.remove("playing");
-        saveState();
-      }
-    },
-    resumeAfterVideo() {
-      suspendedByVideo = false;
-      if (wasPlayingBeforeVideo) tryPlay().then(saveState);
-    },
-    isPlaying() { return !audio.paused; }
-  };
 })();
