@@ -62,7 +62,9 @@ alter table wall_messages add column deleted boolean not null default false;
 -- 查询策略改为「未删除才可见」，并重建（先删旧策略）
 drop policy if exists "public read" on wall_messages;
 create policy "public read" on wall_messages for select using (deleted is not true);
--- 删除走 update 权限（已有 public update 策略），由前端把 deleted 置 true
+-- 删除走 update 权限：必须确保存在下面这条「public update」策略，否则删除/点赞会报 401
+drop policy if exists "public update" on wall_messages;
+create policy "public update" on wall_messages for update using (true) with check (true);
 
 -- ============ 首页状态面板：累计访客计数表 ============
 create table site_visits (

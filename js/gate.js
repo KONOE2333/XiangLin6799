@@ -1,9 +1,6 @@
-// ===================== 翔霖专属入站验证（轻量开场仪式，仅弹一次） =====================
+// ===================== 翔霖专属入站验证（每次进入都验证） =====================
 (function () {
   "use strict";
-  var KEY = "xl_gate_passed";
-  try { if (localStorage.getItem(KEY) === "1") return; } catch (e) {}
-
   var ANSWER = "拜仁慕尼黑"; // 5 个字
 
   var overlay = document.createElement("div");
@@ -12,7 +9,6 @@
     '<div class="gate-card">' +
       '<div class="gate-kicker">XIANG LIN · VERIFY</div>' +
       '<div class="gate-title">欢迎来到翔霖小站</div>' +
-      '<div class="gate-desc">先确认一下你是自己人～ 回答一个小问题，再进来。</div>' +
       '<div class="gate-question">我们最爱的球队是什么？（5 个字）</div>' +
       '<input class="gate-input" type="text" placeholder="输入答案" maxlength="12" autocomplete="off">' +
       '<div class="gate-err" id="gate-err"></div>' +
@@ -35,7 +31,6 @@
   });
 
   function pass() {
-    try { localStorage.setItem(KEY, "1"); } catch (e) {}
     overlay.classList.add("hide");
     setTimeout(function () { if (overlay.parentNode) overlay.parentNode.removeChild(overlay); }, 520);
   }

@@ -98,7 +98,7 @@
           await cloud.remove(id);
           messages = messages.filter((x) => x.id !== id);
           render();
-        } catch (err) { console.warn("删除失败：", err); alert("删除失败：" + (err && err.message ? err.message : err) + "\n（若提示 400/404，多半是 Supabase 的 deleted 列或更新策略未就绪，请到 SQL Editor 重跑站长删除那段 SQL）"); }
+        } catch (err) { console.warn("删除失败：", err); alert("删除失败：" + (err && err.message ? err.message : err) + "\n（若提示 401/403，多半是 Supabase 缺「public update」策略——请到 SQL Editor 重跑 wall-config.js 底部那段 SQL；若提示 400/404，多半是 deleted 列未就绪）"); }
       } else {
         messages = messages.filter((x) => x.id !== id);
         saveLocal();
