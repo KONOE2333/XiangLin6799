@@ -9,7 +9,6 @@
   const PLAYLIST = (window.MUSIC_PLAYLIST && window.MUSIC_PLAYLIST.length)
     ? window.MUSIC_PLAYLIST
     : [
-        { title: "站点主题曲", src: "audio/bgm.mp3", artist: "XiangLin" },
         { title: "耻辱柱", src: "audio/耻辱柱.mp3", artist: "翔霖" },
         { title: "做我的猫", src: "audio/做我的猫.mp3", artist: "翔霖" }
       ];
