@@ -56,55 +56,66 @@
   <p class="welcome-text">欢迎来到本站，这里主要记录小严♡小贺的照片、舞台、物料等，欢迎每一位爱他们的你的来访，也感谢你对翔霖的爱。网站不定时更新，多多期待吧～</p>
 </section>
 
-<!-- 音乐播放板块 -->
-<section class="section music-sec reveal">
-  <h2 class="section-title">此刻旋律</h2>
-  <p class="section-sub">戴上耳机，和我们一起听 · 可播放 / 暂停 / 切换</p>
-  <div class="music-player" id="music-player">
-    <div class="mp-cover" id="mp-cover"></div>
-    <div class="mp-main">
-      <div class="mp-title" id="mp-title">—</div>
-      <div class="mp-artist" id="mp-artist"></div>
-      <div class="mp-bar"><div class="mp-progress" id="mp-progress"></div></div>
-      <div class="mp-controls">
-        <button id="mp-prev" class="mp-btn" title="上一首">⏮</button>
-        <button id="mp-toggle" class="mp-toggle" title="播放/暂停">▶</button>
-        <button id="mp-next" class="mp-btn" title="下一首">⏭</button>
+<!-- 横向不规则内容区：音乐 / 状态 / 今日一句 -->
+<section class="section bento-sec reveal">
+  <div class="bento-grid">
+    <!-- 音乐播放器 -->
+    <div class="bento-card bento-music" id="music-player">
+      <div class="bento-head">
+        <span class="bento-icon">♫</span>
+        <span class="bento-name">此刻旋律</span>
+      </div>
+      <div class="music-player">
+        <div class="mp-cover" id="mp-cover"></div>
+        <div class="mp-main">
+          <div class="mp-title" id="mp-title">—</div>
+          <div class="mp-artist" id="mp-artist"></div>
+          <div class="mp-bar"><div class="mp-progress" id="mp-progress"></div></div>
+          <div class="mp-controls">
+            <button id="mp-prev" class="mp-btn" title="上一首">⏮</button>
+            <button id="mp-toggle" class="mp-toggle" title="播放/暂停">▶</button>
+            <button id="mp-next" class="mp-btn" title="下一首">⏭</button>
+          </div>
+        </div>
+      </div>
+      <ul class="mp-list" id="mp-list"></ul>
+    </div>
+
+    <!-- 小站状态 -->
+    <div class="bento-card bento-status">
+      <div class="bento-head">
+        <span class="bento-icon">✦</span>
+        <span class="bento-name">小站状态</span>
+      </div>
+      <div class="status-grid">
+        <div class="stat"><div class="stat-num" id="stat-visits">··</div><div class="stat-label">累计访客</div></div>
+        <div class="stat"><div class="stat-num" id="stat-msgs">··</div><div class="stat-label">留言条数</div></div>
+        <div class="stat"><div class="stat-num" id="stat-days">··</div><div class="stat-label">建站天数</div></div>
+        <div class="stat"><div class="stat-num">07-31</div><div class="stat-label">最近更新</div></div>
       </div>
     </div>
-    <ul class="mp-list" id="mp-list"></ul>
+
+    <!-- 今日一句 -->
+    <div class="bento-card bento-quote">
+      <div class="bento-head">
+        <span class="bento-icon">“</span>
+        <span class="bento-name">今日一句</span>
+      </div>
+      <div class="quote-inner">
+        <div class="q-text" id="quote-text"></div>
+        <button class="q-btn" id="quote-btn">抽一句 ✦</button>
+        <div class="q-from" id="quote-from"></div>
+      </div>
+    </div>
   </div>
 </section>
 
-<!-- 网页状态面板 -->
-<section class="section status-sec reveal">
-  <h2 class="section-title">小站状态</h2>
-  <p class="section-sub">这盏灯，为每一个到来的你亮着</p>
-  <div class="status-grid">
-    <div class="stat"><div class="stat-num" id="stat-visits">··</div><div class="stat-label">累计访客</div></div>
-    <div class="stat"><div class="stat-num" id="stat-msgs">··</div><div class="stat-label">留言条数</div></div>
-    <div class="stat"><div class="stat-num" id="stat-days">··</div><div class="stat-label">建站天数</div></div>
-    <div class="stat"><div class="stat-num">07-31</div><div class="stat-label">最近更新</div></div>
-  </div>
-</section>
-
-<!-- 更新日志 -->
+<!-- 更新日志：放在最下方 -->
 <section class="section log-sec reveal">
   <h2 class="section-title">更新日志</h2>
   <p class="section-sub">小站一点点长起来的痕迹</p>
   <ul class="changelog" id="changelog"></ul>
 </section>
-
-<!-- 今日一句抽签 -->
-<div class="quote-wrap reveal">
-  <div class="quote-card">
-    <span class="q-mark">“</span>
-    <div class="q-label">今 日 一 句</div>
-    <div class="q-text" id="quote-text"></div>
-    <button class="q-btn" id="quote-btn">抽一句 ✦</button>
-    <div class="q-from" id="quote-from"></div>
-  </div>
-</div>
 
 <div class="polaroid-layer" id="polaroid-layer"></div>
 

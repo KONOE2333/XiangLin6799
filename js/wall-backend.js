@@ -33,7 +33,7 @@
       return { "apikey": k, "Authorization": "Bearer " + k };
     },
     async load() {
-      const r = await fetch(cfg.supabase.url + "/rest/v1/wall_messages?select=*&order=created_at.desc", {
+      const r = await fetch(cfg.supabase.url + "/rest/v1/wall_messages?select=*&deleted=is.false&order=created_at.desc", {
         headers: this.headers()
       });
       if (!r.ok) throw new Error("load " + r.status);
@@ -92,7 +92,8 @@
       };
     },
     async load() {
-      const r = await fetch(this.base() + "/1.1/classes/WallMessage?order=-createdAt", { headers: this.headers() });
+      const where = encodeURIComponent(JSON.stringify({ deleted: { $ne: true } }));
+      const r = await fetch(this.base() + "/1.1/classes/WallMessage?where=" + where + "&order=-createdAt", { headers: this.headers() });
       if (!r.ok) throw new Error("load " + r.status);
       const d = await r.json();
       return (d.results || []).map((x) => ({

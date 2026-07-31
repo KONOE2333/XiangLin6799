@@ -20,7 +20,7 @@ window.WALL_CONFIG = {
   // —— 站长模式口令（用于留言墙删除权限）——
   // 仅前端校验，适合粉丝站这种非高安全场景；请改成只有你知道的口令。
   // 站长模式开启后，每条留言会出现「删除」按钮，删除为软删除（全员不可见）。
-  adminCode: "xianglin2026",
+  adminCode: "yjn030218",
 
   supabase: {
     url: "https://czmokdtlxwayqyjtsnwp.supabase.co",           // 项目根地址（不带 /rest/v1/）

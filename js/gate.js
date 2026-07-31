@@ -17,7 +17,6 @@
       '<input class="gate-input" type="text" placeholder="输入答案" maxlength="12" autocomplete="off">' +
       '<div class="gate-err" id="gate-err"></div>' +
       '<button class="gate-enter" disabled>进 入 ✦</button>' +
-      '<button class="gate-skip">下次再说</button>' +
     '</div>';
   document.body.appendChild(overlay);
 
@@ -53,6 +52,5 @@
     }
   });
 
-  overlay.querySelector(".gate-skip").addEventListener("click", pass);
   setTimeout(function () { try { input.focus(); } catch (e) {} }, 60);
 })();

@@ -1,5 +1,6 @@
 // ===================== 便签留言墙 =====================
 (function () {
+  "use strict";
   const KEY = "xl_wall_messages_v2";
   const wall = document.getElementById("wall-body");
   const form = document.getElementById("msg-form");
@@ -29,7 +30,7 @@
   let adminMode = (function () { try { return localStorage.getItem("xl_admin") === "1"; } catch { return false; } })();
 
   function uid() {
-    if (crypto && crypto.randomUUID) return crypto.randomUUID();
+    if (typeof crypto !== "undefined" && crypto.randomUUID) return crypto.randomUUID();
     return "m" + Date.now() + Math.random().toString(16).slice(2);
   }
 
@@ -49,7 +50,7 @@
     if (cloud) {
       try {
         const list = await cloud.load();
-        if (Array.isArray(list) && list.length) { messages = list; render(); return; }
+        if (Array.isArray(list)) { messages = list; render(); return; }
       } catch (e) {
         console.warn("云端加载失败，回退本地：", e);
       }
@@ -167,15 +168,25 @@
     function applyAdmin() {
       if (adminMode) {
         if (adminHint) adminHint.textContent = "站长模式已开启";
+        if (adminEnter) adminEnter.textContent = "退出站长模式";
         adminBar.classList.add("on");
       } else {
         if (adminHint) adminHint.textContent = "";
+        if (adminEnter) adminEnter.textContent = "进入站长模式";
         adminBar.classList.remove("on");
+        if (codeInput) codeInput.value = "";
       }
       render();
     }
     applyAdmin();
+
     adminEnter.addEventListener("click", () => {
+      if (adminMode) {
+        adminMode = false;
+        try { localStorage.removeItem("xl_admin"); } catch {}
+        applyAdmin();
+        return;
+      }
       if (codeInput && codeInput.value.trim() === (cfg.adminCode || "")) {
         adminMode = true;
         try { localStorage.setItem("xl_admin", "1"); } catch {}
