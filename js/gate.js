@@ -1,6 +1,9 @@
-// ===================== 翔霖专属入站验证（每次进入都验证） =====================
+// ===================== 翔霖专属入站验证（轻量开场仪式，仅首次） =====================
 (function () {
   "use strict";
+  var KEY = "xl_gate_passed";
+  try { if (localStorage.getItem(KEY) === "1") return; } catch (e) {}
+
   var ANSWER = "拜仁慕尼黑"; // 5 个字
 
   var overlay = document.createElement("div");
@@ -31,6 +34,7 @@
   });
 
   function pass() {
+    try { localStorage.setItem(KEY, "1"); } catch (e) {}
     overlay.classList.add("hide");
     setTimeout(function () { if (overlay.parentNode) overlay.parentNode.removeChild(overlay); }, 520);
   }
