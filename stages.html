@@ -6,6 +6,7 @@
 <title>舞台高光 · 翔霖小站</title>
 <link rel="stylesheet" href="css/style.css">
 <link rel="stylesheet" href="css/home.css">
+<script>document.documentElement.classList.add('js');</script>
 </head>
 <body class="home">
 <canvas id="star-rain"></canvas>
@@ -22,9 +23,10 @@
 </nav>
 
 <section class="section">
-  <h2 class="section-title">舞台高光</h2>
-  <p class="section-sub">翔霖的出名舞台与合作曲 · 点击即可观看</p>
-  <div class="stage-grid" id="stages-body"></div>
+  <h2 class="section-title reveal">舞台高光</h2>
+  <p class="section-sub reveal">翔霖的出名舞台与合作曲 · 点击即可观看</p>
+  <div class="filter reveal" id="stages-filter"></div>
+  <div class="stage-grid reveal" id="stages-body"></div>
 </section>
 
 <footer class="footer footer-dark">
@@ -39,5 +41,7 @@
 <script src="js/starrain.js"></script>
 <script src="js/stages.js"></script>
 <script src="js/audio.js"></script>
+<script src="js/reveal.js"></script>
+<script src="js/gate.js"></script>
 </body>
 </html>

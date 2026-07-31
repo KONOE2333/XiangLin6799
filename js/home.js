@@ -138,4 +138,36 @@
   });
 })();
 
+// ===================== 今日一句抽签 =====================
+(function () {
+  const textEl = document.getElementById("quote-text");
+  const fromEl = document.getElementById("quote-from");
+  const btn = document.getElementById("quote-btn");
+  if (!textEl || typeof QUOTES === "undefined" || !QUOTES.length) return;
+
+  let idx = -1;
+  function pick() {
+    let n;
+    do { n = Math.floor(Math.random() * QUOTES.length); }
+    while (QUOTES.length > 1 && n === idx);
+    idx = n;
+    return QUOTES[n];
+  }
+  function render(q, animate) {
+    if (animate) {
+      textEl.classList.add("swapping");
+      setTimeout(() => {
+        textEl.textContent = q.q;
+        fromEl.textContent = q.a || "";
+        textEl.classList.remove("swapping");
+      }, 350);
+    } else {
+      textEl.textContent = q.q;
+      fromEl.textContent = q.a || "";
+    }
+  }
+  render(pick(), false);
+  btn.addEventListener("click", () => render(pick(), true));
+})();
+
 // （背景音乐逻辑已统一移至 js/audio.js，全站三页共用，跳转不重播）

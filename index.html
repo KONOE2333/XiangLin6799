@@ -6,9 +6,11 @@
 <title>翔霖小站 · 时间与星光</title>
 <link rel="stylesheet" href="css/style.css">
 <link rel="stylesheet" href="css/home.css">
+<script>document.documentElement.classList.add('js');</script>
 </head>
 <body class="home">
 <canvas id="star-rain"></canvas>
+<div class="hero-aura"></div>
 
 <nav class="nav nav-dark">
   <div class="nav-logo">✦ 翔霖小站</div>
@@ -41,6 +43,54 @@
   <button class="hero-btn" id="moments-btn">我们的瞬间 ✦</button>
 </header>
 
+<!-- 双生星座：签名母题 -->
+<div class="twin reveal">
+  <div class="twin-node"><span class="twin-dot"></span><span class="twin-name">严浩翔</span></div>
+  <span class="twin-line"></span>
+  <div class="twin-node"><span class="twin-dot"></span><span class="twin-name">贺峻霖</span></div>
+</div>
+
+<!-- 板块入口卡片带 -->
+<section class="portal">
+  <div class="portal-grid">
+    <a class="portal-card reveal d1" href="timeline.html">
+      <div class="pc-ico">01</div>
+      <div class="pc-title">记忆时间轴</div>
+      <div class="pc-sub">从 2015 到现在的同行时光</div>
+      <div class="pc-arrow">→</div>
+    </a>
+    <a class="portal-card reveal d2" href="stages.html">
+      <div class="pc-ico">02</div>
+      <div class="pc-title">舞台高光</div>
+      <div class="pc-sub">出圈舞台与合作曲合集</div>
+      <div class="pc-arrow">→</div>
+    </a>
+    <a class="portal-card reveal d3" href="birthday.html">
+      <div class="pc-ico">03</div>
+      <div class="pc-title">生日纪念</div>
+      <div class="pc-sub">岁岁年年的生日祝福</div>
+      <div class="pc-arrow">→</div>
+    </a>
+    <a class="portal-card reveal d4" href="wall.html">
+      <div class="pc-ico">04</div>
+      <div class="pc-title">留言墙</div>
+      <div class="pc-sub">写给翔霖与同担的话</div>
+      <div class="pc-arrow">→</div>
+    </a>
+  </div>
+</section>
+
+<!-- 今日一句抽签 -->
+<div class="quote-wrap reveal">
+  <div class="quote-card">
+    <span class="q-mark">“</span>
+    <div class="q-label">今 日 一 句</div>
+    <div class="q-text" id="quote-text"></div>
+    <button class="q-btn" id="quote-btn">抽一句 ✦</button>
+    <div class="q-from" id="quote-from"></div>
+  </div>
+</div>
+
 <div class="polaroid-layer" id="polaroid-layer"></div>
 
 <audio id="bgm" src="audio/bgm.mp3" loop preload="auto"></audio>
@@ -52,8 +102,11 @@
 </footer>
 
 <script src="js/photos-data.js"></script>
+<script src="js/quotes-data.js"></script>
 <script src="js/starrain.js"></script>
 <script src="js/home.js"></script>
 <script src="js/audio.js"></script>
+<script src="js/reveal.js"></script>
+<script src="js/gate.js"></script>
 </body>
 </html>
