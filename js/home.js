@@ -199,19 +199,21 @@ function escapeHtml2(s) {
   if (!titleEl || !window.XLAudio) return;
   const A = window.XLAudio;
 
-  (window.MUSIC_PLAYLIST || []).forEach((t, i) => {
-    const li = document.createElement("li");
-    li.innerHTML = '<span class="mp-li-no">' + (i + 1) + "</span>" + escapeHtml2(t.title);
-    li.addEventListener("click", () => A.play(i));
-    list.appendChild(li);
-  });
+  if (list) {
+    (window.MUSIC_PLAYLIST || []).forEach((t, i) => {
+      const li = document.createElement("li");
+      li.innerHTML = '<span class="mp-li-no">' + (i + 1) + "</span>" + escapeHtml2(t.title);
+      li.addEventListener("click", () => A.play(i));
+      list.appendChild(li);
+    });
+  }
 
   function update(info) {
     titleEl.textContent = info.title;
     if (artistEl) artistEl.textContent = info.artist || "";
     if (btnToggle) btnToggle.textContent = info.playing ? "⏸" : "▶";
     if (progress) progress.style.width = (info.duration ? (info.time / info.duration * 100) : 0) + "%";
-    Array.prototype.forEach.call(list.children, (li, i) => li.classList.toggle("active", i === info.index));
+    if (list) Array.prototype.forEach.call(list.children, (li, i) => li.classList.toggle("active", i === info.index));
   }
   A.onChange(update);
   update(A.getInfo());

@@ -59,7 +59,20 @@
 <!-- 横向不规则内容区：音乐 / 状态 / 今日一句 -->
 <section class="section bento-sec reveal">
   <div class="bento-grid">
-    <!-- 音乐播放器 -->
+    <!-- 今日一句（大块） -->
+    <div class="bento-card bento-quote">
+      <div class="bento-head">
+        <span class="bento-icon">“</span>
+        <span class="bento-name">今日一句</span>
+      </div>
+      <div class="quote-inner">
+        <div class="q-text" id="quote-text"></div>
+        <button class="q-btn" id="quote-btn">抽一句 ✦</button>
+        <div class="q-from" id="quote-from"></div>
+      </div>
+    </div>
+
+    <!-- 此刻旋律（小板块，不显示歌单） -->
     <div class="bento-card bento-music" id="music-player">
       <div class="bento-head">
         <span class="bento-icon">♫</span>
@@ -78,7 +91,6 @@
           </div>
         </div>
       </div>
-      <ul class="mp-list" id="mp-list"></ul>
     </div>
 
     <!-- 小站状态 -->
@@ -92,19 +104,6 @@
         <div class="stat"><div class="stat-num" id="stat-msgs">··</div><div class="stat-label">留言条数</div></div>
         <div class="stat"><div class="stat-num" id="stat-days">··</div><div class="stat-label">建站天数</div></div>
         <div class="stat"><div class="stat-num">07-31</div><div class="stat-label">最近更新</div></div>
-      </div>
-    </div>
-
-    <!-- 今日一句 -->
-    <div class="bento-card bento-quote">
-      <div class="bento-head">
-        <span class="bento-icon">“</span>
-        <span class="bento-name">今日一句</span>
-      </div>
-      <div class="quote-inner">
-        <div class="q-text" id="quote-text"></div>
-        <button class="q-btn" id="quote-btn">抽一句 ✦</button>
-        <div class="q-from" id="quote-from"></div>
       </div>
     </div>
   </div>

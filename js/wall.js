@@ -98,7 +98,7 @@
           await cloud.remove(id);
           messages = messages.filter((x) => x.id !== id);
           render();
-        } catch (err) { console.warn("删除失败：", err); alert("删除失败，请稍后再试。"); }
+        } catch (err) { console.warn("删除失败：", err); alert("删除失败：" + (err && err.message ? err.message : err) + "\n（若提示 400/404，多半是 Supabase 的 deleted 列或更新策略未就绪，请到 SQL Editor 重跑站长删除那段 SQL）"); }
       } else {
         messages = messages.filter((x) => x.id !== id);
         saveLocal();
