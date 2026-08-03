@@ -4,7 +4,6 @@
   const KEY = "xl_wall_messages_v2";
   const wall = document.getElementById("wall-body");
   const form = document.getElementById("msg-form");
-  const modeEl = document.getElementById("wall-mode");
   const adminBar = document.getElementById("admin-bar");
   const codeInput = document.getElementById("admin-code");
   const adminEnter = document.getElementById("admin-enter");
@@ -20,8 +19,6 @@
 
   // 云端后端（配置见 js/wall-config.js）
   const cloud = (window.WallBackend && window.WallBackend.isConfigured()) ? window.WallBackend : null;
-  if (modeEl) modeEl.textContent = cloud ? "· 云端同步中" : "· 本地模式";
-  if (modeEl) modeEl.className = "wall-mode" + (cloud ? " is-cloud" : " is-local");
 
   const seed = [
     { id: "seed1", name: "KONOE", text: "2026年才开始喜欢上你们，体会到了太多幸福与痛苦的经历，谢谢你们让我更加懂得感情的复杂，未来也请一起走吧", time: "2026/07/28", likes: 0 }

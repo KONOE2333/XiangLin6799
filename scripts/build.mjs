@@ -7,7 +7,7 @@ const srcDir = path.join(root, "src");
 const pagesDir = path.join(srcDir, "pages");
 const partialsDir = path.join(srcDir, "partials");
 const STAR_RAIN_SCRIPT = '<script src="js/starrain.js?v=5"></script>';
-const CACHE_VERSION = "11";
+const CACHE_VERSION = "12";
 
 const pages = {
   "index.html": {
