@@ -5,6 +5,7 @@
   try { if (localStorage.getItem(KEY) === "1") return; } catch (e) {}
 
   var QUESTIONS = [
+    { question: "我们最爱的球队是什么？（5 个字）", answer: "拜仁慕尼黑", maxlength: 12 },
     { question: "贺儿最喜欢怎么称呼小严？（1 个字）", answer: "他", maxlength: 8 },
     { question: "我们的应援色是？（4 个字）", answer: "克莱因蓝", maxlength: 12 }
   ];
