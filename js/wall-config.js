@@ -66,6 +66,21 @@ create policy "public read" on wall_messages for select using (deleted is not tr
 drop policy if exists "public update" on wall_messages;
 create policy "public update" on wall_messages for update using (true) with check (true);
 
+-- ============ 站长软删除函数（推荐，删除走 RPC，避免旧 RLS 策略干扰） ============
+create or replace function public.soft_delete_wall_message(target uuid)
+returns void
+language sql
+security definer
+set search_path = public
+as $$
+  update public.wall_messages
+  set deleted = true
+  where id = target;
+$$;
+
+revoke all on function public.soft_delete_wall_message(uuid) from public;
+grant execute on function public.soft_delete_wall_message(uuid) to anon, authenticated;
+
 -- ============ 首页状态面板：累计访客计数表 ============
 create table site_visits (
   id uuid primary key default gen_random_uuid(),

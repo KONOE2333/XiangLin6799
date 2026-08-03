@@ -69,13 +69,13 @@
       if (!r.ok) throw new Error("like " + r.status);
     },
     async remove(id) {
-      const r = await fetch(cfg.supabase.url + "/rest/v1/wall_messages?id=eq." + encodeURIComponent(id), {
-        method: "PATCH",
+      const r = await fetch(cfg.supabase.url + "/rest/v1/rpc/soft_delete_wall_message", {
+        method: "POST",
         headers: Object.assign(this.headers(), {
           "Content-Type": "application/json",
-          "Prefer": "return=representation"
+          "Prefer": "return=minimal"
         }),
-        body: JSON.stringify({ deleted: true })
+        body: JSON.stringify({ target: id })
       });
       if (!r.ok) throw new Error("remove " + r.status);
     }
