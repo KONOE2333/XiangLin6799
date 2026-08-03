@@ -4,7 +4,11 @@
   var KEY = "xl_gate_passed";
   try { if (localStorage.getItem(KEY) === "1") return; } catch (e) {}
 
-  var ANSWER = "拜仁慕尼黑"; // 5 个字
+  var QUESTIONS = [
+    { question: "贺儿最喜欢怎么称呼小严？（1 个字）", answer: "他", maxlength: 8 },
+    { question: "我们的应援色是？（4 个字）", answer: "克莱因蓝", maxlength: 12 }
+  ];
+  var current = QUESTIONS[Math.floor(Math.random() * QUESTIONS.length)];
 
   var overlay = document.createElement("div");
   overlay.className = "gate";
@@ -12,8 +16,8 @@
     '<div class="gate-card">' +
       '<div class="gate-kicker">XIANG LIN · VERIFY</div>' +
       '<div class="gate-title">欢迎来到翔霖小站</div>' +
-      '<div class="gate-question">我们最爱的球队是什么？（5 个字）</div>' +
-      '<input class="gate-input" type="text" placeholder="输入答案" maxlength="12" autocomplete="off">' +
+      '<div class="gate-question">' + current.question + '</div>' +
+      '<input class="gate-input" type="text" placeholder="输入答案" maxlength="' + current.maxlength + '" autocomplete="off">' +
       '<div class="gate-err" id="gate-err"></div>' +
       '<button class="gate-enter" type="button" disabled>进 入 ✦</button>' +
     '</div>';
@@ -40,7 +44,7 @@
   }
 
   enter.addEventListener("click", function () {
-    if (normalize(input.value) === normalize(ANSWER)) {
+    if (normalize(input.value) === normalize(current.answer)) {
       pass();
     } else {
       errEl.textContent = "答案不对哦，再想想～";
