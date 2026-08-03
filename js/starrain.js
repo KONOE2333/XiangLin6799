@@ -7,6 +7,8 @@
 
   const reduced = window.matchMedia &&
     window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const mobile = window.matchMedia &&
+    window.matchMedia("(max-width: 720px)").matches;
 
   let W = 0, H = 0, dpr = 1;
   let drops = [];
@@ -25,7 +27,9 @@
     canvas.style.height = H + "px";
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-    const n = Math.min(160, Math.floor(W / 9));
+    const n = mobile
+      ? Math.min(30, Math.floor(W / 12))
+      : Math.min(160, Math.floor(W / 9));
     drops = Array.from({ length: n }, () => spawn(true));
 
     // 极光/星云光晕：3~4 团缓慢漂移的彩色光斑
@@ -161,7 +165,7 @@
 
     const ox = mouseX * 14, oy = mouseY * 14; // 视差偏移
 
-    if (!reduced) drawAurora(t);
+    if (!reduced && !mobile) drawAurora(t);
 
     // 星雨
     for (let i = 0; i < drops.length; i++) {
@@ -185,7 +189,7 @@
       if (d.y - d.len > H) drops[i] = spawn(false);
     }
 
-    if (!reduced) {
+    if (!reduced && !mobile) {
       if (t > nextMeteor) {
         spawnMeteor();
         nextMeteor = t + 240 + Math.random() * 360; // 约 4~10 秒一颗

@@ -13,6 +13,10 @@
   const items = window.GALLERY || [];
   if (!stage || !sphere || !items.length) return;
 
+  const isMobile = window.matchMedia &&
+    window.matchMedia("(max-width: 720px), (pointer: coarse)").matches;
+  const frameInterval = isMobile ? 33 : 16;
+  let lastFrame = 0;
   let open = false;
   let burstTriggered = false;
   let charge = 0;
@@ -34,15 +38,21 @@
 
   function layout() {
     // 球半径、照片尺寸和透视距离都集中在这里，方便后续微调。
-    const R = Math.max(320, Math.min(window.innerWidth, window.innerHeight) * 0.5);
-    const size = Math.max(120, Math.min(220, R * 0.46));
+    const R = isMobile
+      ? Math.max(220, Math.min(window.innerWidth, window.innerHeight) * 0.42)
+      : Math.max(320, Math.min(window.innerWidth, window.innerHeight) * 0.5);
+    const size = isMobile
+      ? Math.max(84, Math.min(120, R * 0.38))
+      : Math.max(120, Math.min(220, R * 0.46));
     centerZ = R * 0.62;
     sphere.style.setProperty("--r", R + "px");
     sphere.style.setProperty("--photo-w", Math.round(size) + "px");
     sphere.style.setProperty("--photo-h", Math.round(size * 0.75) + "px");
     // 相机仍位于球内，但球心向后退一段，使正前方照片更近；
     // 同时用更长的透视距离减少四周照片的拉扯畸变。
-    perspectiveDistance = Math.max(1000, Math.min(window.innerWidth, window.innerHeight) * 1.2);
+    perspectiveDistance = isMobile
+      ? 800
+      : Math.max(1000, Math.min(window.innerWidth, window.innerHeight) * 1.2);
     stage.style.setProperty("--perspective", perspectiveDistance + "px");
   }
 
@@ -300,12 +310,17 @@
   function tick(now) {
     const dt = Math.min(0.05, (now - last) / 1000);
     last = now;
-    if (charging && Math.random() < 0.45) spawnParticle();
+    if (charging && !isMobile && Math.random() < 0.45) spawnParticle();
     if (open && !dragging) {
-      const speed = selected ? 0.045 : 0.12;
+      const speed = selected ? 0.03 : (isMobile ? 0.06 : 0.12);
       ry += speed * dt * 60;
       applyRotation();
     }
+    if (isMobile && now - lastFrame < frameInterval) {
+      requestAnimationFrame(tick);
+      return;
+    }
+    lastFrame = now;
     requestAnimationFrame(tick);
   }
   requestAnimationFrame(tick);
