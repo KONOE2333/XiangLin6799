@@ -15,3 +15,6 @@
   1. 原图放入 large/，按命名规则取名；
   2. 生成压缩版放本目录：sips -Z 1200 -s format jpeg -s formatOptions 78 large/xxx.jpg --out xxx.jpg
   3. 在 js/birthday-data.js 对应年份的 pics 数组加 "img/birthday/xxx.jpg"。
+
+这些生日配图也会自动进入「照片球」；只要在 BIRTHDAYS 数据里出现，
+照片球会按现有 GALLERY 派生逻辑自动收录。

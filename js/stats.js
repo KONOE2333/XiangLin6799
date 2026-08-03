@@ -18,13 +18,21 @@
   const headers = { "apikey": anonKey, "Authorization": "Bearer " + anonKey };
 
   function getCount(path) {
-    return fetch(url + path, { headers })
-      .then((r) => { if (!r.ok) throw new Error("count " + r.status); return r.json(); })
-      .then((rows) => (rows && rows[0] && typeof rows[0].count === "number") ? rows[0].count : 0);
+    const countHeaders = Object.assign({}, headers, {
+      "Range": "0-0",
+      "Prefer": "count=exact"
+    });
+    return fetch(url + path, { headers: countHeaders })
+      .then((r) => {
+        if (!r.ok) throw new Error("count " + r.status);
+        const range = r.headers.get("content-range") || "";
+        const total = Number(range.split("/")[1]);
+        return Number.isFinite(total) ? total : 0;
+      });
   }
 
   // 留言数（已删的不会计入，因查询策略过滤 deleted）
-  getCount("/rest/v1/wall_messages?select=count()")
+  getCount("/rest/v1/wall_messages?select=id&deleted=is.false")
     .then((n) => { if (elMsgs) elMsgs.textContent = n; })
     .catch(() => {});
 
@@ -34,7 +42,7 @@
   try { counted = localStorage.getItem(todayKey) === "1"; } catch (e) {}
 
   function readVisits() {
-    getCount("/rest/v1/site_visits?select=count()")
+    getCount("/rest/v1/site_visits?select=id")
       .then((n) => { if (elVisits) elVisits.textContent = n; })
       .catch(() => {});
   }

@@ -4,24 +4,34 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>翔霖小站 · 时间与星光</title>
-<link rel="stylesheet" href="css/style.css">
-<link rel="stylesheet" href="css/home.css">
+<meta name="description" content="严浩翔 × 贺峻霖的粉丝纪念小站，收录照片、时间轴、舞台与生日祝福。">
+<meta name="theme-color" content="#060d24">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="css/style.css?v=9">
+<link rel="stylesheet" href="css/home.css?v=9">
+
 <script>document.documentElement.classList.add('js');</script>
+
 </head>
 <body class="home">
 <canvas id="star-rain"></canvas>
-<div class="hero-aura"></div>
-
 <nav class="nav nav-dark">
   <div class="nav-logo">Tina贺♡严美娜</div>
-  <div class="nav-links">
+  <button class="nav-toggle" id="nav-toggle" type="button" aria-label="打开菜单" aria-expanded="false" aria-controls="nav-links">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+  <div class="nav-links" id="nav-links">
     <a href="index.html" class="on">首页</a>
-    <a href="timeline.html">记忆时间轴</a>
-    <a href="stages.html">舞台高光</a>
-    <a href="birthday.html">生日纪念</a>
-    <a href="wall.html">留言墙</a>
+    <a href="timeline.html" class="">记忆时间轴</a>
+    <a href="gallery.html" class="">照片图库</a>
+    <a href="stages.html" class="">舞台高光</a>
+    <a href="birthday.html" class="">生日纪念</a>
+    <a href="wall.html" class="">留言墙</a>
   </div>
 </nav>
+
 
 <header class="hero">
   <p class="hero-sub">XIANG LIN · MEMORY &amp; STARLIGHT</p>
@@ -40,7 +50,7 @@
     <span>天</span>
   </div>
 
-  <button class="hero-btn" id="moments-btn">我们的瞬间 ✦</button>
+  <button class="hero-btn" id="moments-btn" type="button">我们的瞬间 ✦</button>
 </header>
 
 <!-- 双生星座：签名母题 -->
@@ -68,7 +78,7 @@
       <div class="quote-inner">
         <div class="q-text" id="quote-text"></div>
         <div class="quote-foot">
-          <button class="q-btn" id="quote-btn">抽一句 ✦</button>
+          <button class="q-btn" id="quote-btn" type="button">抽一句 ✦</button>
           <div class="q-from" id="quote-from"></div>
         </div>
       </div>
@@ -87,9 +97,9 @@
           <div class="mp-artist" id="mp-artist"></div>
           <div class="mp-bar"><div class="mp-progress" id="mp-progress"></div></div>
           <div class="mp-controls">
-            <button id="mp-prev" class="mp-btn" title="上一首">⏮</button>
-            <button id="mp-toggle" class="mp-toggle" title="播放/暂停">▶</button>
-            <button id="mp-next" class="mp-btn" title="下一首">⏭</button>
+            <button id="mp-prev" class="mp-btn" type="button" title="上一首">⏮</button>
+            <button id="mp-toggle" class="mp-toggle" type="button" title="播放/暂停">▶</button>
+            <button id="mp-next" class="mp-btn" type="button" title="下一首">⏭</button>
           </div>
         </div>
       </div>
@@ -105,7 +115,7 @@
         <div class="stat"><div class="stat-num" id="stat-visits">··</div><div class="stat-label">累计访客</div></div>
         <div class="stat"><div class="stat-num" id="stat-msgs">··</div><div class="stat-label">留言条数</div></div>
         <div class="stat"><div class="stat-num" id="stat-days">··</div><div class="stat-label">建站天数</div></div>
-        <div class="stat"><div class="stat-num">07-31</div><div class="stat-label">最近更新</div></div>
+        <div class="stat"><div class="stat-num" id="stat-update">··</div><div class="stat-label">最近更新</div></div>
       </div>
     </div>
   </div>
@@ -120,23 +130,27 @@
 
 <div class="polaroid-layer" id="polaroid-layer"></div>
 
-<audio id="bgm" src="audio/bgm.mp3" loop preload="auto"></audio>
-<button id="music-btn" class="music-disc" title="背景音乐">♪</button>
+<audio id="bgm" loop preload="none"></audio>
+<button id="music-btn" class="music-disc" type="button" title="背景音乐">♪</button>
 
 <footer class="footer footer-dark">
   <p>✦ All for XiangLin.</p>
   <p class="copyright">Copyright © KONOE. All rights reserved.</p>
 </footer>
 
-<script src="js/photos-data.js"></script>
-<script src="js/quotes-data.js"></script>
-<script src="js/changelog-data.js"></script>
-<script src="js/starrain.js"></script>
-<script src="js/audio.js"></script>
-<script src="js/home.js"></script>
-<script src="js/reveal.js"></script>
-<script src="js/gate.js?v=3"></script>
-<script src="js/wall-config.js"></script>
-<script src="js/stats.js"></script>
+<script src="js/starrain.js?v=9"></script>
+
+<script src="js/photos-data.js?v=9"></script>
+<script src="js/quotes-data.js?v=9"></script>
+<script src="js/changelog-data.js?v=9"></script>
+<script src="js/wall-config.js?v=9"></script>
+<script src="js/stats.js?v=9"></script>
+<script src="js/audio.js?v=9"></script>
+
+<script src="js/home.js?v=9"></script>
+<script src="js/reveal.js?v=9"></script>
+<script src="js/nav.js?v=9"></script>
+<script src="js/gate.js?v=9"></script>
+
 </body>
 </html>

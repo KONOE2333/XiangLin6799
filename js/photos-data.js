@@ -12,10 +12,11 @@ const REUNION_DATE = "2019-06-16";
 // file：文件名（png 图就写 "01.png"）；cap：照片下方的手写说明。
 // 照片还没上传时会显示星星占位拍立得，不影响页面。
 const MOMENTS = [
-  { file: "01.jpg", cap: "第一张双人合照" },
-  { file: "02.jpg", cap: "舞台同框瞬间" },
-  { file: "03.jpg", cap: "综艺名场面" },
-  { file: "04.jpg", cap: "日常抓拍" },
-  { file: "05.jpg", cap: "演唱会互动" },
-  { file: "06.jpg", cap: "你最爱的那张" }
+  { file: "01.jpg", cap: "第一张双人合照", alt: "翔霖第一张双人合照", source: "首页瞬间" },
+  { file: "02.jpg", cap: "舞台同框瞬间", alt: "翔霖舞台同框瞬间", source: "首页瞬间" },
+  { file: "03.jpg", cap: "综艺名场面", alt: "翔霖综艺名场面", source: "首页瞬间" },
+  { file: "04.jpg", cap: "日常抓拍", alt: "翔霖日常抓拍", source: "首页瞬间" },
+  { file: "05.jpg", cap: "演唱会互动", alt: "翔霖演唱会互动", source: "首页瞬间" },
+  { file: "06.jpg", cap: "你最爱的那张", alt: "翔霖同框瞬间", source: "首页瞬间" },
+  { file: "07.jpg", cap: "同框定格", alt: "翔霖同框定格", source: "首页瞬间" }
 ];

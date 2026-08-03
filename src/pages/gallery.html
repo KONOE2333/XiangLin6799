@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+{{head}}
+</head>
+<body class="home photo-sphere">
+<canvas id="star-rain"></canvas>
+{{nav}}
+
+<main class="sphere-stage" id="sphere-stage">
+  <div class="sphere" id="photo-sphere" aria-label="翔霖照片球"></div>
+  <p class="sphere-hint" id="sphere-hint">照片正在聚拢 · 点击按钮展开</p>
+</main>
+
+<div class="memory-core-wrap" id="memory-core-wrap">
+  <svg class="core-ring" viewBox="0 0 140 140" aria-hidden="true">
+    <circle class="core-ring-bg" cx="70" cy="70" r="62"></circle>
+    <circle class="core-ring-fill" id="core-ring-fill" cx="70" cy="70" r="62"></circle>
+  </svg>
+  <button class="memory-core" id="memory-core" type="button" aria-label="按住并转动记忆核心，充能后展开照片球">
+    <span class="core-icon">✦</span>
+  </button>
+</div>
+<button class="sphere-exit" id="sphere-exit" type="button">(EXIT)</button>
+
+<audio id="bgm" loop preload="none"></audio>
+<button id="music-btn" class="music-disc" type="button" title="背景音乐">♪</button>
+
+{{scripts}}
+</body>
+</html>

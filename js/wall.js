@@ -77,8 +77,8 @@
       note.innerHTML =
         "<p>" + escapeHtml(m.text) + "</p>" +
         '<div class="note-meta"><span>' + escapeHtml(m.name) + " · " + m.time + "</span>" +
-        '<button class="note-like" data-id="' + m.id + '">♥ ' + m.likes + "</button></div>" +
-        (adminMode ? '<button class="note-del" data-id="' + m.id + '" title="删除这条留言">删除</button>' : "");
+        '<button class="note-like" type="button" data-id="' + m.id + '">♥ ' + m.likes + "</button></div>" +
+        (adminMode ? '<button class="note-del" type="button" data-id="' + m.id + '" title="删除这条留言">删除</button>' : "");
       wall.appendChild(note);
     });
   }

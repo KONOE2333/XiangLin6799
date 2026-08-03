@@ -15,7 +15,7 @@
       '<div class="gate-question">我们最爱的球队是什么？（5 个字）</div>' +
       '<input class="gate-input" type="text" placeholder="输入答案" maxlength="12" autocomplete="off">' +
       '<div class="gate-err" id="gate-err"></div>' +
-      '<button class="gate-enter" disabled>进 入 ✦</button>' +
+      '<button class="gate-enter" type="button" disabled>进 入 ✦</button>' +
     '</div>';
   document.body.appendChild(overlay);
 

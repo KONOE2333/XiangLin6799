@@ -1,0 +1,306 @@
+body.photo-sphere {
+  background: #060d24;
+  color: #dfe4ff;
+  overflow: hidden;
+}
+
+body.photo-sphere #star-rain {
+  z-index: 0;
+}
+
+.sphere-stage {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  overflow: hidden;
+  perspective: var(--perspective, 1100px);
+  perspective-origin: 50% 50%;
+  touch-action: none;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.sphere-stage:active {
+  cursor: grabbing;
+}
+
+#photo-sphere {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 0;
+  height: 0;
+  transform-style: preserve-3d;
+}
+
+.sphere-photo {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: var(--photo-w, 160px);
+  height: var(--photo-h, 120px);
+  margin-left: calc(var(--photo-w, 160px) / -2);
+  margin-top: calc(var(--photo-h, 120px) / -2);
+  padding: 0;
+  border: 0;
+  background: #101f4d;
+  opacity: 0;
+  transform: translate(var(--sx), var(--sy)) scale(0.3);
+  animation: photo-converge 1.15s cubic-bezier(0.2, 0.8, 0.25, 1) forwards;
+  animation-delay: var(--delay, 0ms);
+  cursor: pointer;
+}
+
+.sphere-photo.launch {
+  animation: photo-launch 1.15s cubic-bezier(0.2, 0.9, 0.3, 1.25) forwards;
+  animation-delay: var(--launch-delay, 0ms);
+}
+
+.sphere-photo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.sphere-photo:hover {
+  transform: var(--sphere) scale(1.12) !important;
+}
+
+.sphere-photo.selected {
+  transform: var(--sphere) scale(1.45) !important;
+  z-index: 60;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.65);
+}
+
+@keyframes photo-converge {
+  0% {
+    opacity: 0;
+    transform: translate(var(--sx), var(--sy)) scale(0.3);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(0, 0) scale(0.72);
+  }
+}
+
+@keyframes photo-launch {
+  from {
+    opacity: 1;
+    transform: translate(0, 0) scale(0.72);
+  }
+  to {
+    opacity: 1;
+    transform: var(--sphere);
+  }
+}
+
+.memory-core-wrap {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  z-index: 85;
+  width: 170px;
+  height: 170px;
+  transform: translate(-50%, -50%) scale(0.85);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.memory-core-wrap.show {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+  pointer-events: auto;
+}
+
+.memory-core-wrap.hidden {
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.88);
+  pointer-events: none;
+}
+
+.memory-core-wrap.shake {
+  animation: core-shake 0.22s ease;
+}
+
+.memory-core-wrap.charged {
+  animation: core-charge-glow 0.45s ease;
+}
+
+.core-ring {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.core-ring circle {
+  fill: none;
+}
+
+.core-ring-bg {
+  stroke: rgba(170, 185, 255, 0.18);
+  stroke-width: 2;
+}
+
+.core-ring-fill {
+  stroke: #f6a8cd;
+  stroke-width: 3;
+  stroke-linecap: round;
+  filter: drop-shadow(0 0 8px rgba(246, 168, 205, 0.55));
+}
+
+.memory-core {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 78px;
+  height: 78px;
+  margin: -39px 0 0 -39px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(170, 185, 255, 0.5);
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #3b4a96, #141d46 70%);
+  color: #ffffff;
+  font-size: 26px;
+  cursor: grab;
+  box-shadow: 0 0 30px rgba(139, 127, 240, 0.45);
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.memory-core.active {
+  cursor: grabbing;
+  box-shadow: 0 0 46px rgba(243, 154, 194, 0.65);
+}
+
+.memory-core.charged {
+  border-color: #ffffff;
+  box-shadow: 0 0 70px rgba(255, 255, 255, 0.65);
+}
+
+.core-icon {
+  display: block;
+  transform: rotate(var(--spin, 0deg));
+  transition: transform 0.05s linear;
+}
+
+.core-particle {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 5px;
+  height: 5px;
+  margin: -2.5px 0 0 -2.5px;
+  border-radius: 50%;
+  background: #ffffff;
+  pointer-events: none;
+  animation: core-particle 0.55s ease-out forwards;
+}
+
+@keyframes core-particle {
+  from {
+    opacity: 1;
+    transform: translate(0, 0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translate(var(--px), var(--py)) scale(0.2);
+  }
+}
+
+@keyframes core-shake {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); }
+  30% { transform: translate(-52%, -50%) scale(1.03); }
+  60% { transform: translate(-48%, -50%) scale(0.99); }
+}
+
+@keyframes core-charge-glow {
+  0% { transform: translate(-50%, -50%) scale(1); }
+  60% { transform: translate(-50%, -50%) scale(1.06); }
+  100% { transform: translate(-50%, -50%) scale(1); }
+}
+
+.sphere-stage.burst::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  pointer-events: none;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.55), rgba(139, 127, 240, 0.18) 42%, transparent 70%);
+  animation: burst-flash 0.55s ease-out forwards;
+}
+
+@keyframes burst-flash {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+.sphere-exit {
+  position: fixed;
+  top: 34px;
+  right: 34px;
+  z-index: 80;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: #aab4e6;
+  font-family: var(--font-latin);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.sphere-exit:hover {
+  color: #ffffff;
+  text-decoration: underline;
+}
+
+.sphere-hint {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 70;
+  color: #7d88bd;
+  font-family: var(--font-latin);
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-align: center;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+body.photo-sphere .music-disc {
+  right: 26px;
+  bottom: 70px;
+  z-index: 75;
+}
+
+@media (max-width: 720px) {
+  .memory-core-wrap {
+    width: 150px;
+    height: 150px;
+  }
+
+  .sphere-exit {
+    top: 18px;
+    right: 18px;
+  }
+
+  .sphere-hint {
+    bottom: 16px;
+    left: 18px;
+    right: 18px;
+    transform: none;
+    font-size: 10px;
+    letter-spacing: 1px;
+    white-space: normal;
+  }
+}

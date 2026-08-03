@@ -114,6 +114,14 @@
     ctx.restore();
   }
 
+  function drawStatic() {
+    ctx.clearRect(0, 0, W, H);
+    for (let i = 0; i < drops.length; i++) {
+      const d = drops[i];
+      drawStar(d.x, d.y, d.size, d.alpha);
+    }
+  }
+
   function drawMeteors() {
     for (let i = meteors.length - 1; i >= 0; i--) {
       const m = meteors[i];
@@ -145,6 +153,11 @@
   function tick() {
     t++;
     ctx.clearRect(0, 0, W, H);
+
+    if (reduced) {
+      drawStatic();
+      return;
+    }
 
     const ox = mouseX * 14, oy = mouseY * 14; // 视差偏移
 
@@ -183,7 +196,10 @@
     requestAnimationFrame(tick);
   }
 
-  window.addEventListener("resize", resize);
+  window.addEventListener("resize", () => {
+    resize();
+    if (reduced) drawStatic();
+  });
   window.addEventListener("mousemove", function (e) {
     mouseX = e.clientX / W - 0.5;
     mouseY = e.clientY / H - 0.5;

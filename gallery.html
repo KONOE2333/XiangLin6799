@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>照片球 · 翔霖小站</title>
+<meta name="description" content="翔霖 3D 照片球，照片从四周汇聚后散开，可拖拽旋转与点选查看。">
+<meta name="theme-color" content="#060d24">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="css/style.css?v=9">
+<link rel="stylesheet" href="css/home.css?v=9">
+
+<link rel="stylesheet" href="css/gallery.css?v=9">
+<script>document.documentElement.classList.add('js');</script>
+
+</head>
+<body class="home photo-sphere">
+<canvas id="star-rain"></canvas>
+<nav class="nav nav-dark">
+  <div class="nav-logo">Tina贺♡严美娜</div>
+  <button class="nav-toggle" id="nav-toggle" type="button" aria-label="打开菜单" aria-expanded="false" aria-controls="nav-links">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+  <div class="nav-links" id="nav-links">
+    <a href="index.html" class="">首页</a>
+    <a href="timeline.html" class="">记忆时间轴</a>
+    <a href="gallery.html" class="on">照片图库</a>
+    <a href="stages.html" class="">舞台高光</a>
+    <a href="birthday.html" class="">生日纪念</a>
+    <a href="wall.html" class="">留言墙</a>
+  </div>
+</nav>
+
+
+<main class="sphere-stage" id="sphere-stage">
+  <div class="sphere" id="photo-sphere" aria-label="翔霖照片球"></div>
+  <p class="sphere-hint" id="sphere-hint">照片正在聚拢 · 点击按钮展开</p>
+</main>
+
+<div class="memory-core-wrap" id="memory-core-wrap">
+  <svg class="core-ring" viewBox="0 0 140 140" aria-hidden="true">
+    <circle class="core-ring-bg" cx="70" cy="70" r="62"></circle>
+    <circle class="core-ring-fill" id="core-ring-fill" cx="70" cy="70" r="62"></circle>
+  </svg>
+  <button class="memory-core" id="memory-core" type="button" aria-label="按住并转动记忆核心，充能后展开照片球">
+    <span class="core-icon">✦</span>
+  </button>
+</div>
+<button class="sphere-exit" id="sphere-exit" type="button">(EXIT)</button>
+
+<audio id="bgm" loop preload="none"></audio>
+<button id="music-btn" class="music-disc" type="button" title="背景音乐">♪</button>
+
+<script src="js/starrain.js?v=9"></script>
+
+<script src="js/photos-data.js?v=9"></script>
+<script src="js/birthday-data.js?v=9"></script>
+<script src="js/gallery-extra-data.js?v=9"></script>
+<script src="js/gallery-data.js?v=9"></script>
+<script src="js/gallery.js?v=9"></script>
+<script src="js/audio.js?v=9"></script>
+
+<script src="js/reveal.js?v=9"></script>
+<script src="js/nav.js?v=9"></script>
+<script src="js/gate.js?v=9"></script>
+
+</body>
+</html>

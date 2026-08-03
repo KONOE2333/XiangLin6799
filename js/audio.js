@@ -52,7 +52,7 @@
     return audio.play()
       .then(() => { if (btn) btn.classList.add("playing"); notify(); })
       .catch(() => {
-        if (!hasFile) toast("还没有背景音乐哦～把音乐文件命名为 bgm.mp3 放进 site/audio/ 即可。");
+        if (!hasFile) toast("音乐文件不存在或暂时无法播放，稍后再试试～");
       });
   }
   function setTrack(i, autoplay) {
@@ -71,7 +71,6 @@
 
   if (state.playing && hasFile) {
     try { audio.currentTime = state.time || 0; } catch {}
-    if (btn) btn.classList.add("playing");
     tryPlay();
   }
   notify();
@@ -113,11 +112,16 @@
   window.XLAudio.pauseForVideo = function () {
     suspendedByVideo = true;
     wasPlayingBeforeVideo = !audio.paused;
-    if (!audio.paused) { audio.pause(); if (btn) btn.classList.remove("playing"); saveState(); notify(); }
+    if (!audio.paused) {
+      audio.volume = 0.08;
+      notify();
+    }
   };
   window.XLAudio.resumeAfterVideo = function () {
     suspendedByVideo = false;
-    if (wasPlayingBeforeVideo) tryPlay().then(saveState);
+    audio.volume = 1;
+    if (wasPlayingBeforeVideo && audio.paused) tryPlay().then(saveState);
+    notify();
   };
   window.XLAudio.isPlaying = function () { return !audio.paused; };
 

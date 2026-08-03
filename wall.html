@@ -4,23 +4,34 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>留言墙 · 翔霖小站</title>
-<link rel="stylesheet" href="css/style.css">
-<link rel="stylesheet" href="css/home.css">
+<meta name="description" content="写下你想对翔霖或同担说的话，贴在这面墙上。">
+<meta name="theme-color" content="#060d24">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="css/style.css?v=9">
+<link rel="stylesheet" href="css/home.css?v=9">
+
 <script>document.documentElement.classList.add('js');</script>
+
 </head>
 <body class="home">
 <canvas id="star-rain"></canvas>
-
 <nav class="nav nav-dark">
   <div class="nav-logo">Tina贺♡严美娜</div>
-  <div class="nav-links">
-    <a href="index.html">首页</a>
-    <a href="timeline.html">记忆时间轴</a>
-    <a href="stages.html">舞台高光</a>
-    <a href="birthday.html">生日纪念</a>
+  <button class="nav-toggle" id="nav-toggle" type="button" aria-label="打开菜单" aria-expanded="false" aria-controls="nav-links">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+  <div class="nav-links" id="nav-links">
+    <a href="index.html" class="">首页</a>
+    <a href="timeline.html" class="">记忆时间轴</a>
+    <a href="gallery.html" class="">照片图库</a>
+    <a href="stages.html" class="">舞台高光</a>
+    <a href="birthday.html" class="">生日纪念</a>
     <a href="wall.html" class="on">留言墙</a>
   </div>
 </nav>
+
 
 <section class="section">
   <h2 class="section-title reveal">粉丝留言墙 <span id="wall-mode" class="wall-mode"></span></h2>
@@ -44,15 +55,20 @@
   <p class="copyright">Copyright © KONOE. All rights reserved.</p>
 </footer>
 
-<audio id="bgm" src="audio/bgm.mp3" loop preload="auto"></audio>
-<button id="music-btn" class="music-disc" title="背景音乐">♪</button>
 
-<script src="js/starrain.js"></script>
-<script src="js/wall-config.js"></script>
-<script src="js/wall-backend.js"></script>
-<script src="js/wall.js"></script>
-<script src="js/audio.js"></script>
-<script src="js/reveal.js"></script>
-<script src="js/gate.js?v=3"></script>
+<audio id="bgm" loop preload="none"></audio>
+<button id="music-btn" class="music-disc" type="button" title="背景音乐">♪</button>
+
+<script src="js/starrain.js?v=9"></script>
+
+<script src="js/wall-config.js?v=9"></script>
+<script src="js/wall-backend.js?v=9"></script>
+<script src="js/wall.js?v=9"></script>
+<script src="js/audio.js?v=9"></script>
+
+<script src="js/reveal.js?v=9"></script>
+<script src="js/nav.js?v=9"></script>
+<script src="js/gate.js?v=9"></script>
+
 </body>
 </html>

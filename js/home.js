@@ -222,6 +222,12 @@ function escapeHtml2(s) {
 
 // ===================== 更新日志 =====================
 (function () {
+  const updateEl = document.getElementById("stat-update");
+  if (updateEl && window.CHANGELOG && window.CHANGELOG.length) {
+    const d = String(window.CHANGELOG[0].date || "");
+    updateEl.textContent = d ? d.slice(5) : "··";
+  }
+
   const ul = document.getElementById("changelog");
   if (!ul || typeof CHANGELOG === "undefined" || !CHANGELOG.length) return;
   CHANGELOG.forEach((it) => {

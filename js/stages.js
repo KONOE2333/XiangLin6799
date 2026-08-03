@@ -32,7 +32,7 @@
     }
 
     box.innerHTML =
-      '<button class="stage-close" aria-label="关闭">×</button>' +
+      '<button class="stage-close" type="button" aria-label="关闭">×</button>' +
       '<div class="stage-player-media">' + mediaHtml + "</div>";
 
     box.querySelector(".stage-close").addEventListener("click", (e) => {
@@ -88,7 +88,9 @@
     if (v.type === "link") card.classList.add("is-link");
 
     const badge = v.platform ? '<span class="stage-badge">' + v.platform + "</span>" : "";
-    const thumb = v.cover ? '<img class="stage-thumb" src="' + v.cover + '" alt="" loading="lazy">' : "";
+    const thumb = v.cover
+      ? '<img class="stage-thumb" src="' + v.cover + '" alt="" loading="lazy" referrerpolicy="no-referrer">'
+      : "";
 
     card.innerHTML =
       '<div class="stage-cover">' + thumb + '<span class="stage-play">▶</span>' + badge + "</div>" +
