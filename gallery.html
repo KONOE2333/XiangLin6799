@@ -7,17 +7,37 @@
 <meta name="description" content="翔霖 3D 照片球，照片从四周汇聚后散开，可拖拽旋转与点选查看。">
 <meta name="theme-color" content="#060d24">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="css/style.css?v=10">
-<link rel="stylesheet" href="css/home.css?v=10">
+<link rel="stylesheet" href="css/style.css?v=11">
+<link rel="stylesheet" href="css/home.css?v=11">
 
-<link rel="stylesheet" href="css/gallery.css?v=10">
+<link rel="stylesheet" href="css/gallery.css?v=11">
 <script>document.documentElement.classList.add('js');</script>
 
 </head>
 <body class="home photo-sphere">
 <canvas id="star-rain"></canvas>
 <nav class="nav nav-dark">
-  <div class="nav-logo">Tina贺♡严美娜</div>
+  <div class="nav-logo" title="Tina贺♡严美娜">
+    <span class="logo-sticker">
+      <svg class="logo-pixel" viewBox="0 0 24 24" shape-rendering="crispEdges" aria-hidden="true">
+        <rect x="6" y="5" width="2" height="2" fill="#f6a8cd"/>
+        <rect x="9" y="5" width="2" height="2" fill="#f6a8cd"/>
+        <rect x="12" y="5" width="2" height="2" fill="#f6a8cd"/>
+        <rect x="15" y="5" width="2" height="2" fill="#f6a8cd"/>
+        <rect x="5" y="7" width="2" height="3" fill="#f6a8cd"/>
+        <rect x="16" y="7" width="2" height="3" fill="#f6a8cd"/>
+        <rect x="4" y="10" width="2" height="3" fill="#f6a8cd"/>
+        <rect x="17" y="10" width="2" height="3" fill="#f6a8cd"/>
+        <rect x="5" y="13" width="2" height="3" fill="#f6a8cd"/>
+        <rect x="16" y="13" width="2" height="3" fill="#f6a8cd"/>
+        <rect x="7" y="16" width="2" height="3" fill="#f6a8cd"/>
+        <rect x="14" y="16" width="2" height="3" fill="#f6a8cd"/>
+        <rect x="9" y="19" width="2" height="2" fill="#f6a8cd"/>
+        <rect x="12" y="19" width="2" height="2" fill="#f6a8cd"/>
+      </svg>
+      <span class="logo-text">Tina贺♡严美娜</span>
+    </span>
+  </div>
   <button class="nav-toggle" id="nav-toggle" type="button" aria-label="打开菜单" aria-expanded="false" aria-controls="nav-links">
     <span></span>
     <span></span>
@@ -48,23 +68,30 @@
     <span class="core-icon">✦</span>
   </button>
 </div>
-<button class="sphere-exit" id="sphere-exit" type="button">(EXIT)</button>
+<div class="mobile-photo-deck" id="mobile-photo-deck" hidden>
+  <div class="deck-viewport" id="deck-viewport">
+    <div class="deck-track" id="deck-track"></div>
+  </div>
+  <button class="deck-prev" id="deck-prev" type="button" aria-label="上一张">‹</button>
+  <button class="deck-next" id="deck-next" type="button" aria-label="下一张">›</button>
+  <p class="deck-counter" id="deck-counter">1 / 1</p>
+</div>
 
 <audio id="bgm" loop preload="none"></audio>
 <button id="music-btn" class="music-disc" type="button" title="背景音乐">♪</button>
 
-<script src="js/starrain.js?v=10"></script>
+<script src="js/starrain.js?v=11"></script>
 
-<script src="js/photos-data.js?v=10"></script>
-<script src="js/birthday-data.js?v=10"></script>
-<script src="js/gallery-extra-data.js?v=10"></script>
-<script src="js/gallery-data.js?v=10"></script>
-<script src="js/gallery.js?v=10"></script>
-<script src="js/audio.js?v=10"></script>
+<script src="js/photos-data.js?v=11"></script>
+<script src="js/birthday-data.js?v=11"></script>
+<script src="js/gallery-extra-data.js?v=11"></script>
+<script src="js/gallery-data.js?v=11"></script>
+<script src="js/gallery.js?v=11"></script>
+<script src="js/audio.js?v=11"></script>
 
-<script src="js/reveal.js?v=10"></script>
-<script src="js/nav.js?v=10"></script>
-<script src="js/gate.js?v=10"></script>
+<script src="js/reveal.js?v=11"></script>
+<script src="js/nav.js?v=11"></script>
+<script src="js/gate.js?v=11"></script>
 
 </body>
 </html>

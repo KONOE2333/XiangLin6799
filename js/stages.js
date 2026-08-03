@@ -2,7 +2,6 @@
 (function () {
   const grid = document.getElementById("stages-body");
   if (!grid) return;
-  const filterBox = document.getElementById("stages-filter");
 
   let overlay = null; // 当前打开的播放器浮层
 
@@ -51,40 +50,9 @@
     if (window.XLAudio) window.XLAudio.pauseForVideo(); // 看视频时暂停 BGM
   }
 
-  // ---------- 分类筛选 ----------
-  const cats = [];
-  VIDEOS.forEach((v) => {
-    if (v.cat && cats.indexOf(v.cat) < 0) cats.push(v.cat);
-  });
-  let active = "全部";
-
-  if (filterBox) {
-    ["全部"].concat(cats).forEach((c) => {
-      const b = document.createElement("button");
-      b.type = "button";
-      b.textContent = c;
-      b.className = c === active ? "on" : "";
-      b.addEventListener("click", () => {
-        active = c;
-        filterBox.querySelectorAll("button").forEach((x) =>
-          x.classList.toggle("on", x.textContent === c));
-        applyFilter();
-      });
-      filterBox.appendChild(b);
-    });
-  }
-
-  function applyFilter() {
-    grid.querySelectorAll(".stage-card").forEach((card) => {
-      const show = active === "全部" || card.dataset.cat === active;
-      card.style.display = show ? "" : "none";
-    });
-  }
-
   VIDEOS.forEach((v) => {
     const card = document.createElement("div");
     card.className = "stage-card";
-    card.dataset.cat = v.cat || "";
     if (v.type === "link") card.classList.add("is-link");
 
     const badge = v.platform ? '<span class="stage-badge">' + v.platform + "</span>" : "";
