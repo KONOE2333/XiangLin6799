@@ -69,7 +69,7 @@ begin
 
   begin
     insert into public.site_users(username, display_name, password_hash)
-    values (v_username, v_display, crypt(p_password, gen_salt('bf')))
+    values (v_username, v_display, extensions.crypt(p_password, extensions.gen_salt('bf')))
     returning id into v_id;
   exception
     when unique_violation then
@@ -77,7 +77,7 @@ begin
   end;
 
   insert into public.user_sessions(token, user_id)
-  values (encode(gen_random_bytes(32), 'hex'), v_id)
+  values (encode(extensions.gen_random_bytes(32), 'hex'), v_id)
   returning token into v_token;
 
   return query select v_token, v_username, v_display;
@@ -99,12 +99,12 @@ begin
   from public.site_users
   where username = lower(trim(p_username));
 
-  if v_id is null or v_hash is null or v_hash <> crypt(p_password, v_hash) then
+  if v_id is null or v_hash is null or v_hash <> extensions.crypt(p_password, v_hash) then
     raise exception '用户名或密码错误';
   end if;
 
   insert into public.user_sessions(token, user_id)
-  values (encode(gen_random_bytes(32), 'hex'), v_id)
+  values (encode(extensions.gen_random_bytes(32), 'hex'), v_id)
   returning token into v_token;
 
   return query select v_token, v_username, v_display;
