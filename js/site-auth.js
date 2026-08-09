@@ -38,10 +38,10 @@
     return r.json();
   }
 
-  async function register(username, displayName, password) {
+  async function register(username, password) {
     const rows = await rpc("register_user", {
       p_username: username,
-      p_display_name: displayName,
+      p_display_name: username,
       p_password: password
     });
     const data = rows && rows[0];

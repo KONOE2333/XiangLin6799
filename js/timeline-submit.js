@@ -73,12 +73,11 @@
   const registerBtn = $("register-btn");
   if (registerBtn) registerBtn.addEventListener("click", async () => {
     const username = $("register-username").value.trim();
-    const displayName = $("register-display").value.trim();
     const password = $("register-password").value;
-    if (!username || !displayName || !password) return setMsg(authMsg, "请填写完整注册信息");
+    if (!username || !password) return setMsg(authMsg, "请填写用户名和密码");
     registerBtn.disabled = true;
     try {
-      await auth.register(username, displayName, password);
+      await auth.register(username, password);
       showForm();
     } catch (e) {
       setMsg(authMsg, e && e.message ? e.message : "注册失败");
