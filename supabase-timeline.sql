@@ -78,7 +78,7 @@ begin
 
   insert into public.user_sessions(token, user_id)
   values (encode(extensions.gen_random_bytes(32), 'hex'), v_id)
-  returning token into v_token;
+  returning user_sessions.token into v_token;
 
   return query select v_token, v_username, v_display;
 end
@@ -105,7 +105,7 @@ begin
 
   insert into public.user_sessions(token, user_id)
   values (encode(extensions.gen_random_bytes(32), 'hex'), v_id)
-  returning token into v_token;
+  returning user_sessions.token into v_token;
 
   return query select v_token, v_username, v_display;
 end
