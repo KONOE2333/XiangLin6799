@@ -7,7 +7,7 @@ const srcDir = path.join(root, "src");
 const pagesDir = path.join(srcDir, "pages");
 const partialsDir = path.join(srcDir, "partials");
 const STAR_RAIN_SCRIPT = '<script src="js/starrain.js?v=5"></script>';
-const CACHE_VERSION = "19";
+const CACHE_VERSION = "20";
 
 const pages = {
   "index.html": {
@@ -30,8 +30,21 @@ const pages = {
     active: "timeline.html",
     pageStyles: "",
     preScripts: `
+<script src="js/wall-config.js?v=5"></script>
 <script src="js/timeline-data.js?v=5"></script>
-<script src="js/timeline.js?v=5"></script>`,
+<script src="js/timeline.js?v=5"></script>
+<script src="js/site-auth.js?v=5"></script>
+<script src="js/timeline-submit.js?v=5"></script>`,
+    postScripts: ""
+  },
+  "review.html": {
+    title: "投稿审核 · 翔霖小站",
+    description: "审核时间轴投稿，通过后自动加入记忆时间轴。",
+    active: "review.html",
+    pageStyles: "",
+    preScripts: `
+<script src="js/wall-config.js?v=5"></script>
+<script src="js/timeline-review.js?v=5"></script>`,
     postScripts: ""
   },
   "gallery.html": {

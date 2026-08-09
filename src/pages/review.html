@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+{{head}}
+</head>
+<body class="home">
+<canvas id="star-rain"></canvas>
+{{nav}}
+
+<section class="section review-section">
+  <h2 class="section-title reveal">投稿审核</h2>
+  <p class="section-sub reveal">审核通过后，投稿会自动加入记忆时间轴对应年份</p>
+
+  <div class="review-login" id="review-login">
+    <input id="review-code" type="password" placeholder="站长口令" maxlength="32" autocomplete="off" aria-label="站长口令">
+    <button id="review-enter" type="button">进入审核</button>
+    <span id="review-msg" class="review-msg"></span>
+  </div>
+
+  <div class="review-list hidden" id="review-body"></div>
+</section>
+
+{{footer}}
+
+<audio id="bgm" loop preload="none"></audio>
+<button id="music-btn" class="music-disc" type="button" title="背景音乐">♪</button>
+
+{{scripts}}
+</body>
+</html>

@@ -785,6 +785,357 @@ body.home .gate-skip {
   body.home .twin { max-width: 320px; }
 }
 
+/* ===================== 时间轴投稿 · 轻量账号 ===================== */
+.hidden { display: none !important; }
+
+body.home .tl-contribute {
+  max-width: 860px;
+  margin: 0 auto 34px;
+  padding: 22px 24px 24px;
+  background: var(--glass);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+  box-shadow: var(--glow), var(--glass-hi);
+}
+body.home .tl-contribute-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 18px;
+}
+body.home .tl-contribute-head h3 {
+  color: #eef1ff;
+  font-size: 20px;
+  margin-bottom: 6px;
+}
+body.home .tl-contribute-head p {
+  color: #aab4e6;
+  font-size: 13.5px;
+  line-height: 1.75;
+}
+body.home .tl-admin-link {
+  flex: 0 0 auto;
+  color: #b3a6ff;
+  font-size: 12px;
+  text-decoration: none;
+  border: 1px solid rgba(170, 180, 255, 0.35);
+  border-radius: 999px;
+  padding: 6px 13px;
+  transition: background 0.2s, color 0.2s;
+}
+body.home .tl-admin-link:hover {
+  background: rgba(139, 127, 240, 0.18);
+  color: #fff;
+}
+
+body.home .auth-panel {
+  padding: 16px;
+  border: 1px solid rgba(170, 180, 255, 0.18);
+  border-radius: 16px;
+  background: rgba(8, 15, 40, 0.3);
+}
+body.home .auth-tabs {
+  display: inline-flex;
+  gap: 6px;
+  margin-bottom: 12px;
+  padding: 4px;
+  border-radius: 999px;
+  background: rgba(10, 16, 40, 0.55);
+}
+body.home .auth-tabs button {
+  border: none;
+  background: transparent;
+  color: #9aa2d0;
+  font-size: 13px;
+  padding: 6px 16px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+body.home .auth-tabs button.on {
+  background: var(--grad);
+  color: #fff;
+}
+body.home .auth-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+body.home .auth-form input {
+  min-width: 160px;
+  flex: 1 1 180px;
+  background: rgba(10, 16, 40, 0.6);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  color: #eef1ff;
+  padding: 10px 13px;
+  font-family: inherit;
+  font-size: 13px;
+  outline: none;
+}
+body.home .auth-form input:focus {
+  border-color: #b3a6ff;
+  box-shadow: 0 0 14px rgba(139, 127, 240, 0.35);
+}
+body.home .auth-form button {
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 12px;
+  padding: 10px 22px;
+  background: var(--grad);
+  color: #fff;
+  font-family: inherit;
+  font-size: 13px;
+  cursor: pointer;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 8px 20px rgba(139, 127, 240, 0.28);
+}
+body.home .auth-msg,
+body.home .submit-msg,
+body.home .review-msg {
+  color: #f3a6c0;
+  font-size: 12.5px;
+  min-height: 1.5em;
+}
+body.home .auth-msg.ok,
+body.home .submit-msg.ok,
+body.home .review-msg.ok {
+  color: #b6f0d2;
+}
+
+body.home .tl-submit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 16px;
+  border: 1px solid rgba(170, 180, 255, 0.18);
+  border-radius: 16px;
+  background: rgba(8, 15, 40, 0.3);
+}
+body.home .tl-submit-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #b3a6ff;
+  font-size: 13px;
+}
+body.home .tl-submit-head button,
+body.home .tl-submit-foot button,
+body.home .review-login button,
+body.home .review-actions button {
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 12px;
+  background: var(--grad);
+  color: #fff;
+  font-family: inherit;
+  font-size: 13px;
+  cursor: pointer;
+  padding: 8px 18px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 8px 20px rgba(139, 127, 240, 0.26);
+}
+body.home .tl-submit-head button {
+  background: rgba(10, 16, 40, 0.65);
+  box-shadow: none;
+}
+body.home .tl-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+body.home .tl-form-grid label,
+body.home .tl-submit-form > label,
+body.home .tl-form-row label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  color: #c7cdf2;
+  font-size: 12.5px;
+}
+body.home .tl-form-grid input,
+body.home .tl-submit-form > label textarea,
+body.home .tl-form-row input,
+body.home .review-login input {
+  width: 100%;
+  background: rgba(10, 16, 40, 0.6);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  color: #eef1ff;
+  padding: 10px 13px;
+  font-family: inherit;
+  font-size: 13px;
+  outline: none;
+  resize: vertical;
+}
+body.home .tl-form-grid input:focus,
+body.home .tl-submit-form textarea:focus,
+body.home .tl-form-row input:focus,
+body.home .review-login input:focus {
+  border-color: #b3a6ff;
+  box-shadow: 0 0 14px rgba(139, 127, 240, 0.35);
+}
+body.home .tl-form-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 12px;
+}
+body.home .tl-form-row label {
+  flex: 1 1 260px;
+}
+body.home .image-info {
+  color: #8f9ace;
+  font-size: 12px;
+  align-self: center;
+}
+body.home .image-preview {
+  width: 180px;
+  max-width: 100%;
+  border-radius: 12px;
+  border: 1px solid var(--glass-border);
+  display: block;
+}
+body.home .tl-submit-foot {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+body.home .tl-photo {
+  display: block;
+  width: 100%;
+  max-height: 340px;
+  object-fit: cover;
+  border-radius: 12px;
+  margin-top: 12px;
+  border: 1px solid rgba(170, 180, 255, 0.2);
+}
+body.home .tl-community-badge {
+  display: inline-block;
+  vertical-align: 3px;
+  margin-left: 8px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  color: #ffd6e8;
+  background: rgba(246, 168, 205, 0.16);
+  border: 1px solid rgba(246, 168, 205, 0.35);
+}
+
+/* ===================== 投稿审核后台 ===================== */
+body.home .review-login {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  max-width: 620px;
+  margin: 0 auto 28px;
+  padding: 16px;
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+}
+body.home .review-login input {
+  flex: 1 1 220px;
+  max-width: 260px;
+}
+body.home .review-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 18px;
+}
+body.home .review-card {
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  padding: 18px;
+  box-shadow: var(--glow), var(--glass-hi);
+  color: #c7cdf2;
+}
+body.home .review-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+body.home .review-status {
+  font-size: 11px;
+  color: #ffd19e;
+  background: rgba(240, 163, 95, 0.14);
+  border: 1px solid rgba(240, 163, 95, 0.35);
+  padding: 3px 9px;
+  border-radius: 999px;
+}
+body.home .review-meta {
+  color: #8f9ace;
+  font-size: 11.5px;
+}
+body.home .review-card h3 {
+  color: #eef1ff;
+  font-size: 17px;
+  margin-bottom: 6px;
+}
+body.home .review-date {
+  color: #b3a6ff;
+  font-size: 12.5px;
+  margin-bottom: 10px;
+}
+body.home .review-img {
+  width: 100%;
+  max-height: 260px;
+  object-fit: cover;
+  border-radius: 12px;
+  margin: 6px 0 10px;
+  border: 1px solid rgba(170, 180, 255, 0.2);
+}
+body.home .review-content {
+  color: #c7cdf2;
+  font-size: 13.5px;
+  line-height: 1.75;
+  white-space: pre-wrap;
+}
+body.home .review-link {
+  display: inline-block;
+  margin-top: 10px;
+  color: #f6a8cd;
+  font-size: 13px;
+}
+body.home .review-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 14px;
+}
+body.home .review-actions button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+body.home .review-actions .review-reject {
+  background: rgba(255, 155, 176, 0.72);
+}
+body.home .review-empty {
+  text-align: center;
+  color: #9aa2d0;
+  padding: 40px 0;
+}
+
+@media (max-width: 620px) {
+  body.home .tl-contribute-head {
+    flex-direction: column;
+  }
+  body.home .tl-form-grid {
+    grid-template-columns: 1fr;
+  }
+  body.home .review-list {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* ===================== 内页卡片轻量入场动画（不依赖 JS） ===================== */
 @keyframes cardIn {
   from { opacity: 0; transform: translateY(20px); }

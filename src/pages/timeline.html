@@ -10,6 +10,77 @@
 <section class="section">
   <h2 class="section-title reveal">记忆时间轴</h2>
   <p class="section-sub reveal">以时间为轴，从相遇到现在 · 每个节点都是被记住的瞬间</p>
+  <div class="tl-contribute reveal" id="tl-contribute">
+    <div class="tl-contribute-head">
+      <div>
+        <h3>记忆投稿箱</h3>
+        <p>如果你知道值得补进时间轴的翔霖同框、舞台、物料或时间线细节，可以投稿给我们。审核通过后会自动出现在对应年份里。</p>
+      </div>
+      <a class="tl-admin-link" href="review.html">投稿审核</a>
+    </div>
+
+    <div class="auth-panel" id="auth-panel">
+      <div class="auth-tabs">
+        <button id="auth-tab-login" class="on" type="button">登录</button>
+        <button id="auth-tab-register" type="button">注册</button>
+      </div>
+      <div class="auth-form" id="auth-login">
+        <input id="login-username" type="text" placeholder="用户名" autocomplete="username" aria-label="用户名">
+        <input id="login-password" type="password" placeholder="密码" autocomplete="current-password" aria-label="密码">
+        <button id="login-btn" type="button">登录</button>
+        <span id="auth-msg" class="auth-msg"></span>
+      </div>
+      <div class="auth-form hidden" id="auth-register">
+        <input id="register-username" type="text" placeholder="用户名（2-20 个字符）" autocomplete="username" aria-label="注册用户名">
+        <input id="register-display" type="text" placeholder="昵称（1-20 个字符）" aria-label="昵称">
+        <input id="register-password" type="password" placeholder="密码（至少 6 位）" autocomplete="new-password" aria-label="注册密码">
+        <button id="register-btn" type="button">注册</button>
+      </div>
+    </div>
+
+    <form class="tl-submit-form hidden" id="timeline-submit-form">
+      <div class="tl-submit-head">
+        <span id="submit-who"></span>
+        <button id="logout-btn" type="button">退出账号</button>
+      </div>
+      <div class="tl-form-grid">
+        <label>标题
+          <input id="tl-title" type="text" maxlength="80" required>
+        </label>
+        <label>时间
+          <input id="tl-date" type="text" placeholder="例如 2021.06.16" maxlength="30" required>
+        </label>
+        <label>年份
+          <input id="tl-year" type="number" min="2000" max="2035" required>
+        </label>
+        <label>分类（可选）
+          <input id="tl-tag" type="text" placeholder="同框 / 舞台 / 物料 / 里程碑…" maxlength="20">
+        </label>
+      </div>
+      <label>内容
+        <textarea id="tl-content" maxlength="1000" rows="5" required></textarea>
+      </label>
+      <div class="tl-form-row">
+        <label>图片（可选，不超过 5MB）
+          <input id="tl-image" type="file" accept="image/*">
+        </label>
+        <span id="image-info" class="image-info"></span>
+        <img id="image-preview" class="image-preview hidden" alt="图片预览">
+      </div>
+      <div class="tl-form-grid">
+        <label>链接地址（可选）
+          <input id="tl-link-url" type="url" placeholder="https://…" maxlength="500">
+        </label>
+        <label>链接文字（可选）
+          <input id="tl-link-text" type="text" placeholder="查看原视频 / 原物料" maxlength="40">
+        </label>
+      </div>
+      <div class="tl-submit-foot">
+        <button type="submit">提交投稿 ✦</button>
+        <span id="submit-msg" class="submit-msg"></span>
+      </div>
+    </form>
+  </div>
   <div class="filter reveal" id="year-filter"></div>
   <div class="timeline" id="timeline-body"></div>
 </section>
