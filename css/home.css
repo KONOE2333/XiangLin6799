@@ -826,6 +826,17 @@ body.home .tl-admin-link {
   padding: 6px 13px;
   transition: background 0.2s, color 0.2s;
 }
+body.home .tl-admin-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: flex-end;
+}
+body.home .tl-admin-toggle {
+  cursor: pointer;
+  font-family: inherit;
+  background: rgba(10, 16, 40, 0.5);
+}
 body.home .tl-admin-link:hover {
   background: rgba(139, 127, 240, 0.18);
   color: #fff;
@@ -953,6 +964,11 @@ body.home .tl-form-row label {
   color: #c7cdf2;
   font-size: 12.5px;
 }
+body.home .field-hint {
+  color: #8f9ace;
+  font-size: 11px;
+  line-height: 1.5;
+}
 body.home .tl-form-grid input,
 body.home .tl-submit-form > label textarea,
 body.home .tl-form-row input,
@@ -1025,8 +1041,43 @@ body.home .tl-community-badge {
   background: rgba(246, 168, 205, 0.16);
   border: 1px solid rgba(246, 168, 205, 0.35);
 }
+body.home .tl-delete-btn {
+  display: inline-block;
+  margin-top: 12px;
+  padding: 5px 13px;
+  border: 1px solid rgba(255, 155, 176, 0.55);
+  border-radius: 999px;
+  background: rgba(255, 155, 176, 0.16);
+  color: #ffb3c4;
+  font-size: 12px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.2s, color 0.2s;
+}
+body.home .tl-delete-btn:hover {
+  background: rgba(255, 155, 176, 0.32);
+  color: #fff;
+}
 
 /* ===================== 投稿审核后台 ===================== */
+body.home .review-toolbar {
+  text-align: center;
+  margin-bottom: 18px;
+}
+body.home .review-back {
+  display: inline-block;
+  color: #b3a6ff;
+  font-size: 13px;
+  text-decoration: none;
+  border: 1px solid rgba(170, 180, 255, 0.35);
+  border-radius: 999px;
+  padding: 7px 16px;
+  transition: background 0.2s, color 0.2s;
+}
+body.home .review-back:hover {
+  background: rgba(139, 127, 240, 0.18);
+  color: #fff;
+}
 body.home .review-login {
   display: flex;
   flex-wrap: wrap;

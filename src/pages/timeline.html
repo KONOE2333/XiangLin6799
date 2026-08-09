@@ -16,7 +16,10 @@
         <h3>记忆投稿箱</h3>
         <p>如果你知道值得补进时间轴的翔霖同框、舞台、物料或时间线细节，可以投稿给我们。审核通过后会自动出现在对应年份里。</p>
       </div>
-      <a class="tl-admin-link" href="review.html">投稿审核</a>
+      <div class="tl-admin-actions">
+        <button id="timeline-admin-toggle" class="tl-admin-link tl-admin-toggle" type="button">站长模式</button>
+        <a class="tl-admin-link" href="review.html">投稿审核</a>
+      </div>
     </div>
 
     <div class="auth-panel" id="auth-panel">
@@ -47,7 +50,8 @@
           <input id="tl-title" type="text" maxlength="80" required>
         </label>
         <label>时间
-          <input id="tl-date" type="text" placeholder="例如 2021.06.16" maxlength="30" required>
+          <input id="tl-date" type="text" placeholder="例如 2026.08.09" maxlength="30" required>
+          <small class="field-hint">请写成 2026.08.09，不要写成 2026.8.9 或 2026年8月9日</small>
         </label>
         <label>年份
           <input id="tl-year" type="number" min="2000" max="2035" required>

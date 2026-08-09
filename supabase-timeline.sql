@@ -262,6 +262,19 @@ begin
 end
 $$;
 
+create or replace function public.delete_timeline_submission(p_target_id uuid, p_admin_code text)
+returns void
+language plpgsql security definer set search_path = public
+as $$
+begin
+  if p_admin_code <> 'yjn030218' then
+    raise exception '口令错误';
+  end if;
+
+  delete from public.timeline_submissions where id = p_target_id;
+end
+$$;
+
 revoke all on function public.register_user(text, text, text) from public;
 revoke all on function public.login_user(text, text) from public;
 revoke all on function public.get_session_user(text) from public;
@@ -269,6 +282,7 @@ revoke all on function public.submit_timeline_entry(text, text, text, int, text,
 revoke all on function public.list_timeline_submissions_for_review(text) from public;
 revoke all on function public.approve_timeline_submission(uuid, text) from public;
 revoke all on function public.reject_timeline_submission(uuid, text, text) from public;
+revoke all on function public.delete_timeline_submission(uuid, text) from public;
 
 grant execute on function public.register_user(text, text, text) to anon, authenticated;
 grant execute on function public.login_user(text, text) to anon, authenticated;
@@ -277,6 +291,7 @@ grant execute on function public.submit_timeline_entry(text, text, text, int, te
 grant execute on function public.list_timeline_submissions_for_review(text) to anon, authenticated;
 grant execute on function public.approve_timeline_submission(uuid, text) to anon, authenticated;
 grant execute on function public.reject_timeline_submission(uuid, text, text) to anon, authenticated;
+grant execute on function public.delete_timeline_submission(uuid, text) to anon, authenticated;
 
 -- 图片上传：公开读取 + 匿名写入 submissions/ 目录
 insert into storage.buckets (id, name, public)

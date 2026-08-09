@@ -3,6 +3,8 @@
   const body = document.getElementById("timeline-body");
   const filterBox = document.getElementById("year-filter");
   let activeYear = "all";
+  let adminMode = false;
+  let adminCode = "";
 
   // 保留书写顺序，再按年份排序（同年内依旧按原顺序）
   let data = TIMELINE_DATA
@@ -37,7 +39,7 @@
     let image = "";
     if (ev.image_url) {
       image = '<img class="tl-photo" src="' + esc(ev.image_url) + '" alt="' + esc(ev.title) +
-        '" loading="lazy" decoding="async">';
+        '" loading="eager" decoding="async">';
     }
 
     let link = "";
@@ -47,6 +49,9 @@
     }
 
     const badge = ev._community ? '<span class="tl-community-badge">小海盐投稿</span>' : "";
+    const adminDelete = (ev._community && ev.id && adminMode)
+      ? '<button class="tl-delete-btn" type="button" data-id="' + esc(ev.id) + '">删除</button>'
+      : "";
 
     item.innerHTML =
       '<span class="tl-dot"></span>' +
@@ -56,6 +61,7 @@
       "<p>" + esc(ev.desc) + "</p>" +
       image +
       (link ? '<div class="tl-link-wrap">' + link + "</div>" : "") +
+      adminDelete +
       "</div>";
     return item;
   }
@@ -131,6 +137,7 @@
       })
       .then(rows => {
         const approved = (rows || []).map(r => ({
+          id: r.id,
           date: r.event_date,
           year: r.year,
           era: eraByYear[r.year] || ("小海盐投稿 · " + r.year),
@@ -153,4 +160,52 @@
   buildFilters();
   render("all");
   loadApproved();
+
+  const adminToggle = document.getElementById("timeline-admin-toggle");
+  if (adminToggle) adminToggle.addEventListener("click", () => {
+    if (adminMode) {
+      adminMode = false;
+      adminCode = "";
+      adminToggle.textContent = "站长模式";
+      render(activeYear);
+      return;
+    }
+    const code = window.prompt("请输入站长口令", "");
+    if (code === null) return;
+    if (code.trim() !== ((window.WALL_CONFIG || {}).adminCode || "")) {
+      window.alert("口令错误");
+      return;
+    }
+    adminMode = true;
+    adminCode = code.trim();
+    adminToggle.textContent = "退出站长模式";
+    render(activeYear);
+  });
+
+  body.addEventListener("click", async (e) => {
+    const del = e.target.closest(".tl-delete-btn");
+    if (!del || !adminMode) return;
+    if (!window.confirm("确定删除这条投稿吗？删除后所有人不可见。")) return;
+    const cfg = window.WALL_CONFIG || {};
+    if (!cfg.supabase || !cfg.supabase.url) return;
+    try {
+      const r = await fetch(cfg.supabase.url + "/rest/v1/rpc/delete_timeline_submission", {
+        method: "POST",
+        headers: {
+          "apikey": cfg.supabase.anonKey,
+          "Authorization": "Bearer " + cfg.supabase.anonKey,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ p_target_id: del.dataset.id, p_admin_code: adminCode })
+      });
+      if (!r.ok) {
+        const data = await r.json().catch(() => ({}));
+        throw new Error(data.message || "删除失败");
+      }
+      data = data.filter(x => x.id !== del.dataset.id);
+      render(activeYear);
+    } catch (err) {
+      window.alert(err && err.message ? err.message : "删除失败");
+    }
+  });
 })();

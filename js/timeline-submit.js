@@ -185,6 +185,10 @@
       setMsg(submitMsg, "标题、时间、内容为必填项");
       return;
     }
+    if (!/^\d{4}\.\d{2}(\.\d{2})?$/.test(eventDate)) {
+      setMsg(submitMsg, "时间请写成 2026.08.09 这样的格式");
+      return;
+    }
     if (year < 2000 || year > 2035) {
       setMsg(submitMsg, "年份请填写 2000-2035");
       return;

@@ -32,11 +32,13 @@
       headers: headers(),
       body: JSON.stringify(payload || {})
     });
+    const text = await r.text();
     if (!r.ok) {
-      const data = await r.json().catch(() => ({}));
+      let data = {};
+      try { data = text ? JSON.parse(text) : {}; } catch (e) {}
       throw new Error(data.message || (name + " 失败"));
     }
-    return r.json();
+    return text ? JSON.parse(text) : [];
   }
 
   function setMsg(text, ok) {
@@ -55,6 +57,7 @@
     list.forEach((item) => {
       const card = document.createElement("article");
       card.className = "review-card status-" + esc(item.status);
+      card.dataset.cardId = item.id;
       card.innerHTML =
         '<div class="review-card-head"><span class="review-status">' + esc(item.status) + '</span>' +
         '<span class="review-meta">' + esc(item.submitter_name) + " · " + esc(item.created_at || "") + "</span></div>" +
@@ -97,13 +100,17 @@
     if (!id) return;
     const approveBtn = e.target.closest(".review-approve");
     const rejectBtn = e.target.closest(".review-reject");
+    const card = e.target.closest(".review-card");
     if (approveBtn) {
       approveBtn.disabled = true;
       try {
         await rpc("approve_timeline_submission", { p_target_id: id, p_admin_code: adminCode });
-        await load();
+        if (card) card.remove();
+        if (body && !body.querySelector(".review-card")) renderList([]);
+        setMsg("已通过，并自动加入记忆时间轴。", true);
       } catch (err) {
         setMsg(err && err.message ? err.message : "通过失败");
+        approveBtn.disabled = false;
       }
     }
     if (rejectBtn) {
@@ -116,9 +123,12 @@
           p_admin_code: adminCode,
           p_note: note || ""
         });
-        await load();
+        if (card) card.remove();
+        if (body && !body.querySelector(".review-card")) renderList([]);
+        setMsg("已拒绝。", true);
       } catch (err) {
         setMsg(err && err.message ? err.message : "拒绝失败");
+        rejectBtn.disabled = false;
       }
     }
   });
