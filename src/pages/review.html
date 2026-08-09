@@ -9,15 +9,21 @@
 
 <section class="section review-section">
   <h2 class="section-title reveal">投稿审核</h2>
-  <p class="section-sub reveal">审核通过后，投稿会自动加入记忆时间轴对应年份</p>
+  <p class="section-sub reveal">审核通过后，投稿会自动加入对应板块</p>
   <div class="review-toolbar">
     <a class="review-back" href="timeline.html">← 返回记忆时间轴</a>
+    <a class="review-back" href="gallery.html">返回照片图库 →</a>
   </div>
 
   <div class="review-login" id="review-login">
     <input id="review-code" type="password" placeholder="站长口令" maxlength="32" autocomplete="off" aria-label="站长口令">
     <button id="review-enter" type="button">进入审核</button>
     <span id="review-msg" class="review-msg"></span>
+  </div>
+
+  <div class="review-tabs hidden" id="review-tabs">
+    <button class="on" data-type="timeline" type="button">时间轴投稿</button>
+    <button data-type="photo" type="button">照片投稿</button>
   </div>
 
   <div class="review-list hidden" id="review-body"></div>

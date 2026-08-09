@@ -1091,6 +1091,33 @@ body.home .review-login {
   border: 1px solid var(--glass-border);
   border-radius: 16px;
 }
+body.home .review-tabs {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin: 0 auto 26px;
+  max-width: 620px;
+  padding: 5px;
+  background: rgba(10, 16, 40, 0.55);
+  border: 1px solid rgba(170, 180, 255, 0.2);
+  border-radius: 999px;
+}
+body.home .review-tabs button {
+  flex: 1;
+  border: none;
+  background: transparent;
+  color: #9aa2d0;
+  font-family: inherit;
+  font-size: 13px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+body.home .review-tabs button.on {
+  background: var(--grad);
+  color: #fff;
+}
 body.home .review-login input {
   flex: 1 1 220px;
   max-width: 260px;

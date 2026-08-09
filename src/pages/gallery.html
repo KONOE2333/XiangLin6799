@@ -21,6 +21,69 @@
     <span class="core-icon">✦</span>
   </button>
 </div>
+
+<section class="gallery-community section" id="gallery-community">
+  <div class="gallery-community-head">
+    <div>
+      <h2>小海盐影像墙</h2>
+      <p>把你们拍到的、收藏的、想留住的翔霖瞬间投上来，审核通过后会贴在影像墙上。</p>
+    </div>
+    <div class="tl-admin-actions">
+      <button id="gallery-admin-toggle" class="tl-admin-link tl-admin-toggle" type="button">站长模式</button>
+      <a class="tl-admin-link" href="review.html">投稿审核</a>
+    </div>
+  </div>
+
+  <div class="auth-panel" id="gallery-auth-panel">
+    <div class="auth-tabs">
+      <button id="gallery-auth-tab-login" class="on" type="button">登录</button>
+      <button id="gallery-auth-tab-register" type="button">注册</button>
+    </div>
+    <span id="gallery-auth-msg" class="auth-msg"></span>
+    <div class="auth-form" id="gallery-auth-login">
+      <input id="gallery-login-username" type="text" placeholder="用户名" autocomplete="username" aria-label="用户名">
+      <input id="gallery-login-password" type="password" placeholder="密码" autocomplete="current-password" aria-label="密码">
+      <button id="gallery-login-btn" type="button">登录</button>
+    </div>
+    <div class="auth-form hidden" id="gallery-auth-register">
+      <input id="gallery-register-username" type="text" placeholder="用户名（2-20 个字符）" autocomplete="username" aria-label="注册用户名">
+      <input id="gallery-register-password" type="password" placeholder="密码（至少 6 位）" autocomplete="new-password" aria-label="注册密码">
+      <button id="gallery-register-btn" type="button">注册</button>
+    </div>
+  </div>
+
+  <form class="tl-submit-form hidden" id="gallery-submit-form">
+    <div class="tl-submit-head">
+      <span id="gallery-submit-who"></span>
+      <button id="gallery-logout-btn" type="button">退出账号</button>
+    </div>
+    <div class="tl-form-grid">
+      <label>标题
+        <input id="gallery-title" type="text" maxlength="80" required>
+      </label>
+      <label>分类（可选）
+        <input id="gallery-category" type="text" placeholder="舞台 / 日常 / 机场 / 物料…" maxlength="20">
+      </label>
+    </div>
+    <label>说明
+      <textarea id="gallery-content" maxlength="500" rows="4" required></textarea>
+    </label>
+    <div class="tl-form-row">
+      <label>图片（不超过 5MB）
+        <input id="gallery-image" type="file" accept="image/*" required>
+      </label>
+      <span id="gallery-image-info" class="image-info"></span>
+      <img id="gallery-image-preview" class="image-preview hidden" alt="图片预览">
+    </div>
+    <div class="tl-submit-foot">
+      <button type="submit">提交照片 ✦</button>
+      <span id="gallery-submit-msg" class="submit-msg"></span>
+    </div>
+  </form>
+
+  <div class="gallery-wall" id="gallery-wall"></div>
+</section>
+
 <audio id="bgm" loop preload="none"></audio>
 <button id="music-btn" class="music-disc" type="button" title="背景音乐">♪</button>
 

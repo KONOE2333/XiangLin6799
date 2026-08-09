@@ -1,4 +1,4 @@
--- ===================== 记忆时间轴投稿 · 轻量账号 · 审核 =====================
+-- ===================== 时间轴 / 照片图库投稿 · 轻量账号 · 审核 =====================
 -- 在 Supabase SQL Editor 中整段执行一次即可。
 
 create extension if not exists pgcrypto;
@@ -36,12 +36,31 @@ create table if not exists timeline_submissions (
   reviewed_at timestamptz
 );
 
+create table if not exists photo_submissions (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid references site_users(id) on delete set null,
+  submitter_name text not null,
+  title text not null,
+  content text not null,
+  category text,
+  image_url text not null,
+  status text not null default 'pending' check (status in ('pending', 'approved', 'rejected')),
+  reviewer_note text,
+  created_at timestamptz not null default now(),
+  reviewed_at timestamptz
+);
+
 alter table site_users enable row level security;
 alter table user_sessions enable row level security;
 alter table timeline_submissions enable row level security;
+alter table photo_submissions enable row level security;
 
 drop policy if exists "public read approved timeline" on timeline_submissions;
 create policy "public read approved timeline" on timeline_submissions
+for select using (status = 'approved');
+
+drop policy if exists "public read approved photo" on photo_submissions;
+create policy "public read approved photo" on photo_submissions
 for select using (status = 'approved');
 
 -- 轻量账号：注册 / 登录 / 会话
@@ -275,6 +294,131 @@ begin
 end
 $$;
 
+-- 照片投稿：必须登录，自动记录投稿人
+create or replace function public.submit_photo_entry(
+  p_token text,
+  p_title text,
+  p_content text,
+  p_category text default null,
+  p_image_url text default null
+) returns uuid
+language plpgsql security definer set search_path = public
+as $$
+declare v_user_id uuid;
+        v_display text;
+        v_id uuid;
+begin
+  select s.user_id into v_user_id
+  from public.user_sessions s
+  where s.token = p_token and s.expires_at > now();
+
+  if not found then
+    raise exception '请先登录';
+  end if;
+
+  select display_name into v_display
+  from public.site_users where id = v_user_id;
+
+  if length(trim(p_title)) < 1 or length(trim(p_title)) > 80 then
+    raise exception '标题需为 1-80 个字符';
+  end if;
+  if length(trim(p_content)) < 1 or length(trim(p_content)) > 500 then
+    raise exception '说明需为 1-500 个字符';
+  end if;
+  if nullif(trim(coalesce(p_image_url, '')), '') is null then
+    raise exception '请上传图片';
+  end if;
+
+  insert into public.photo_submissions(
+    user_id, submitter_name, title, content, category, image_url
+  )
+  values (
+    v_user_id,
+    v_display,
+    trim(p_title),
+    trim(p_content),
+    nullif(trim(coalesce(p_category, '')), ''),
+    trim(p_image_url)
+  )
+  returning id into v_id;
+
+  return v_id;
+end
+$$;
+
+create or replace function public.list_photo_submissions_for_review(p_admin_code text)
+returns table(
+  id uuid,
+  submitter_name text,
+  title text,
+  content text,
+  category text,
+  image_url text,
+  status text,
+  created_at timestamptz
+)
+language plpgsql security definer set search_path = public
+as $$
+begin
+  if p_admin_code <> 'yjn030218' then
+    raise exception '口令错误';
+  end if;
+
+  return query
+    select t.id, t.submitter_name, t.title, t.content,
+           t.category, t.image_url, t.status, t.created_at
+    from public.photo_submissions t
+    where t.status <> 'approved'
+    order by t.created_at desc;
+end
+$$;
+
+create or replace function public.approve_photo_submission(p_target_id uuid, p_admin_code text)
+returns void
+language plpgsql security definer set search_path = public
+as $$
+begin
+  if p_admin_code <> 'yjn030218' then
+    raise exception '口令错误';
+  end if;
+
+  update public.photo_submissions
+  set status = 'approved', reviewed_at = now()
+  where id = p_target_id;
+end
+$$;
+
+create or replace function public.reject_photo_submission(
+  p_target_id uuid,
+  p_admin_code text,
+  p_note text default ''
+) returns void
+language plpgsql security definer set search_path = public
+as $$
+begin
+  if p_admin_code <> 'yjn030218' then
+    raise exception '口令错误';
+  end if;
+
+  update public.photo_submissions
+  set status = 'rejected', reviewer_note = nullif(trim(p_note), ''), reviewed_at = now()
+  where id = p_target_id;
+end
+$$;
+
+create or replace function public.delete_photo_submission(p_target_id uuid, p_admin_code text)
+returns void
+language plpgsql security definer set search_path = public
+as $$
+begin
+  if p_admin_code <> 'yjn030218' then
+    raise exception '口令错误';
+  end if;
+
+  delete from public.photo_submissions where id = p_target_id;
+end
+$$;
+
 revoke all on function public.register_user(text, text, text) from public;
 revoke all on function public.login_user(text, text) from public;
 revoke all on function public.get_session_user(text) from public;
@@ -283,6 +427,11 @@ revoke all on function public.list_timeline_submissions_for_review(text) from pu
 revoke all on function public.approve_timeline_submission(uuid, text) from public;
 revoke all on function public.reject_timeline_submission(uuid, text, text) from public;
 revoke all on function public.delete_timeline_submission(uuid, text) from public;
+revoke all on function public.submit_photo_entry(text, text, text, text, text) from public;
+revoke all on function public.list_photo_submissions_for_review(text) from public;
+revoke all on function public.approve_photo_submission(uuid, text) from public;
+revoke all on function public.reject_photo_submission(uuid, text, text) from public;
+revoke all on function public.delete_photo_submission(uuid, text) from public;
 
 grant execute on function public.register_user(text, text, text) to anon, authenticated;
 grant execute on function public.login_user(text, text) to anon, authenticated;
@@ -292,6 +441,11 @@ grant execute on function public.list_timeline_submissions_for_review(text) to a
 grant execute on function public.approve_timeline_submission(uuid, text) to anon, authenticated;
 grant execute on function public.reject_timeline_submission(uuid, text, text) to anon, authenticated;
 grant execute on function public.delete_timeline_submission(uuid, text) to anon, authenticated;
+grant execute on function public.submit_photo_entry(text, text, text, text, text) to anon, authenticated;
+grant execute on function public.list_photo_submissions_for_review(text) to anon, authenticated;
+grant execute on function public.approve_photo_submission(uuid, text) to anon, authenticated;
+grant execute on function public.reject_photo_submission(uuid, text, text) to anon, authenticated;
+grant execute on function public.delete_photo_submission(uuid, text) to anon, authenticated;
 
 -- 图片上传：公开读取 + 匿名写入 submissions/ 目录
 insert into storage.buckets (id, name, public)
@@ -307,4 +461,20 @@ create policy "public insert timeline uploads" on storage.objects
 for insert with check (
   bucket_id = 'timeline-uploads' and
   (storage.foldername(name))[1] = 'submissions'
+);
+
+-- 照片投稿图片：公开读取 + 匿名写入 photo-submissions/ 目录
+insert into storage.buckets (id, name, public)
+values ('photo-uploads', 'photo-uploads', true)
+on conflict (id) do update set public = true;
+
+drop policy if exists "public read photo uploads" on storage.objects;
+create policy "public read photo uploads" on storage.objects
+for select using (bucket_id = 'photo-uploads');
+
+drop policy if exists "public insert photo uploads" on storage.objects;
+create policy "public insert photo uploads" on storage.objects
+for insert with check (
+  bucket_id = 'photo-uploads' and
+  (storage.foldername(name))[1] = 'photo-submissions'
 );

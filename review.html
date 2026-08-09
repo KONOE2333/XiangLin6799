@@ -4,11 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>投稿审核 · 翔霖小站</title>
-<meta name="description" content="审核时间轴投稿，通过后自动加入记忆时间轴。">
+<meta name="description" content="审核时间轴与照片投稿，通过后自动加入对应板块。">
 <meta name="theme-color" content="#060d24">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="css/style.css?v=22">
-<link rel="stylesheet" href="css/home.css?v=22">
+<link rel="stylesheet" href="css/style.css?v=23">
+<link rel="stylesheet" href="css/home.css?v=23">
 
 <script>document.documentElement.classList.add('js');</script>
 
@@ -68,15 +68,21 @@
 
 <section class="section review-section">
   <h2 class="section-title reveal">投稿审核</h2>
-  <p class="section-sub reveal">审核通过后，投稿会自动加入记忆时间轴对应年份</p>
+  <p class="section-sub reveal">审核通过后，投稿会自动加入对应板块</p>
   <div class="review-toolbar">
     <a class="review-back" href="timeline.html">← 返回记忆时间轴</a>
+    <a class="review-back" href="gallery.html">返回照片图库 →</a>
   </div>
 
   <div class="review-login" id="review-login">
     <input id="review-code" type="password" placeholder="站长口令" maxlength="32" autocomplete="off" aria-label="站长口令">
     <button id="review-enter" type="button">进入审核</button>
     <span id="review-msg" class="review-msg"></span>
+  </div>
+
+  <div class="review-tabs hidden" id="review-tabs">
+    <button class="on" data-type="timeline" type="button">时间轴投稿</button>
+    <button data-type="photo" type="button">照片投稿</button>
   </div>
 
   <div class="review-list hidden" id="review-body"></div>
@@ -109,15 +115,15 @@
 <audio id="bgm" loop preload="none"></audio>
 <button id="music-btn" class="music-disc" type="button" title="背景音乐">♪</button>
 
-<script src="js/starrain.js?v=22"></script>
+<script src="js/starrain.js?v=23"></script>
 
-<script src="js/wall-config.js?v=22"></script>
-<script src="js/timeline-review.js?v=22"></script>
-<script src="js/audio.js?v=22"></script>
+<script src="js/wall-config.js?v=23"></script>
+<script src="js/timeline-review.js?v=23"></script>
+<script src="js/audio.js?v=23"></script>
 
-<script src="js/reveal.js?v=22"></script>
-<script src="js/nav.js?v=22"></script>
-<script src="js/gate.js?v=22"></script>
+<script src="js/reveal.js?v=23"></script>
+<script src="js/nav.js?v=23"></script>
+<script src="js/gate.js?v=23"></script>
 
 </body>
 </html>

@@ -7,7 +7,7 @@ const srcDir = path.join(root, "src");
 const pagesDir = path.join(srcDir, "pages");
 const partialsDir = path.join(srcDir, "partials");
 const STAR_RAIN_SCRIPT = '<script src="js/starrain.js?v=5"></script>';
-const CACHE_VERSION = "22";
+const CACHE_VERSION = "23";
 
 const pages = {
   "index.html": {
@@ -39,7 +39,7 @@ const pages = {
   },
   "review.html": {
     title: "投稿审核 · 翔霖小站",
-    description: "审核时间轴投稿，通过后自动加入记忆时间轴。",
+    description: "审核时间轴与照片投稿，通过后自动加入对应板块。",
     active: "review.html",
     pageStyles: "",
     preScripts: `
@@ -54,11 +54,14 @@ const pages = {
     pageStyles: '\n<link rel="stylesheet" href="css/gallery.css?v=5">',
     starRain: STAR_RAIN_SCRIPT,
     preScripts: `
+<script src="js/wall-config.js?v=5"></script>
+<script src="js/site-auth.js?v=5"></script>
 <script src="js/photos-data.js?v=5"></script>
 <script src="js/birthday-data.js?v=5"></script>
 <script src="js/gallery-extra-data.js?v=5"></script>
 <script src="js/gallery-data.js?v=5"></script>
-<script src="js/gallery.js?v=5"></script>`,
+<script src="js/gallery.js?v=5"></script>
+<script src="js/gallery-community.js?v=5"></script>`,
     postScripts: ""
   },
   "stages.html": {
