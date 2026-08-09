@@ -1,4 +1,4 @@
-// ===================== 照片图库投稿 + 小海盐影像墙 =====================
+// ===================== 照片图库投稿 + 可拖拽小海盐影像墙 =====================
 (function () {
   "use strict";
   const auth = window.SiteAuth;
@@ -16,6 +16,9 @@
   let approvedPhotos = [];
   let adminMode = false;
   let adminCode = "";
+  let dragPhoto = null;
+  let dragOffsetX = 0;
+  let dragOffsetY = 0;
 
   function setMsg(el, text, ok) {
     if (!el) return;
@@ -182,28 +185,24 @@
     if (!wall) return;
     wall.innerHTML = "";
     if (!approvedPhotos.length) {
-      wall.innerHTML = '<p class="gallery-wall-empty">还没有审核通过的影像，等第一张投稿上墙吧～</p>';
+      wall.innerHTML = '<p class="gallery-wall-empty">还没有影像上墙，来贴第一张吧～</p>';
       return;
     }
     approvedPhotos.forEach((item) => {
-      const card = document.createElement("article");
-      card.className = "gallery-card";
-      card.dataset.id = item.id;
+      const photo = document.createElement("div");
+      photo.className = "sticky-photo";
+      photo.dataset.id = item.id;
+      photo.style.left = (item.pos_x == null ? 50 : Number(item.pos_x)) + "%";
+      photo.style.top = (item.pos_y == null ? 35 : Number(item.pos_y)) + "%";
+      photo.style.setProperty("--rot", (item.rot || 0) + "deg");
       const del = (adminMode && item.id)
         ? '<button class="gallery-delete-btn" type="button" data-id="' + esc(item.id) + '">删除</button>'
         : "";
-      card.innerHTML =
-        '<div class="gallery-card-img"><img src="' + esc(item.image_url) + '" alt="' + esc(item.title) + '" loading="lazy"></div>' +
-        '<div class="gallery-card-body">' +
-          '<h3>' + esc(item.title) + '</h3>' +
-          '<p>' + esc(item.content) + "</p>" +
-          '<div class="gallery-card-meta">' +
-            (item.category ? '<span class="gallery-tag">' + esc(item.category) + "</span>" : "") +
-            '<span>' + esc(item.submitter_name) + "</span>" +
-          "</div>" +
-          del +
-        "</div>";
-      wall.appendChild(card);
+      photo.innerHTML =
+        del +
+        '<img src="' + esc(item.image_url) + '" alt="' + esc(item.title) + '" loading="lazy" draggable="false">' +
+        (item.title ? '<div class="sticky-title">' + esc(item.title) + "</div>" : "");
+      wall.appendChild(photo);
     });
   }
 
@@ -212,7 +211,7 @@
     if (!c.supabase || !c.supabase.url) return;
     try {
       const r = await fetch(c.supabase.url +
-        "/rest/v1/photo_submissions?select=id,title,content,category,image_url,submitter_name&status=eq.approved&order=created_at.desc", {
+        "/rest/v1/photo_submissions?select=id,title,content,category,image_url,submitter_name,pos_x,pos_y,rot&status=eq.approved&order=created_at.desc", {
           headers: {
             "apikey": c.supabase.anonKey,
             "Authorization": "Bearer " + c.supabase.anonKey
@@ -246,7 +245,7 @@
     }
     const btn = submitForm.querySelector("button[type=submit]");
     btn.disabled = true;
-    setMsg($("gallery-submit-msg"), "正在提交…");
+    setMsg($("gallery-submit-msg"), "正在贴上影像墙…");
     try {
       const imageUrl = await uploadImage(file);
       await callRpc("submit_photo_entry", {
@@ -259,7 +258,8 @@
       submitForm.reset();
       if (imagePreview) imagePreview.classList.add("hidden");
       if (imageInfo) imageInfo.textContent = "";
-      setMsg($("gallery-submit-msg"), "照片已提交，审核通过后会出现在小海盐影像墙。", true);
+      await loadWall();
+      setMsg($("gallery-submit-msg"), "已贴上影像墙，拖动照片可以调整位置。", true);
     } catch (err) {
       setMsg($("gallery-submit-msg"), err && err.message ? err.message : "提交失败，请稍后重试");
     } finally {
@@ -286,6 +286,47 @@
     adminCode = code.trim();
     adminToggle.textContent = "退出站长模式";
     renderWall();
+  });
+
+  if (wall) wall.addEventListener("pointerdown", (e) => {
+    const del = e.target.closest(".gallery-delete-btn");
+    if (del) return;
+    if (!auth.getUser()) return;
+    const photo = e.target.closest(".sticky-photo");
+    if (!photo) return;
+    const rect = photo.getBoundingClientRect();
+    dragPhoto = photo;
+    dragOffsetX = e.clientX - rect.left;
+    dragOffsetY = e.clientY - rect.top;
+    photo.classList.add("dragging");
+    photo.setPointerCapture(e.pointerId);
+  });
+
+  document.addEventListener("pointermove", (e) => {
+    if (!dragPhoto || !wall) return;
+    const board = wall.getBoundingClientRect();
+    const x = (e.clientX - board.left - dragOffsetX) / board.width * 100;
+    const y = (e.clientY - board.top - dragOffsetY) / board.height * 100;
+    dragPhoto.style.left = Math.max(2, Math.min(98, x)) + "%";
+    dragPhoto.style.top = Math.max(2, Math.min(98, y)) + "%";
+  });
+
+  document.addEventListener("pointerup", async (e) => {
+    if (!dragPhoto) return;
+    const photo = dragPhoto;
+    dragPhoto = null;
+    photo.classList.remove("dragging");
+    try {
+      await callRpc("move_photo_submission", {
+        p_token: auth.getToken(),
+        p_target_id: photo.dataset.id,
+        p_x: Number(parseFloat(photo.style.left)),
+        p_y: Number(parseFloat(photo.style.top)),
+        p_rot: Number(photo.style.getPropertyValue("--rot").replace("deg", "") || 0)
+      });
+    } catch (err) {
+      console.warn("位置保存失败：", err);
+    }
   });
 
   if (wall) wall.addEventListener("click", async (e) => {

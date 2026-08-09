@@ -427,3 +427,230 @@ body.photo-sphere.scrolled .memory-core-wrap {
     gap: 12px;
   }
 }
+
+/* ===================== 蓄力爱心 / 胶卷模式 ===================== */
+.core-heart {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 18px;
+  height: 18px;
+  margin: -9px 0 0 -9px;
+  color: #ff8fc4;
+  font-size: 18px;
+  line-height: 1;
+  font-style: normal;
+  pointer-events: none;
+  text-shadow: 0 0 10px rgba(255, 143, 196, 0.9);
+  animation: core-heart 0.9s ease-out forwards;
+}
+@keyframes core-heart {
+  from {
+    opacity: 1;
+    transform: translate(0, 0) scale(0.6) rotate(-8deg);
+  }
+  to {
+    opacity: 0;
+    transform: translate(var(--px), var(--py)) scale(1.25) rotate(14deg);
+  }
+}
+
+.sphere-stage.film-active {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.55s ease;
+}
+
+.film-strip-layer {
+  position: fixed;
+  top: 76px;
+  left: 0;
+  right: 0;
+  z-index: 68;
+  padding: 12px 0 10px;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-16px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+  background: linear-gradient(180deg, rgba(5, 9, 25, 0.92), rgba(5, 9, 25, 0.72));
+  border-bottom: 1px solid rgba(170, 185, 255, 0.2);
+  box-shadow: 0 18px 50px rgba(2, 6, 20, 0.45);
+}
+.film-strip-layer.show {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+.film-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow: hidden;
+}
+.film-row {
+  display: flex;
+  width: max-content;
+  gap: 10px;
+  padding: 4px 0;
+}
+.film-row-a {
+  animation: film-scroll-a 42s linear infinite;
+}
+.film-row-b {
+  animation: film-scroll-b 30s linear infinite;
+}
+.film-cell {
+  flex: 0 0 auto;
+  width: 126px;
+  height: 92px;
+  padding: 6px;
+  border-radius: 5px;
+  background: #fdfcf7;
+  box-shadow: 0 10px 26px rgba(2, 6, 20, 0.5);
+  transform: rotate(-1.2deg);
+}
+.film-cell:nth-child(even) {
+  transform: rotate(1.4deg);
+}
+.film-cell img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border-radius: 2px;
+}
+@keyframes film-scroll-a {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+@keyframes film-scroll-b {
+  from { transform: translateX(-50%); }
+  to { transform: translateX(0); }
+}
+.film-back,
+.film-scroll-hint {
+  position: absolute;
+  z-index: 3;
+  font-family: var(--font-latin);
+}
+.film-back {
+  right: 18px;
+  top: 10px;
+  border: 1px solid rgba(170, 185, 255, 0.4);
+  border-radius: 999px;
+  background: rgba(10, 16, 40, 0.8);
+  color: #cfc4ff;
+  font-size: 12px;
+  padding: 7px 14px;
+  cursor: pointer;
+}
+.film-scroll-hint {
+  right: 22px;
+  bottom: 12px;
+  color: #8f9ace;
+  font-size: 11px;
+  letter-spacing: 1px;
+}
+
+/* ===================== 可拖拽粘贴墙 ===================== */
+.gallery-wall {
+  position: relative;
+  width: 100%;
+  max-width: 1160px;
+  height: min(72vh, 720px);
+  min-height: 480px;
+  margin: 30px auto 0;
+  overflow: hidden;
+  border-radius: 26px;
+  border: 2px solid rgba(170, 185, 255, 0.28);
+  background:
+    radial-gradient(circle at 18% 18%, rgba(139, 127, 240, 0.18), transparent 32%),
+    radial-gradient(circle at 82% 76%, rgba(246, 168, 205, 0.16), transparent 34%),
+    linear-gradient(155deg, #101b45, #1a2457 55%, #121c4d);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 24px 70px rgba(2, 6, 20, 0.5);
+}
+.sticky-photo {
+  position: absolute;
+  width: 168px;
+  padding: 7px 7px 9px;
+  border-radius: 4px;
+  background: #fdfcf7;
+  box-shadow: 0 14px 34px rgba(2, 6, 20, 0.45);
+  transform: translate(-50%, -50%) rotate(var(--rot, 0deg));
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  transition: box-shadow 0.2s ease;
+}
+.sticky-photo.dragging {
+  cursor: grabbing;
+  z-index: 40;
+  box-shadow: 0 20px 50px rgba(2, 6, 20, 0.65);
+}
+.sticky-photo img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: 2px;
+}
+.sticky-photo .sticky-title {
+  margin-top: 6px;
+  color: #4a4363;
+  font-size: 11px;
+  line-height: 1.4;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.gallery-delete-btn {
+  position: absolute;
+  top: -9px;
+  right: -7px;
+  z-index: 5;
+  border: 1px solid rgba(255, 155, 176, 0.7);
+  border-radius: 999px;
+  background: rgba(25, 12, 40, 0.92);
+  color: #ffb3c4;
+  font-size: 11px;
+  padding: 3px 9px;
+  cursor: pointer;
+}
+
+body.photo-sphere.scrolled .film-strip-layer {
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+@media (max-width: 720px) {
+  .film-strip-layer {
+    top: 64px;
+    padding-top: 8px;
+  }
+  .film-cell {
+    width: 92px;
+    height: 68px;
+    padding: 4px;
+  }
+  .film-back {
+    position: static;
+    display: block;
+    margin: 10px auto 0;
+  }
+  .film-scroll-hint {
+    position: static;
+    display: block;
+    text-align: center;
+    margin: 10px 0 0;
+  }
+  .gallery-wall {
+    height: 66vh;
+    min-height: 420px;
+  }
+  .sticky-photo {
+    width: 130px;
+    padding: 5px 5px 7px;
+  }
+}

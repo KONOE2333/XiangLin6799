@@ -44,11 +44,18 @@ create table if not exists photo_submissions (
   content text not null,
   category text,
   image_url text not null,
+  pos_x numeric not null default 50,
+  pos_y numeric not null default 35,
+  rot numeric not null default 0,
   status text not null default 'pending' check (status in ('pending', 'approved', 'rejected')),
   reviewer_note text,
   created_at timestamptz not null default now(),
   reviewed_at timestamptz
 );
+
+alter table photo_submissions add column if not exists pos_x numeric not null default 50;
+alter table photo_submissions add column if not exists pos_y numeric not null default 35;
+alter table photo_submissions add column if not exists rot numeric not null default 0;
 
 alter table site_users enable row level security;
 alter table user_sessions enable row level security;
@@ -330,7 +337,7 @@ begin
   end if;
 
   insert into public.photo_submissions(
-    user_id, submitter_name, title, content, category, image_url
+    user_id, submitter_name, title, content, category, image_url, status
   )
   values (
     v_user_id,
@@ -338,11 +345,37 @@ begin
     trim(p_title),
     trim(p_content),
     nullif(trim(coalesce(p_category, '')), ''),
-    trim(p_image_url)
+    trim(p_image_url),
+    'approved'
   )
   returning id into v_id;
 
   return v_id;
+end
+$$;
+
+create or replace function public.move_photo_submission(
+  p_token text,
+  p_target_id uuid,
+  p_x numeric,
+  p_y numeric,
+  p_rot numeric
+) returns void
+language plpgsql security definer set search_path = public
+as $$
+begin
+  if not exists (
+    select 1 from public.user_sessions
+    where token = p_token and expires_at > now()
+  ) then
+    raise exception '请先登录';
+  end if;
+
+  update public.photo_submissions
+  set pos_x = greatest(0, least(100, p_x)),
+      pos_y = greatest(0, least(100, p_y)),
+      rot = p_rot
+  where id = p_target_id and status = 'approved';
 end
 $$;
 
@@ -432,6 +465,7 @@ revoke all on function public.list_photo_submissions_for_review(text) from publi
 revoke all on function public.approve_photo_submission(uuid, text) from public;
 revoke all on function public.reject_photo_submission(uuid, text, text) from public;
 revoke all on function public.delete_photo_submission(uuid, text) from public;
+revoke all on function public.move_photo_submission(text, uuid, numeric, numeric, numeric) from public;
 
 grant execute on function public.register_user(text, text, text) to anon, authenticated;
 grant execute on function public.login_user(text, text) to anon, authenticated;
@@ -446,6 +480,7 @@ grant execute on function public.list_photo_submissions_for_review(text) to anon
 grant execute on function public.approve_photo_submission(uuid, text) to anon, authenticated;
 grant execute on function public.reject_photo_submission(uuid, text, text) to anon, authenticated;
 grant execute on function public.delete_photo_submission(uuid, text) to anon, authenticated;
+grant execute on function public.move_photo_submission(text, uuid, numeric, numeric, numeric) to anon, authenticated;
 
 -- 图片上传：公开读取 + 匿名写入 submissions/ 目录
 insert into storage.buckets (id, name, public)

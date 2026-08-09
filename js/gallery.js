@@ -10,8 +10,12 @@
   const memoryCore = document.getElementById("memory-core");
   const ringFill = document.getElementById("core-ring-fill");
   const hint = document.getElementById("sphere-hint");
+  const filmStrip = document.getElementById("film-strip");
+  const filmRows = document.getElementById("film-rows");
+  const filmBack = document.getElementById("film-back");
   const items = window.GALLERY || [];
   if (!stage || !sphere || !items.length) return;
+  const CHARGE_MS = 1400;
 
   const isMobile = window.matchMedia &&
     window.matchMedia("(max-width: 720px), (pointer: coarse)").matches;
@@ -25,6 +29,8 @@
   let chargePointerId = null;
   let lastAngle = 0;
   let lastChargeTime = 0;
+  let chargeStart = 0;
+  let lastHeartAt = 0;
   let coreAngle = 0;
   let lastTier = -1;
   let rx = 0;
@@ -36,6 +42,7 @@
   let dragged = false;
   const pointers = new Map();
   let pinchStartDist = 0;
+  let filmOpen = false;
 
   function layout() {
     // 球半径、照片尺寸和透视距离都集中在这里，方便后续微调。
@@ -69,8 +76,51 @@
     selected = null;
   }
 
-  function exitSphere() {
-    window.location.href = "index.html";
+  function buildFilmStrip() {
+    if (!filmRows || filmRows.children.length) return;
+    const rows = [
+      document.createElement("div"),
+      document.createElement("div")
+    ];
+    rows[0].className = "film-row film-row-a";
+    rows[1].className = "film-row film-row-b";
+    const half = Math.ceil(items.length / 2);
+    items.forEach((item, i) => {
+      const row = rows[i < half ? 0 : 1];
+      const cell = document.createElement("div");
+      cell.className = "film-cell";
+      cell.innerHTML = '<img src="' + item.src + '" alt="' + (item.alt || "") + '" loading="lazy">';
+      row.appendChild(cell);
+    });
+    rows.forEach((row) => {
+      row.innerHTML += row.innerHTML;
+    });
+    filmRows.appendChild(rows[0]);
+    filmRows.appendChild(rows[1]);
+  }
+
+  function openFilmStrip() {
+    if (!open || filmOpen) return;
+    filmOpen = true;
+    buildFilmStrip();
+    stage.classList.add("film-active");
+    sphere.classList.add("is-film");
+    if (filmStrip) {
+      filmStrip.classList.add("show");
+      filmStrip.setAttribute("aria-hidden", "false");
+    }
+    if (hint) hint.textContent = "胶卷滚动中 · 下滑查看小海盐影像墙";
+  }
+
+  function closeFilmStrip() {
+    filmOpen = false;
+    if (filmStrip) {
+      filmStrip.classList.remove("show");
+      filmStrip.setAttribute("aria-hidden", "true");
+    }
+    stage.classList.remove("film-active");
+    sphere.classList.remove("is-film");
+    if (hint) hint.textContent = "拖拽旋转 · 双击空白区域 → 胶卷模式";
   }
 
   function openSphere() {
@@ -78,7 +128,7 @@
     open = true;
     if (coreWrap) coreWrap.classList.add("hidden");
     if (memoryCore) memoryCore.classList.remove("active");
-    if (hint) hint.textContent = "拖拽旋转 · 点击照片放大 · 双击空白/ESC 退出";
+    if (hint) hint.textContent = "拖拽旋转 · 双击空白区域 → 胶卷模式";
     stage.classList.add("burst");
     sphere.classList.add("is-open");
     document.querySelectorAll(".sphere-photo").forEach((photo) => {
@@ -114,7 +164,8 @@
   function spawnParticle() {
     if (!coreWrap) return;
     const p = document.createElement("i");
-    p.className = "core-particle";
+    p.className = "core-heart";
+    p.textContent = "♥";
     const angle = Math.random() * Math.PI * 2;
     const dist = 48 + Math.random() * 76;
     p.style.setProperty("--px", (Math.cos(angle) * dist).toFixed(0) + "px");
@@ -126,6 +177,8 @@
   function completeCharge() {
     if (open || burstTriggered || charge < 1) return;
     burstTriggered = true;
+    charging = false;
+    chargePointerId = null;
     if (memoryCore) memoryCore.classList.add("charged");
     if (coreWrap) coreWrap.classList.add("charged");
     if (navigator.vibrate) navigator.vibrate(30);
@@ -214,7 +267,7 @@
     if (pointers.size === 2) {
       const pts = [...pointers.values()];
       const dist = Math.hypot(pts[0].x - pts[1].x, pts[0].y - pts[1].y);
-      if (pinchStartDist && dist < pinchStartDist * 0.78) exitSphere();
+      if (pinchStartDist && dist < pinchStartDist * 0.78) openFilmStrip();
       pinchStartDist = dist;
     }
   });
@@ -235,7 +288,7 @@
   });
   stage.addEventListener("dblclick", (e) => {
     if (!open) return;
-    if (!e.target.closest(".sphere-photo")) exitSphere();
+    if (!e.target.closest(".sphere-photo")) openFilmStrip();
   });
 
   if (memoryCore) {
@@ -243,60 +296,41 @@
       e.preventDefault();
       e.stopPropagation();
       charging = true;
+      charge = 0;
+      lastTier = -1;
       chargePointerId = e.pointerId;
-      lastAngle = coreAngleFor(e);
-      lastChargeTime = performance.now();
+      chargeStart = performance.now();
+      lastHeartAt = 0;
       memoryCore.classList.add("active");
-    });
-
-    document.addEventListener("pointermove", (e) => {
-      if (!charging || e.pointerId !== chargePointerId) return;
-      const now = performance.now();
-      const dt = Math.min(0.05, (now - lastChargeTime) / 1000);
-      lastChargeTime = now;
-      if (dt <= 0) return;
-      const a = coreAngleFor(e);
-      let delta = a - lastAngle;
-      if (delta > Math.PI) delta -= Math.PI * 2;
-      if (delta < -Math.PI) delta += Math.PI * 2;
-      lastAngle = a;
-      coreAngle += delta;
-      memoryCore.style.setProperty("--spin", (coreAngle * 180 / Math.PI).toFixed(1) + "deg");
-
-      const speed = Math.abs(delta) / dt;
-      const perRad = 0.09 + Math.min(0.12, speed * 0.002);
-      charge = Math.min(1, charge + Math.abs(delta) * perRad);
       updateCharge();
-      if (charge >= 1) completeCharge();
     });
 
-    document.addEventListener("pointerup", (e) => {
-      if (e.pointerId === chargePointerId) {
-        charging = false;
-        memoryCore.classList.remove("active");
-        chargePointerId = null;
+    function stopCharge(e) {
+      if (e.pointerId !== chargePointerId) return;
+      charging = false;
+      memoryCore.classList.remove("active");
+      chargePointerId = null;
+      if (charge < 1) {
+        charge = 0;
+        updateCharge();
       }
-    });
-    document.addEventListener("pointercancel", (e) => {
-      if (e.pointerId === chargePointerId) {
-        charging = false;
-        memoryCore.classList.remove("active");
-        chargePointerId = null;
-      }
-    });
+    }
+
+    document.addEventListener("pointerup", stopCharge);
+    document.addEventListener("pointercancel", stopCharge);
   }
 
   setTimeout(() => {
     if (!open && coreWrap) {
       coreWrap.classList.add("show");
-      if (hint) hint.textContent = "按住记忆核心 · 转动充能";
+      if (hint) hint.textContent = "长按记忆核心 · 蓄力充能";
     }
   }, 1300);
 
-  if (exitBtn) exitBtn.addEventListener("click", exitSphere);
+  if (filmBack) filmBack.addEventListener("click", closeFilmStrip);
   document.addEventListener("keydown", (e) => {
     if (!open) return;
-    if (e.key === "Escape") exitSphere();
+    if (e.key === "Escape" && filmOpen) closeFilmStrip();
     if (e.key === "ArrowLeft") { ry -= 4; applyRotation(); }
     if (e.key === "ArrowRight") { ry += 4; applyRotation(); }
     if (e.key === "ArrowUp") { rx = Math.max(-30, rx - 3); applyRotation(); }
@@ -311,7 +345,16 @@
   function tick(now) {
     const dt = Math.min(0.05, (now - last) / 1000);
     last = now;
-    if (charging && !isMobile && Math.random() < 0.45) spawnParticle();
+    if (charging) {
+      const now2 = performance.now();
+      charge = Math.min(1, (now2 - chargeStart) / CHARGE_MS);
+      updateCharge();
+      if (now2 - lastHeartAt > 90) {
+        lastHeartAt = now2;
+        spawnParticle();
+      }
+      if (charge >= 1) completeCharge();
+    }
     if (open && !dragging) {
       const speed = selected ? 0.03 : (isMobile ? 0.06 : 0.12);
       ry += speed * dt * 60;
