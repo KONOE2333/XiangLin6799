@@ -323,8 +323,8 @@ begin
   if length(trim(p_title)) < 1 or length(trim(p_title)) > 80 then
     raise exception '标题需为 1-80 个字符';
   end if;
-  if length(trim(p_content)) < 1 or length(trim(p_content)) > 500 then
-    raise exception '说明需为 1-500 个字符';
+  if length(trim(p_content)) > 500 then
+    raise exception '说明不能超过 500 个字符';
   end if;
   if nullif(trim(coalesce(p_image_url, '')), '') is null then
     raise exception '请上传图片';
@@ -337,7 +337,7 @@ begin
     trim(p_owner_key),
     '小海盐',
     trim(p_title),
-    trim(p_content),
+    coalesce(trim(p_content), '小海盐的照片'),
     nullif(trim(coalesce(p_category, '')), ''),
     trim(p_image_url),
     'approved'

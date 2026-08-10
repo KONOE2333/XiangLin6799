@@ -178,7 +178,7 @@
       await callRpc("submit_photo_entry", {
         p_owner_key: getGuestId(),
         p_title: title || "小海盐的照片",
-        p_content: "",
+        p_content: "小海盐的照片",
         p_category: null,
         p_image_url: imageUrl
       });
