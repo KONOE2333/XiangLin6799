@@ -7,7 +7,7 @@ const srcDir = path.join(root, "src");
 const pagesDir = path.join(srcDir, "pages");
 const partialsDir = path.join(srcDir, "partials");
 const STAR_RAIN_SCRIPT = '<script src="js/starrain.js?v=5"></script>';
-const CACHE_VERSION = "24";
+const CACHE_VERSION = "25";
 
 const pages = {
   "index.html": {
@@ -55,7 +55,6 @@ const pages = {
     starRain: STAR_RAIN_SCRIPT,
     preScripts: `
 <script src="js/wall-config.js?v=5"></script>
-<script src="js/site-auth.js?v=5"></script>
 <script src="js/photos-data.js?v=5"></script>
 <script src="js/birthday-data.js?v=5"></script>
 <script src="js/gallery-extra-data.js?v=5"></script>

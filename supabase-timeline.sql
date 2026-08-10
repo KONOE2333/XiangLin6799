@@ -39,6 +39,7 @@ create table if not exists timeline_submissions (
 create table if not exists photo_submissions (
   id uuid primary key default gen_random_uuid(),
   user_id uuid references site_users(id) on delete set null,
+  owner_key text,
   submitter_name text not null,
   title text not null,
   content text not null,
@@ -56,6 +57,7 @@ create table if not exists photo_submissions (
 alter table photo_submissions add column if not exists pos_x numeric not null default 50;
 alter table photo_submissions add column if not exists pos_y numeric not null default 35;
 alter table photo_submissions add column if not exists rot numeric not null default 0;
+alter table photo_submissions add column if not exists owner_key text;
 
 alter table site_users enable row level security;
 alter table user_sessions enable row level security;
@@ -301,9 +303,9 @@ begin
 end
 $$;
 
--- 照片投稿：必须登录，自动记录投稿人
+-- 照片投稿：匿名访客共享墙，自动直接公开
 create or replace function public.submit_photo_entry(
-  p_token text,
+  p_owner_key text,
   p_title text,
   p_content text,
   p_category text default null,
@@ -311,20 +313,11 @@ create or replace function public.submit_photo_entry(
 ) returns uuid
 language plpgsql security definer set search_path = public
 as $$
-declare v_user_id uuid;
-        v_display text;
-        v_id uuid;
+declare v_id uuid;
 begin
-  select s.user_id into v_user_id
-  from public.user_sessions s
-  where s.token = p_token and s.expires_at > now();
-
-  if not found then
-    raise exception '请先登录';
+  if length(trim(coalesce(p_owner_key, ''))) < 4 then
+    raise exception '访客标识无效';
   end if;
-
-  select display_name into v_display
-  from public.site_users where id = v_user_id;
 
   if length(trim(p_title)) < 1 or length(trim(p_title)) > 80 then
     raise exception '标题需为 1-80 个字符';
@@ -337,11 +330,11 @@ begin
   end if;
 
   insert into public.photo_submissions(
-    user_id, submitter_name, title, content, category, image_url, status
+    owner_key, submitter_name, title, content, category, image_url, status
   )
   values (
-    v_user_id,
-    v_display,
+    trim(p_owner_key),
+    '小海盐',
     trim(p_title),
     trim(p_content),
     nullif(trim(coalesce(p_category, '')), ''),
@@ -355,7 +348,6 @@ end
 $$;
 
 create or replace function public.move_photo_submission(
-  p_token text,
   p_target_id uuid,
   p_x numeric,
   p_y numeric,
@@ -364,18 +356,21 @@ create or replace function public.move_photo_submission(
 language plpgsql security definer set search_path = public
 as $$
 begin
-  if not exists (
-    select 1 from public.user_sessions
-    where token = p_token and expires_at > now()
-  ) then
-    raise exception '请先登录';
-  end if;
-
   update public.photo_submissions
   set pos_x = greatest(0, least(100, p_x)),
       pos_y = greatest(0, least(100, p_y)),
       rot = p_rot
   where id = p_target_id and status = 'approved';
+end
+$$;
+
+create or replace function public.delete_own_photo_submission(p_target_id uuid, p_owner_key text)
+returns void
+language plpgsql security definer set search_path = public
+as $$
+begin
+  delete from public.photo_submissions
+  where id = p_target_id and owner_key = p_owner_key and status = 'approved';
 end
 $$;
 
@@ -465,7 +460,8 @@ revoke all on function public.list_photo_submissions_for_review(text) from publi
 revoke all on function public.approve_photo_submission(uuid, text) from public;
 revoke all on function public.reject_photo_submission(uuid, text, text) from public;
 revoke all on function public.delete_photo_submission(uuid, text) from public;
-revoke all on function public.move_photo_submission(text, uuid, numeric, numeric, numeric) from public;
+revoke all on function public.move_photo_submission(uuid, numeric, numeric, numeric) from public;
+revoke all on function public.delete_own_photo_submission(uuid, text) from public;
 
 grant execute on function public.register_user(text, text, text) to anon, authenticated;
 grant execute on function public.login_user(text, text) to anon, authenticated;
@@ -480,7 +476,8 @@ grant execute on function public.list_photo_submissions_for_review(text) to anon
 grant execute on function public.approve_photo_submission(uuid, text) to anon, authenticated;
 grant execute on function public.reject_photo_submission(uuid, text, text) to anon, authenticated;
 grant execute on function public.delete_photo_submission(uuid, text) to anon, authenticated;
-grant execute on function public.move_photo_submission(text, uuid, numeric, numeric, numeric) to anon, authenticated;
+grant execute on function public.move_photo_submission(uuid, numeric, numeric, numeric) to anon, authenticated;
+grant execute on function public.delete_own_photo_submission(uuid, text) to anon, authenticated;
 
 -- 图片上传：公开读取 + 匿名写入 submissions/ 目录
 insert into storage.buckets (id, name, public)

@@ -1,128 +1,43 @@
-// ===================== 照片图库投稿 + 可拖拽小海盐影像墙 =====================
+// ===================== 小海盐星空软木板（匿名共享、可拖拽） =====================
 (function () {
   "use strict";
-  const auth = window.SiteAuth;
-  if (!auth) return;
-
   const $ = (id) => document.getElementById(id);
-  const authPanel = $("gallery-auth-panel");
-  const authMsg = $("gallery-auth-msg");
-  const submitForm = $("gallery-submit-form");
+  const board = $("gallery-board");
+  const closeBtn = $("gallery-board-close");
   const wall = $("gallery-wall");
+  const form = $("gallery-upload-form");
   const imageInput = $("gallery-image");
-  const imagePreview = $("gallery-image-preview");
-  const imageInfo = $("gallery-image-info");
+  const titleInput = $("gallery-title");
+  const msgEl = $("gallery-upload-msg");
+  const adminToggle = $("gallery-admin-toggle");
+  const GUEST_KEY = "xl_photo_guest_id";
   const MAX_SIZE = 5 * 1024 * 1024;
-  let approvedPhotos = [];
+  let photos = [];
+  let loaded = false;
   let adminMode = false;
   let adminCode = "";
   let dragPhoto = null;
   let dragOffsetX = 0;
   let dragOffsetY = 0;
 
-  function setMsg(el, text, ok) {
-    if (!el) return;
-    el.textContent = text || "";
-    el.classList.toggle("ok", !!ok);
-  }
-
-  function showAuth() {
-    if (!authPanel) return;
-    authPanel.classList.remove("hidden");
-    if (submitForm) submitForm.classList.add("hidden");
-  }
-
-  function showForm() {
-    if (!authPanel) return;
-    authPanel.classList.add("hidden");
-    if (submitForm) submitForm.classList.remove("hidden");
-    const user = auth.getUser();
-    if ($("gallery-submit-who") && user) {
-      $("gallery-submit-who").textContent = "正在以 " + user.display_name + " 的身份投稿";
-    }
-  }
-
-  function switchAuthTab(mode) {
-    const login = $("gallery-auth-tab-login");
-    const reg = $("gallery-auth-tab-register");
-    const toLogin = mode === "login";
-    $("gallery-auth-login").classList.toggle("hidden", !toLogin);
-    $("gallery-auth-register").classList.toggle("hidden", toLogin);
-    if (login) login.classList.toggle("on", toLogin);
-    if (reg) reg.classList.toggle("on", !toLogin);
-    setMsg(authMsg, "");
-  }
-
-  const tabLogin = $("gallery-auth-tab-login");
-  const tabRegister = $("gallery-auth-tab-register");
-  if (tabLogin) tabLogin.addEventListener("click", () => switchAuthTab("login"));
-  if (tabRegister) tabRegister.addEventListener("click", () => switchAuthTab("register"));
-
-  const loginBtn = $("gallery-login-btn");
-  if (loginBtn) loginBtn.addEventListener("click", async () => {
-    const username = $("gallery-login-username").value.trim();
-    const password = $("gallery-login-password").value;
-    if (!username || !password) return setMsg(authMsg, "请输入用户名和密码");
-    loginBtn.disabled = true;
+  function getGuestId() {
     try {
-      await auth.login(username, password);
-      showForm();
+      let id = localStorage.getItem(GUEST_KEY);
+      if (!id) {
+        id = "g_" + Date.now().toString(36) + "_" + Math.random().toString(16).slice(2, 10);
+        localStorage.setItem(GUEST_KEY, id);
+      }
+      return id;
     } catch (e) {
-      setMsg(authMsg, e && e.message ? e.message : "登录失败");
-    } finally {
-      loginBtn.disabled = false;
+      return "g_" + Date.now().toString(36);
     }
-  });
-
-  const registerBtn = $("gallery-register-btn");
-  if (registerBtn) registerBtn.addEventListener("click", async () => {
-    const username = $("gallery-register-username").value.trim();
-    const password = $("gallery-register-password").value;
-    if (!username || !password) return setMsg(authMsg, "请填写用户名和密码");
-    registerBtn.disabled = true;
-    try {
-      await auth.register(username, password);
-      showForm();
-    } catch (e) {
-      setMsg(authMsg, e && e.message ? e.message : "注册失败");
-    } finally {
-      registerBtn.disabled = false;
-    }
-  });
-
-  const logoutBtn = $("gallery-logout-btn");
-  if (logoutBtn) logoutBtn.addEventListener("click", () => {
-    auth.logout();
-    if (submitForm) submitForm.reset();
-    if (imagePreview) imagePreview.classList.add("hidden");
-    setMsg($("gallery-submit-msg"), "");
-    showAuth();
-  });
-
-  function previewImage(file) {
-    if (!imagePreview || !file) return;
-    imagePreview.src = URL.createObjectURL(file);
-    imagePreview.classList.remove("hidden");
-    if (imageInfo) imageInfo.textContent = Math.round(file.size / 1024) + " KB";
   }
 
-  if (imageInput) imageInput.addEventListener("change", () => {
-    const file = imageInput.files && imageInput.files[0];
-    if (!file) {
-      if (imagePreview) imagePreview.classList.add("hidden");
-      if (imageInfo) imageInfo.textContent = "";
-      return;
-    }
-    if (file.size > MAX_SIZE) {
-      setMsg($("gallery-submit-msg"), "图片不能超过 5MB，请压缩后再上传");
-      imageInput.value = "";
-      if (imagePreview) imagePreview.classList.add("hidden");
-      if (imageInfo) imageInfo.textContent = "";
-      return;
-    }
-    previewImage(file);
-    setMsg($("gallery-submit-msg"), "");
-  });
+  function esc(s) {
+    return String(s || "").replace(/[&<>"']/g, c => ({
+      "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+    }[c]));
+  }
 
   function cfg() {
     return window.WALL_CONFIG || {};
@@ -135,6 +50,12 @@
       "Authorization": "Bearer " + s.anonKey,
       "Content-Type": "application/json"
     };
+  }
+
+  function setMsg(text, ok) {
+    if (!msgEl) return;
+    msgEl.textContent = text || "";
+    msgEl.classList.toggle("ok", !!ok);
   }
 
   async function callRpc(name, body) {
@@ -158,8 +79,7 @@
     const c = cfg();
     const s = c.supabase;
     const ext = (file.name.split(".").pop() || "jpg").toLowerCase().replace(/[^a-z0-9]/g, "");
-    const token = auth.getToken().slice(0, 8);
-    const path = "photo-submissions/" + token + "/" +
+    const path = "photo-submissions/" + getGuestId().slice(0, 10) + "/" +
       (window.crypto && crypto.randomUUID ? crypto.randomUUID() : Date.now() + "-" + Math.random().toString(16).slice(2)) +
       "." + ext;
     const r = await fetch(s.url + "/storage/v1/object/photo-uploads/" + path, {
@@ -175,32 +95,28 @@
     return s.url + "/storage/v1/object/public/photo-uploads/" + path;
   }
 
-  function esc(s) {
-    return String(s || "").replace(/[&<>"']/g, c => ({
-      "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
-    }[c]));
-  }
-
   function renderWall() {
     if (!wall) return;
     wall.innerHTML = "";
-    if (!approvedPhotos.length) {
-      wall.innerHTML = '<p class="gallery-wall-empty">还没有影像上墙，来贴第一张吧～</p>';
+    if (!photos.length) {
+      wall.innerHTML = '<p class="board-empty">还没有照片上墙，先贴第一张吧～</p>';
       return;
     }
-    approvedPhotos.forEach((item) => {
+    const guestId = getGuestId();
+    photos.forEach((item) => {
       const photo = document.createElement("div");
       photo.className = "sticky-photo";
       photo.dataset.id = item.id;
       photo.style.left = (item.pos_x == null ? 50 : Number(item.pos_x)) + "%";
       photo.style.top = (item.pos_y == null ? 35 : Number(item.pos_y)) + "%";
       photo.style.setProperty("--rot", (item.rot || 0) + "deg");
-      const del = (adminMode && item.id)
-        ? '<button class="gallery-delete-btn" type="button" data-id="' + esc(item.id) + '">删除</button>'
-        : "";
+      const own = item.owner_key && item.owner_key === guestId;
+      const del = own
+        ? '<button class="sticky-del" type="button" data-id="' + esc(item.id) + '" data-own="1">✕</button>'
+        : (adminMode ? '<button class="sticky-del" type="button" data-id="' + esc(item.id) + '">✕</button>' : "");
       photo.innerHTML =
         del +
-        '<img src="' + esc(item.image_url) + '" alt="' + esc(item.title) + '" loading="lazy" draggable="false">' +
+        '<img src="' + esc(item.image_url) + '" alt="' + esc(item.title || "") + '" loading="lazy" draggable="false">' +
         (item.title ? '<div class="sticky-title">' + esc(item.title) + "</div>" : "");
       wall.appendChild(photo);
     });
@@ -211,87 +127,73 @@
     if (!c.supabase || !c.supabase.url) return;
     try {
       const r = await fetch(c.supabase.url +
-        "/rest/v1/photo_submissions?select=id,title,content,category,image_url,submitter_name,pos_x,pos_y,rot&status=eq.approved&order=created_at.desc", {
+        "/rest/v1/photo_submissions?select=id,title,image_url,owner_key,pos_x,pos_y,rot&status=eq.approved&order=created_at.desc", {
           headers: {
             "apikey": c.supabase.anonKey,
             "Authorization": "Bearer " + c.supabase.anonKey
           }
         });
       if (!r.ok) throw new Error("load " + r.status);
-      approvedPhotos = await r.json();
+      photos = await r.json();
+      loaded = true;
       renderWall();
     } catch (e) {
-      console.warn("影像墙加载失败：", e);
+      console.warn("软木板加载失败：", e);
     }
   }
 
-  if (submitForm) submitForm.addEventListener("submit", async (e) => {
+  function open() {
+    if (!board) return;
+    board.classList.add("show");
+    board.setAttribute("aria-hidden", "false");
+    document.body.classList.add("board-open");
+    if (!loaded) loadWall();
+  }
+
+  function close() {
+    if (!board) return;
+    board.classList.remove("show");
+    board.setAttribute("aria-hidden", "true");
+    document.body.classList.remove("board-open");
+  }
+
+  window.GalleryBoard = { open, close };
+
+  if (closeBtn) closeBtn.addEventListener("click", close);
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") close();
+  });
+
+  if (form) form.addEventListener("submit", async (e) => {
     e.preventDefault();
-    const title = $("gallery-title").value.trim();
-    const content = $("gallery-content").value.trim();
-    const category = $("gallery-category").value.trim();
     const file = imageInput && imageInput.files && imageInput.files[0];
-    if (!title || !content) {
-      setMsg($("gallery-submit-msg"), "标题和说明为必填项");
-      return;
-    }
-    if (!file) {
-      setMsg($("gallery-submit-msg"), "请选择一张图片");
-      return;
-    }
-    if (file.size > MAX_SIZE) {
-      setMsg($("gallery-submit-msg"), "图片不能超过 5MB，请压缩后再上传");
-      return;
-    }
-    const btn = submitForm.querySelector("button[type=submit]");
+    const title = titleInput ? titleInput.value.trim() : "";
+    if (!file) return setMsg("请选择一张本地图片");
+    if (file.size > MAX_SIZE) return setMsg("图片不能超过 5MB");
+    const btn = form.querySelector("button[type=submit]");
     btn.disabled = true;
-    setMsg($("gallery-submit-msg"), "正在贴上影像墙…");
+    setMsg("正在钉上软木板…");
     try {
       const imageUrl = await uploadImage(file);
       await callRpc("submit_photo_entry", {
-        p_token: auth.getToken(),
-        p_title: title,
-        p_content: content,
-        p_category: category || null,
+        p_owner_key: getGuestId(),
+        p_title: title || "小海盐的照片",
+        p_content: "",
+        p_category: null,
         p_image_url: imageUrl
       });
-      submitForm.reset();
-      if (imagePreview) imagePreview.classList.add("hidden");
-      if (imageInfo) imageInfo.textContent = "";
+      if (form) form.reset();
       await loadWall();
-      setMsg($("gallery-submit-msg"), "已贴上影像墙，拖动照片可以调整位置。", true);
+      setMsg("已经钉上软木板，拖动可以调整位置。", true);
     } catch (err) {
-      setMsg($("gallery-submit-msg"), err && err.message ? err.message : "提交失败，请稍后重试");
+      setMsg(err && err.message ? err.message : "上传失败，请稍后重试");
     } finally {
       btn.disabled = false;
     }
   });
 
-  const adminToggle = $("gallery-admin-toggle");
-  if (adminToggle) adminToggle.addEventListener("click", () => {
-    if (adminMode) {
-      adminMode = false;
-      adminCode = "";
-      adminToggle.textContent = "站长模式";
-      renderWall();
-      return;
-    }
-    const code = window.prompt("请输入站长口令", "");
-    if (code === null) return;
-    if (code.trim() !== ((cfg().adminCode) || "")) {
-      window.alert("口令错误");
-      return;
-    }
-    adminMode = true;
-    adminCode = code.trim();
-    adminToggle.textContent = "退出站长模式";
-    renderWall();
-  });
-
   if (wall) wall.addEventListener("pointerdown", (e) => {
-    const del = e.target.closest(".gallery-delete-btn");
-    if (del) return;
-    if (!auth.getUser()) return;
+    if (e.target.closest(".sticky-del")) return;
     const photo = e.target.closest(".sticky-photo");
     if (!photo) return;
     const rect = photo.getBoundingClientRect();
@@ -304,9 +206,9 @@
 
   document.addEventListener("pointermove", (e) => {
     if (!dragPhoto || !wall) return;
-    const board = wall.getBoundingClientRect();
-    const x = (e.clientX - board.left - dragOffsetX) / board.width * 100;
-    const y = (e.clientY - board.top - dragOffsetY) / board.height * 100;
+    const boardRect = wall.getBoundingClientRect();
+    const x = (e.clientX - boardRect.left - dragOffsetX) / boardRect.width * 100;
+    const y = (e.clientY - boardRect.top - dragOffsetY) / boardRect.height * 100;
     dragPhoto.style.left = Math.max(2, Math.min(98, x)) + "%";
     dragPhoto.style.top = Math.max(2, Math.min(98, y)) + "%";
   });
@@ -318,7 +220,6 @@
     photo.classList.remove("dragging");
     try {
       await callRpc("move_photo_submission", {
-        p_token: auth.getToken(),
         p_target_id: photo.dataset.id,
         p_x: Number(parseFloat(photo.style.left)),
         p_y: Number(parseFloat(photo.style.top)),
@@ -330,26 +231,43 @@
   });
 
   if (wall) wall.addEventListener("click", async (e) => {
-    const del = e.target.closest(".gallery-delete-btn");
-    if (!del || !adminMode) return;
-    if (!window.confirm("确定删除这张影像吗？删除后所有人不可见。")) return;
+    const del = e.target.closest(".sticky-del");
+    if (!del) return;
+    const id = del.dataset.id;
+    const own = del.dataset.own === "1";
+    if (!window.confirm("确定删除这张照片吗？")) return;
     try {
-      await callRpc("delete_photo_submission", {
-        p_target_id: del.dataset.id,
-        p_admin_code: adminCode
-      });
-      approvedPhotos = approvedPhotos.filter(x => x.id !== del.dataset.id);
+      if (own) {
+        await callRpc("delete_own_photo_submission", { p_target_id: id, p_owner_key: getGuestId() });
+      } else if (adminMode) {
+        await callRpc("delete_photo_submission", { p_target_id: id, p_admin_code: adminCode });
+      } else {
+        return;
+      }
+      photos = photos.filter(x => x.id !== id);
       renderWall();
     } catch (err) {
       window.alert(err && err.message ? err.message : "删除失败");
     }
   });
 
-  if (auth.getUser()) showForm();
-  else showAuth();
-  loadWall();
-
-  window.addEventListener("scroll", () => {
-    document.body.classList.toggle("scrolled", window.scrollY > window.innerHeight * 0.5);
-  }, { passive: true });
+  if (adminToggle) adminToggle.addEventListener("click", () => {
+    if (adminMode) {
+      adminMode = false;
+      adminCode = "";
+      adminToggle.textContent = "站长模式";
+      renderWall();
+      return;
+    }
+    const code = window.prompt("请输入站长口令", "");
+    if (code === null) return;
+    if (code.trim() !== (cfg().adminCode || "")) {
+      window.alert("口令错误");
+      return;
+    }
+    adminMode = true;
+    adminCode = code.trim();
+    adminToggle.textContent = "退出站长模式";
+    renderWall();
+  });
 })();

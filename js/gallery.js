@@ -10,9 +10,6 @@
   const memoryCore = document.getElementById("memory-core");
   const ringFill = document.getElementById("core-ring-fill");
   const hint = document.getElementById("sphere-hint");
-  const filmStrip = document.getElementById("film-strip");
-  const filmRows = document.getElementById("film-rows");
-  const filmBack = document.getElementById("film-back");
   const items = window.GALLERY || [];
   if (!stage || !sphere || !items.length) return;
   const CHARGE_MS = 1400;
@@ -42,7 +39,6 @@
   let dragged = false;
   const pointers = new Map();
   let pinchStartDist = 0;
-  let filmOpen = false;
 
   function layout() {
     // 球半径、照片尺寸和透视距离都集中在这里，方便后续微调。
@@ -76,51 +72,9 @@
     selected = null;
   }
 
-  function buildFilmStrip() {
-    if (!filmRows || filmRows.children.length) return;
-    const rows = [
-      document.createElement("div"),
-      document.createElement("div")
-    ];
-    rows[0].className = "film-row film-row-a";
-    rows[1].className = "film-row film-row-b";
-    const half = Math.ceil(items.length / 2);
-    items.forEach((item, i) => {
-      const row = rows[i < half ? 0 : 1];
-      const cell = document.createElement("div");
-      cell.className = "film-cell";
-      cell.innerHTML = '<img src="' + item.src + '" alt="' + (item.alt || "") + '" loading="lazy">';
-      row.appendChild(cell);
-    });
-    rows.forEach((row) => {
-      row.innerHTML += row.innerHTML;
-    });
-    filmRows.appendChild(rows[0]);
-    filmRows.appendChild(rows[1]);
-  }
-
-  function openFilmStrip() {
-    if (!open || filmOpen) return;
-    filmOpen = true;
-    buildFilmStrip();
-    stage.classList.add("film-active");
-    sphere.classList.add("is-film");
-    if (filmStrip) {
-      filmStrip.classList.add("show");
-      filmStrip.setAttribute("aria-hidden", "false");
-    }
-    if (hint) hint.textContent = "胶卷滚动中 · 下滑查看小海盐影像墙";
-  }
-
-  function closeFilmStrip() {
-    filmOpen = false;
-    if (filmStrip) {
-      filmStrip.classList.remove("show");
-      filmStrip.setAttribute("aria-hidden", "true");
-    }
-    stage.classList.remove("film-active");
-    sphere.classList.remove("is-film");
-    if (hint) hint.textContent = "拖拽旋转 · 双击空白区域 → 胶卷模式";
+  function openPhotoBoard() {
+    if (!open) return;
+    if (window.GalleryBoard) window.GalleryBoard.open();
   }
 
   function openSphere() {
@@ -128,7 +82,7 @@
     open = true;
     if (coreWrap) coreWrap.classList.add("hidden");
     if (memoryCore) memoryCore.classList.remove("active");
-    if (hint) hint.textContent = "拖拽旋转 · 双击空白区域 → 胶卷模式";
+    if (hint) hint.textContent = "拖拽旋转 · 双击空白区域 → 打开软木板";
     stage.classList.add("burst");
     sphere.classList.add("is-open");
     document.querySelectorAll(".sphere-photo").forEach((photo) => {
@@ -267,7 +221,7 @@
     if (pointers.size === 2) {
       const pts = [...pointers.values()];
       const dist = Math.hypot(pts[0].x - pts[1].x, pts[0].y - pts[1].y);
-      if (pinchStartDist && dist < pinchStartDist * 0.78) openFilmStrip();
+      if (pinchStartDist && dist < pinchStartDist * 0.78) openPhotoBoard();
       pinchStartDist = dist;
     }
   });
@@ -288,7 +242,7 @@
   });
   stage.addEventListener("dblclick", (e) => {
     if (!open) return;
-    if (!e.target.closest(".sphere-photo")) openFilmStrip();
+    if (!e.target.closest(".sphere-photo")) openPhotoBoard();
   });
 
   if (memoryCore) {
@@ -327,10 +281,8 @@
     }
   }, 1300);
 
-  if (filmBack) filmBack.addEventListener("click", closeFilmStrip);
   document.addEventListener("keydown", (e) => {
     if (!open) return;
-    if (e.key === "Escape" && filmOpen) closeFilmStrip();
     if (e.key === "ArrowLeft") { ry -= 4; applyRotation(); }
     if (e.key === "ArrowRight") { ry += 4; applyRotation(); }
     if (e.key === "ArrowUp") { rx = Math.max(-30, rx - 3); applyRotation(); }
