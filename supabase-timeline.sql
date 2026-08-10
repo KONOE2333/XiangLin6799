@@ -304,6 +304,7 @@ end
 $$;
 
 -- 照片投稿：匿名访客共享墙，自动直接公开
+drop function if exists public.submit_photo_entry(text, text, text, text, text);
 create or replace function public.submit_photo_entry(
   p_owner_key text,
   p_title text,
