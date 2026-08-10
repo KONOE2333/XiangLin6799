@@ -1,7 +1,6 @@
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
-/* 字体组合：中文霞鹜文楷、数字英文 Nunito、Logo 黄油体 */
-@import url('https://fonts.googleapis.com/css2?family=LXGW+WenKai&family=Nunito:wght@400;600;700;800&family=ZCOOL+QingKe+HuangYou&display=swap');
+/* 字体组合：中文霞鹜文楷本地加载，数字英文 Nunito 仅在系统可用时使用 */
 
 :root {
   --purple: #8b7ff0;
@@ -23,9 +22,9 @@
   --r: 16px;
   --grad: linear-gradient(100deg, #8b7ff0, #f39ac2);
   --grad-soft: linear-gradient(100deg, #b3a6ff, #f6a8cd 55%, #8fc0ff);
-  --font-cn: "LXGW WenKai", "Kaiti SC", "STKaiti", "KaiTi", "PingFang SC", serif;
-  --font-latin: "Nunito", "LXGW WenKai", "PingFang SC", sans-serif;
-  --font-logo: "ZCOOL QingKe HuangYou", "LXGW WenKai", "PingFang SC", cursive;
+  --font-cn: "LXGW WenKai", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  --font-latin: "Nunito", "LXGW WenKai", "PingFang SC", "Microsoft YaHei", sans-serif;
+  --font-logo: "ZCOOL QingKe HuangYou", "LXGW WenKai", "PingFang SC", "Microsoft YaHei", sans-serif;
   --btn-radius: 14px;
   --btn-shadow: 0 10px 24px rgba(139, 127, 240, 0.22);
   --btn-shadow-hover: 0 14px 34px rgba(243, 154, 194, 0.28);
