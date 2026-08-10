@@ -5,11 +5,16 @@
   const board = $("gallery-board");
   const closeBtn = $("gallery-board-close");
   const wall = $("gallery-wall");
+  const canvas = $("board-canvas");
   const form = $("gallery-upload-form");
   const imageInput = $("gallery-image");
   const titleInput = $("gallery-title");
   const msgEl = $("gallery-upload-msg");
   const adminToggle = $("gallery-admin-toggle");
+  const zoomIn = $("board-zoom-in");
+  const zoomOut = $("board-zoom-out");
+  const zoomReset = $("board-zoom-reset");
+  const zoomLabel = $("board-zoom-label");
   const GUEST_KEY = "xl_photo_guest_id";
   const MAX_SIZE = 5 * 1024 * 1024;
   let photos = [];
@@ -19,6 +24,7 @@
   let dragPhoto = null;
   let dragOffsetX = 0;
   let dragOffsetY = 0;
+  let boardZoom = 1;
 
   function getGuestId() {
     try {
@@ -95,11 +101,42 @@
     return s.url + "/storage/v1/object/public/photo-uploads/" + path;
   }
 
+  function loadImage(url) {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => resolve(img);
+      img.onerror = () => reject(new Error("图片解析失败"));
+      img.src = url;
+    });
+  }
+
+  async function compressImage(file) {
+    if (!file || !file.type || !file.type.startsWith("image/")) return file;
+    const url = URL.createObjectURL(file);
+    try {
+      const img = await loadImage(url);
+      const MAX = 1600;
+      const scale = Math.min(1, MAX / Math.max(img.naturalWidth, img.naturalHeight));
+      const w = Math.max(1, Math.round(img.naturalWidth * scale));
+      const h = Math.max(1, Math.round(img.naturalHeight * scale));
+      const canvas = document.createElement("canvas");
+      canvas.width = w;
+      canvas.height = h;
+      const ctx = canvas.getContext("2d");
+      ctx.drawImage(img, 0, 0, w, h);
+      const blob = await new Promise((resolve) => canvas.toBlob(resolve, "image/jpeg", 0.85));
+      if (!blob) throw new Error("压缩失败");
+      return new File([blob], file.name.replace(/\.[^.]+$/, ".jpg"), { type: "image/jpeg" });
+    } finally {
+      URL.revokeObjectURL(url);
+    }
+  }
+
   function renderWall() {
-    if (!wall) return;
-    wall.innerHTML = "";
+    if (!canvas) return;
+    canvas.innerHTML = "";
     if (!photos.length) {
-      wall.innerHTML = '<p class="board-empty">还没有照片上墙，先贴第一张吧～</p>';
+      canvas.innerHTML = '<p class="board-empty">还没有照片上墙，先贴第一张吧～</p>';
       return;
     }
     const guestId = getGuestId();
@@ -107,18 +144,20 @@
       const photo = document.createElement("div");
       photo.className = "sticky-photo";
       photo.dataset.id = item.id;
+      photo.dataset.owner = item.owner_key || "";
       photo.style.left = (item.pos_x == null ? 50 : Number(item.pos_x)) + "%";
       photo.style.top = (item.pos_y == null ? 35 : Number(item.pos_y)) + "%";
-      photo.style.setProperty("--rot", (item.rot || 0) + "deg");
+      const rot = (Number(item.rot || 0) + (Math.random() * 6 - 3));
+      photo.style.setProperty("--rot", rot.toFixed(1) + "deg");
       const own = item.owner_key && item.owner_key === guestId;
       const del = own
-        ? '<button class="sticky-del" type="button" data-id="' + esc(item.id) + '" data-own="1">✕</button>'
-        : (adminMode ? '<button class="sticky-del" type="button" data-id="' + esc(item.id) + '">✕</button>' : "");
+        ? '<button class="sticky-del" type="button" data-id="' + esc(item.id) + '" data-own="1" aria-label="删除粘贴照片">✕</button>'
+        : (adminMode ? '<button class="sticky-del" type="button" data-id="' + esc(item.id) + '" aria-label="删除粘贴照片">✕</button>' : "");
       photo.innerHTML =
-        del +
-        '<img src="' + esc(item.image_url) + '" alt="' + esc(item.title || "") + '" loading="lazy" draggable="false">' +
-        (item.title ? '<div class="sticky-title">' + esc(item.title) + "</div>" : "");
-      wall.appendChild(photo);
+        '<img src="' + esc(item.image_url) + '" alt="' + esc(item.title || "") + '" loading="eager" decoding="async" draggable="false">' +
+        (item.title ? '<div class="sticky-title">' + esc(item.title) + "</div>" : "") +
+        del;
+      canvas.appendChild(photo);
     });
   }
 
@@ -160,6 +199,9 @@
   window.GalleryBoard = { open, close };
 
   if (closeBtn) closeBtn.addEventListener("click", close);
+  if (board) board.addEventListener("click", (e) => {
+    if (e.target === board) close();
+  });
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape") close();
   });
@@ -174,7 +216,7 @@
     btn.disabled = true;
     setMsg("正在钉上软木板…");
     try {
-      const imageUrl = await uploadImage(file);
+      const imageUrl = await uploadImage(await compressImage(file));
       await callRpc("submit_photo_entry", {
         p_owner_key: getGuestId(),
         p_title: title || "小海盐的照片",
@@ -196,6 +238,8 @@
     if (e.target.closest(".sticky-del")) return;
     const photo = e.target.closest(".sticky-photo");
     if (!photo) return;
+    const own = photo.dataset.owner === getGuestId();
+    if (!own && !adminMode) return;
     const rect = photo.getBoundingClientRect();
     dragPhoto = photo;
     dragOffsetX = e.clientX - rect.left;
@@ -205,8 +249,8 @@
   });
 
   document.addEventListener("pointermove", (e) => {
-    if (!dragPhoto || !wall) return;
-    const boardRect = wall.getBoundingClientRect();
+    if (!dragPhoto || !canvas) return;
+    const boardRect = canvas.getBoundingClientRect();
     const x = (e.clientX - boardRect.left - dragOffsetX) / boardRect.width * 100;
     const y = (e.clientY - boardRect.top - dragOffsetY) / boardRect.height * 100;
     dragPhoto.style.left = Math.max(2, Math.min(98, x)) + "%";
@@ -220,6 +264,7 @@
     photo.classList.remove("dragging");
     try {
       await callRpc("move_photo_submission", {
+        p_owner_key: getGuestId(),
         p_target_id: photo.dataset.id,
         p_x: Number(parseFloat(photo.style.left)),
         p_y: Number(parseFloat(photo.style.top)),
@@ -270,4 +315,24 @@
     adminToggle.textContent = "退出站长模式";
     renderWall();
   });
+
+  function applyZoom() {
+    if (!canvas) return;
+    canvas.style.setProperty("--zoom", boardZoom);
+    if (zoomLabel) zoomLabel.textContent = "画布 " + Math.round(boardZoom * 100) + "%";
+  }
+
+  if (zoomIn) zoomIn.addEventListener("click", () => {
+    boardZoom = Math.min(2, boardZoom + 0.1);
+    applyZoom();
+  });
+  if (zoomOut) zoomOut.addEventListener("click", () => {
+    boardZoom = Math.max(0.7, boardZoom - 0.1);
+    applyZoom();
+  });
+  if (zoomReset) zoomReset.addEventListener("click", () => {
+    boardZoom = 1;
+    applyZoom();
+  });
+  applyZoom();
 })();

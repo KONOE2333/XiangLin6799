@@ -41,8 +41,10 @@ create table wall_messages (
   name text not null,
   text text not null,
   likes int not null default 0,
+  kind text not null default 'message',
   created_at timestamptz not null default now()
 );
+alter table wall_messages add column if not exists kind text not null default 'message';
 -- 开放匿名读写（点赞需要 update 权限）
 alter table wall_messages enable row level security;
 create policy "public read"   on wall_messages for select using (true);

@@ -323,6 +323,70 @@ body.home .wall-mode {
 body.home .wall-mode.is-cloud { color: #b6f0d2; background: rgba(80, 200, 150, 0.16); border: 1px solid rgba(120, 220, 170, 0.4); }
 body.home .wall-mode.is-local { color: #c9c2f5; background: rgba(139, 127, 240, 0.14); border: 1px solid rgba(170, 160, 240, 0.35); }
 body.home .wall-empty { color: #9aa2d0; font-size: 14px; text-align: center; padding: 40px 0; }
+body.home .wall-tabs {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin: 0 auto 26px;
+  max-width: 420px;
+  padding: 5px;
+  background: rgba(10, 16, 40, 0.55);
+  border: 1px solid rgba(170, 180, 255, 0.2);
+  border-radius: 999px;
+}
+body.home .wall-tabs button {
+  flex: 1;
+  border: none;
+  background: transparent;
+  color: #9aa2d0;
+  font-family: inherit;
+  font-size: 13px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+body.home .wall-tabs button.on {
+  background: var(--grad);
+  color: #fff;
+}
+body.home .wall-panel.hidden {
+  display: none;
+}
+body.home .wall-pager {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 30px auto 0;
+  max-width: 720px;
+}
+body.home .wall-pager button {
+  min-width: 38px;
+  padding: 7px 12px;
+  border: 1px solid rgba(170, 180, 255, 0.32);
+  border-radius: 999px;
+  background: rgba(10, 16, 40, 0.6);
+  color: #c7cdf2;
+  font-family: inherit;
+  font-size: 12.5px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+body.home .wall-pager button:hover:not(:disabled) {
+  background: rgba(139, 127, 240, 0.2);
+  color: #fff;
+}
+body.home .wall-pager button.on {
+  background: var(--grad);
+  color: #fff;
+  border-color: transparent;
+}
+body.home .wall-pager button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
 
 /* ===================== 舞台高光 ===================== */
 body.home .stage-grid {

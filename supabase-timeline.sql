@@ -122,10 +122,10 @@ declare v_id uuid;
         v_display text;
         v_hash text;
 begin
-  select id, username, display_name, password_hash
+  select u.id, u.username, u.display_name, u.password_hash
     into v_id, v_username, v_display, v_hash
-  from public.site_users
-  where username = lower(trim(p_username));
+  from public.site_users u
+  where u.username = lower(trim(p_username));
 
   if v_id is null or v_hash is null or v_hash <> extensions.crypt(p_password, v_hash) then
     raise exception '用户名或密码错误';
@@ -348,7 +348,10 @@ begin
 end
 $$;
 
+drop function if exists public.move_photo_submission(text, uuid, numeric, numeric, numeric);
+drop function if exists public.move_photo_submission(uuid, numeric, numeric, numeric);
 create or replace function public.move_photo_submission(
+  p_owner_key text,
   p_target_id uuid,
   p_x numeric,
   p_y numeric,
@@ -361,7 +364,7 @@ begin
   set pos_x = greatest(0, least(100, p_x)),
       pos_y = greatest(0, least(100, p_y)),
       rot = p_rot
-  where id = p_target_id and status = 'approved';
+  where id = p_target_id and owner_key = p_owner_key and status = 'approved';
 end
 $$;
 
@@ -461,7 +464,7 @@ revoke all on function public.list_photo_submissions_for_review(text) from publi
 revoke all on function public.approve_photo_submission(uuid, text) from public;
 revoke all on function public.reject_photo_submission(uuid, text, text) from public;
 revoke all on function public.delete_photo_submission(uuid, text) from public;
-revoke all on function public.move_photo_submission(uuid, numeric, numeric, numeric) from public;
+revoke all on function public.move_photo_submission(text, uuid, numeric, numeric, numeric) from public;
 revoke all on function public.delete_own_photo_submission(uuid, text) from public;
 
 grant execute on function public.register_user(text, text, text) to anon, authenticated;
@@ -477,7 +480,7 @@ grant execute on function public.list_photo_submissions_for_review(text) to anon
 grant execute on function public.approve_photo_submission(uuid, text) to anon, authenticated;
 grant execute on function public.reject_photo_submission(uuid, text, text) to anon, authenticated;
 grant execute on function public.delete_photo_submission(uuid, text) to anon, authenticated;
-grant execute on function public.move_photo_submission(uuid, numeric, numeric, numeric) to anon, authenticated;
+grant execute on function public.move_photo_submission(text, uuid, numeric, numeric, numeric) to anon, authenticated;
 grant execute on function public.delete_own_photo_submission(uuid, text) to anon, authenticated;
 
 -- 图片上传：公开读取 + 匿名写入 submissions/ 目录

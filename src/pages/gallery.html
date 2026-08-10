@@ -12,6 +12,15 @@
   <p class="sphere-hint" id="sphere-hint">照片正在聚拢 · 点击按钮展开</p>
 </main>
 
+<div class="sphere-actions" id="sphere-actions" aria-hidden="true">
+  <button class="sphere-action sphere-action-rotate" id="sphere-action-rotate" type="button">
+    <span class="action-icon">✦</span>拖拽旋转
+  </button>
+  <button class="sphere-action sphere-action-board" id="sphere-action-board" type="button">
+    <span class="action-icon">✦</span>打开照片软木板
+  </button>
+</div>
+
 <div class="memory-core-wrap" id="memory-core-wrap">
   <svg class="core-ring" viewBox="0 0 140 140" aria-hidden="true">
     <circle class="core-ring-bg" cx="70" cy="70" r="62"></circle>
@@ -30,6 +39,12 @@
         <p>上传照片，直接钉到星空软木板上；拖动照片可以重新摆放。</p>
       </div>
       <div class="board-head-actions">
+        <div class="board-zoom" id="board-zoom">
+          <button id="board-zoom-out" type="button" aria-label="缩小画布">−</button>
+          <span id="board-zoom-label">画布 100%</span>
+          <button id="board-zoom-in" type="button" aria-label="放大画布">+</button>
+          <button id="board-zoom-reset" type="button">复位</button>
+        </div>
         <button id="gallery-admin-toggle" class="board-admin-toggle" type="button">站长模式</button>
         <button id="gallery-board-close" class="board-close" type="button">收起软木板</button>
       </div>
@@ -43,7 +58,9 @@
       <button type="submit">贴上软木板 ✦</button>
       <span id="gallery-upload-msg" class="board-msg"></span>
     </form>
-    <div class="board-wall" id="gallery-wall"></div>
+    <div class="board-wall" id="gallery-wall">
+      <div class="board-canvas" id="board-canvas"></div>
+    </div>
   </div>
 </div>
 

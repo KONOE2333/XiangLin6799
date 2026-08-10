@@ -10,6 +10,8 @@
   const memoryCore = document.getElementById("memory-core");
   const ringFill = document.getElementById("core-ring-fill");
   const hint = document.getElementById("sphere-hint");
+  const sphereActions = document.getElementById("sphere-actions");
+  const actionBoard = document.getElementById("sphere-action-board");
   const items = window.GALLERY || [];
   if (!stage || !sphere || !items.length) return;
   const CHARGE_MS = 1400;
@@ -82,7 +84,8 @@
     open = true;
     if (coreWrap) coreWrap.classList.add("hidden");
     if (memoryCore) memoryCore.classList.remove("active");
-    if (hint) hint.textContent = "拖拽旋转 · 双击空白区域 → 打开软木板";
+    if (hint) hint.style.display = "none";
+    if (sphereActions) sphereActions.classList.add("show");
     stage.classList.add("burst");
     sphere.classList.add("is-open");
     document.querySelectorAll(".sphere-photo").forEach((photo) => {
@@ -163,6 +166,12 @@
       "deg) translateZ(var(--r)) rotateY(180deg)");
     photo.style.setProperty("--delay", (i * 45) + "ms");
     photo.style.setProperty("--launch-delay", (i * 20) + "ms");
+    const restAngle = (i / Math.max(1, count)) * Math.PI * 2 + (i % 3) * 0.35;
+    const restRadius = 92 + (i % 5) * 22;
+    photo.style.setProperty("--rest-x", (Math.cos(restAngle) * restRadius).toFixed(0) + "px");
+    photo.style.setProperty("--rest-y", (Math.sin(restAngle) * restRadius * 0.82).toFixed(0) + "px");
+    photo.style.setProperty("--rest-scale", (0.5 + (i % 5) * 0.055).toFixed(2));
+    photo.style.setProperty("--rest-rot", ((i % 5) * 6 - 12).toFixed(1) + "deg");
     photo.innerHTML =
       '<img src="' + item.src + '" alt="' + (item.alt || "") + '" decoding="async">';
 
@@ -170,7 +179,7 @@
       photo.style.animation = "none";
       photo.style.opacity = "1";
       if (e.animationName === "photo-converge") {
-        photo.style.transform = "translate(0, 0) scale(0.72)";
+        photo.style.transform = "translate(var(--rest-x), var(--rest-y)) scale(var(--rest-scale)) rotate(var(--rest-rot))";
       }
       if (e.animationName === "photo-launch") {
         photo.style.transform = "var(--sphere)";
@@ -212,7 +221,7 @@
     pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
 
     if (pointers.size === 1 && dragging) {
-      ry += dx * 0.22;
+      ry -= dx * 0.22;
       rx = Math.max(-70, Math.min(70, rx + dy * 0.18));
       if (Math.abs(dx) > 5 || Math.abs(dy) > 5) dragged = true;
       applyRotation();
@@ -281,10 +290,12 @@
     }
   }, 1300);
 
+  if (actionBoard) actionBoard.addEventListener("click", openPhotoBoard);
+
   document.addEventListener("keydown", (e) => {
     if (!open) return;
-    if (e.key === "ArrowLeft") { ry -= 4; applyRotation(); }
-    if (e.key === "ArrowRight") { ry += 4; applyRotation(); }
+    if (e.key === "ArrowLeft") { ry += 4; applyRotation(); }
+    if (e.key === "ArrowRight") { ry -= 4; applyRotation(); }
     if (e.key === "ArrowUp") { rx = Math.max(-30, rx - 3); applyRotation(); }
     if (e.key === "ArrowDown") { rx = Math.min(30, rx + 3); applyRotation(); }
   });

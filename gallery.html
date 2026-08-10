@@ -7,10 +7,10 @@
 <meta name="description" content="翔霖 3D 照片球，照片从四周汇聚后散开，可拖拽旋转与点选查看。">
 <meta name="theme-color" content="#060d24">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="css/style.css?v=26">
-<link rel="stylesheet" href="css/home.css?v=26">
+<link rel="stylesheet" href="css/style.css?v=31">
+<link rel="stylesheet" href="css/home.css?v=31">
 
-<link rel="stylesheet" href="css/gallery.css?v=26">
+<link rel="stylesheet" href="css/gallery.css?v=31">
 <script>document.documentElement.classList.add('js');</script>
 
 </head>
@@ -72,6 +72,15 @@
   <p class="sphere-hint" id="sphere-hint">照片正在聚拢 · 点击按钮展开</p>
 </main>
 
+<div class="sphere-actions" id="sphere-actions" aria-hidden="true">
+  <button class="sphere-action sphere-action-rotate" id="sphere-action-rotate" type="button">
+    <span class="action-icon">✦</span>拖拽旋转
+  </button>
+  <button class="sphere-action sphere-action-board" id="sphere-action-board" type="button">
+    <span class="action-icon">✦</span>打开照片软木板
+  </button>
+</div>
+
 <div class="memory-core-wrap" id="memory-core-wrap">
   <svg class="core-ring" viewBox="0 0 140 140" aria-hidden="true">
     <circle class="core-ring-bg" cx="70" cy="70" r="62"></circle>
@@ -90,6 +99,12 @@
         <p>上传照片，直接钉到星空软木板上；拖动照片可以重新摆放。</p>
       </div>
       <div class="board-head-actions">
+        <div class="board-zoom" id="board-zoom">
+          <button id="board-zoom-out" type="button" aria-label="缩小画布">−</button>
+          <span id="board-zoom-label">画布 100%</span>
+          <button id="board-zoom-in" type="button" aria-label="放大画布">+</button>
+          <button id="board-zoom-reset" type="button">复位</button>
+        </div>
         <button id="gallery-admin-toggle" class="board-admin-toggle" type="button">站长模式</button>
         <button id="gallery-board-close" class="board-close" type="button">收起软木板</button>
       </div>
@@ -103,27 +118,29 @@
       <button type="submit">贴上软木板 ✦</button>
       <span id="gallery-upload-msg" class="board-msg"></span>
     </form>
-    <div class="board-wall" id="gallery-wall"></div>
+    <div class="board-wall" id="gallery-wall">
+      <div class="board-canvas" id="board-canvas"></div>
+    </div>
   </div>
 </div>
 
 <audio id="bgm" loop preload="none"></audio>
 <button id="music-btn" class="music-disc" type="button" title="背景音乐">♪</button>
 
-<script src="js/starrain.js?v=26"></script>
+<script src="js/starrain.js?v=31"></script>
 
-<script src="js/wall-config.js?v=26"></script>
-<script src="js/photos-data.js?v=26"></script>
-<script src="js/birthday-data.js?v=26"></script>
-<script src="js/gallery-extra-data.js?v=26"></script>
-<script src="js/gallery-data.js?v=26"></script>
-<script src="js/gallery.js?v=26"></script>
-<script src="js/gallery-community.js?v=26"></script>
-<script src="js/audio.js?v=26"></script>
+<script src="js/wall-config.js?v=31"></script>
+<script src="js/photos-data.js?v=31"></script>
+<script src="js/birthday-data.js?v=31"></script>
+<script src="js/gallery-extra-data.js?v=31"></script>
+<script src="js/gallery-data.js?v=31"></script>
+<script src="js/gallery.js?v=31"></script>
+<script src="js/gallery-community.js?v=31"></script>
+<script src="js/audio.js?v=31"></script>
 
-<script src="js/reveal.js?v=26"></script>
-<script src="js/nav.js?v=26"></script>
-<script src="js/gate.js?v=26"></script>
+<script src="js/reveal.js?v=31"></script>
+<script src="js/nav.js?v=31"></script>
+<script src="js/gate.js?v=31"></script>
 
 </body>
 </html>

@@ -40,7 +40,8 @@
       const rows = await r.json();
       return rows.map((x) => ({
         id: x.id, name: x.name, text: x.text,
-        time: fmtTime(x.created_at), likes: x.likes || 0
+        time: fmtTime(x.created_at), likes: x.likes || 0,
+        kind: x.kind || "message"
       }));
     },
     async add(m) {
@@ -50,12 +51,12 @@
           "Content-Type": "application/json",
           "Prefer": "return=representation"
         }),
-        body: JSON.stringify({ name: m.name, text: m.text, likes: 0 })
+        body: JSON.stringify({ name: m.name, text: m.text, likes: 0, kind: m.kind || "message" })
       });
       if (!r.ok) throw new Error("add " + r.status);
       const rows = await r.json();
       const x = rows[0];
-      return { id: x.id, name: x.name, text: x.text, time: fmtTime(x.created_at), likes: x.likes || 0 };
+      return { id: x.id, name: x.name, text: x.text, time: fmtTime(x.created_at), likes: x.likes || 0, kind: x.kind || "message" };
     },
     async like(id, likes) {
       const r = await fetch(cfg.supabase.url + "/rest/v1/wall_messages?id=eq." + encodeURIComponent(id), {

@@ -9,13 +9,32 @@
 
 <section class="section">
   <h2 class="section-title reveal">粉丝留言墙</h2>
-  <p class="section-sub reveal">写下你想对翔霖或同担说的话，贴在这面墙上</p>
-  <form class="msg-form" id="msg-form">
-    <input type="text" id="msg-name" maxlength="16" placeholder="你的昵称（必填）" required>
-    <textarea id="msg-text" maxlength="120" placeholder="留言内容，120 字以内…" required></textarea>
-    <button type="submit">贴上便签 ✦</button>
-  </form>
-  <div class="wall" id="wall-body"></div>
+  <p class="section-sub reveal">把想说的话、发现的问题和新的想法，都留在这面墙上</p>
+
+  <div class="wall-tabs reveal">
+    <button id="tab-message" class="on" type="button">留言</button>
+    <button id="tab-suggestion" type="button">建议</button>
+  </div>
+
+  <div id="message-panel" class="wall-panel">
+    <form class="msg-form" id="msg-form">
+      <input type="text" id="msg-name" maxlength="16" placeholder="你的昵称（必填）" required>
+      <textarea id="msg-text" maxlength="120" placeholder="写下你想对翔霖或同担说的话，贴在这面墙上" required></textarea>
+      <button type="submit">贴上便签 ✦</button>
+    </form>
+    <div class="wall" id="message-wall"></div>
+    <div class="wall-pager" id="message-pager"></div>
+  </div>
+
+  <div id="suggestion-panel" class="wall-panel hidden">
+    <form class="msg-form" id="suggestion-form">
+      <input type="text" id="suggestion-name" maxlength="16" placeholder="你的昵称（必填）" required>
+      <textarea id="suggestion-text" maxlength="300" placeholder="网站有没有问题？想新增什么板块？写在这里，站长会看到" required></textarea>
+      <button type="submit">贴上建议 ✦</button>
+    </form>
+    <div class="wall" id="suggestion-wall"></div>
+    <div class="wall-pager" id="suggestion-pager"></div>
+  </div>
 </section>
 
 <div class="admin-soft" id="admin-bar">
