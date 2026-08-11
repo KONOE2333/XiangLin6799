@@ -99,6 +99,11 @@
   window.XLAudio = window.XLAudio || {};
   window.XLAudio.onChange = function (fn) { listeners.push(fn); };
   window.XLAudio.play = function (i) { if (typeof i === "number") setTrack(i, true); else tryPlay(); };
+  window.XLAudio.playFromEntry = function () {
+    state.playing = true;
+    tryPlay();
+    saveState();
+  };
   window.XLAudio.toggle = function () {
     if (audio.paused) tryPlay().then(saveState);
     else { audio.pause(); if (btn) btn.classList.remove("playing"); saveState(); }

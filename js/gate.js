@@ -40,6 +40,9 @@
 
   function pass() {
     try { localStorage.setItem(KEY, "1"); } catch (e) {}
+    if (window.XLAudio && window.XLAudio.playFromEntry) {
+      window.XLAudio.playFromEntry();
+    }
     overlay.classList.add("hide");
     setTimeout(function () { if (overlay.parentNode) overlay.parentNode.removeChild(overlay); }, 520);
   }
