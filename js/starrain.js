@@ -18,7 +18,7 @@
   let mouseX = 0, mouseY = 0;   // -0.5 ~ 0.5，用于轻视差
 
   function resize() {
-    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    dpr = Math.min(window.devicePixelRatio || 1, mobile ? 1.5 : 2);
     W = window.innerWidth;
     H = window.innerHeight;
     canvas.width = W * dpr;

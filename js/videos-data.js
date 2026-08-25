@@ -9,7 +9,7 @@
 
 const VIDEOS = [
   {
-    title: "严浩翔 / 贺峻霖《耻辱柱》官摄修音版",
+    title: "Oliver / Tina《耻辱柱》官摄修音版",
     sub: "双人合作舞台",
     cat: "合作曲",
     type: "embed",
@@ -46,7 +46,7 @@ const VIDEOS = [
   },
   {
     title: "《屋顶着火》3D环绕",
-    sub: "严浩翔 × 贺峻霖",
+    sub: "Oliver × Tina",
     cat: "舞台",
     type: "embed",
     src: "https://player.bilibili.com/player.html?bvid=BV11B4y1P7GM&autoplay=0",

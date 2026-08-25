@@ -45,10 +45,10 @@
     let link = "";
     if (ev.link && ev.link.url) {
       link = '<a class="tl-link" href="' + esc(ev.link.url) +
-        '" target="_blank" rel="noopener">' + esc(ev.link.text || "查看 ↗") + "</a>";
+        '" target="_blank" rel="noopener">' + esc(ev.link.text || "View ↗") + "</a>";
     }
 
-    const badge = ev._community ? '<span class="tl-community-badge">小海盐投稿</span>' : "";
+    const badge = ev._community ? '<span class="tl-community-badge">小海盐Submissions</span>' : "";
     const adminDelete = (ev._community && ev.id && adminMode)
       ? '<button class="tl-delete-btn" type="button" data-id="' + esc(ev.id) + '">删除</button>'
       : "";
@@ -104,7 +104,7 @@
     filterBox.innerHTML = "";
     const years = [...new Set(data.map(d => d.year))];
     const allBtn = document.createElement("button");
-    allBtn.textContent = "全部";
+    allBtn.textContent = "All";
     allBtn.dataset.year = "all";
     allBtn.className = activeYear === "all" ? "on" : "";
     allBtn.onclick = () => { setActive(allBtn); render("all"); };
@@ -140,12 +140,12 @@
           id: r.id,
           date: r.event_date,
           year: r.year,
-          era: eraByYear[r.year] || ("小海盐投稿 · " + r.year),
-          tag: r.tag || "投稿",
+          era: eraByYear[r.year] || ("小海盐Submissions · " + r.year),
+          tag: r.tag || "Submissions",
           title: r.title,
           desc: r.content,
           image_url: r.image_url || "",
-          link: r.link_url ? { text: r.link_text || "查看 ↗", url: r.link_url } : null,
+          link: r.link_url ? { text: r.link_text || "View ↗", url: r.link_url } : null,
           _community: true,
           _i: data.length
         }));
@@ -154,7 +154,7 @@
         buildFilters();
         render(activeYear);
       })
-      .catch(e => console.warn("社区时间轴加载失败：", e));
+      .catch(e => console.warn("Failed to load community timeline: ", e));
   }
 
   buildFilters();
@@ -185,7 +185,7 @@
   body.addEventListener("click", async (e) => {
     const del = e.target.closest(".tl-delete-btn");
     if (!del || !adminMode) return;
-    if (!window.confirm("确定删除这条投稿吗？删除后所有人不可见。")) return;
+    if (!window.confirm("确定删除这条Submissions吗？删除后所有人不可见。")) return;
     const cfg = window.WALL_CONFIG || {};
     if (!cfg.supabase || !cfg.supabase.url) return;
     try {
@@ -200,12 +200,29 @@
       });
       if (!r.ok) {
         const data = await r.json().catch(() => ({}));
-        throw new Error(data.message || "删除失败");
+        throw new Error(data.message || "Delete failed");
       }
       data = data.filter(x => x.id !== del.dataset.id);
       render(activeYear);
     } catch (err) {
-      window.alert(err && err.message ? err.message : "删除失败");
+      window.alert(err && err.message ? err.message : "Delete failed");
     }
   });
+})();
+
+// ===================== 记忆投稿箱：收起 / 展开 =====================
+(function () {
+  "use strict";
+  var openBtn = document.getElementById("tl-collapsed-open");
+  var closeBtn = document.getElementById("tl-collapsed-close");
+  var collapsed = document.getElementById("tl-collapsed");
+  var expand = document.getElementById("tl-expand");
+  if (!openBtn || !expand) return;
+  function setOpen(on) {
+    if (collapsed) collapsed.classList.toggle("hidden", on);
+    expand.classList.toggle("hidden", !on);
+    if (on && expand.scrollIntoView) expand.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  }
+  openBtn.addEventListener("click", function () { setOpen(true); });
+  if (closeBtn) closeBtn.addEventListener("click", function () { setOpen(false); });
 })();

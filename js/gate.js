@@ -18,9 +18,9 @@
       '<div class="gate-kicker">XIANG LIN · VERIFY</div>' +
       '<div class="gate-title">欢迎来到翔霖小站</div>' +
       '<div class="gate-question">' + current.question + '</div>' +
-      '<input class="gate-input" type="text" placeholder="输入答案" maxlength="' + current.maxlength + '" autocomplete="off">' +
+      '<input class="gate-input" type="text" placeholder="Your answer" maxlength="' + current.maxlength + '" autocomplete="off">' +
       '<div class="gate-err" id="gate-err"></div>' +
-      '<button class="gate-enter" type="button" disabled>进 入 ✦</button>' +
+      '<button class="gate-enter" type="button" disabled>Enter ✦</button>' +
     '</div>';
   document.body.appendChild(overlay);
 
@@ -51,7 +51,7 @@
     if (normalize(input.value) === normalize(current.answer)) {
       pass();
     } else {
-      errEl.textContent = "答案不对哦，再想想～";
+      errEl.textContent = "Not quite — try again ✦";
       var card = overlay.querySelector(".gate-card");
       card.classList.remove("shake");
       void card.offsetWidth; // 重启动画

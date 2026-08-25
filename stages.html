@@ -5,11 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>舞台高光 · 翔霖小站</title>
 <meta name="description" content="翔霖合作舞台与经典演出视频，点击即可观看。">
-<meta name="theme-color" content="#060d24">
+<meta name="theme-color" content="#070b17">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="fonts/script/script-fonts.css?v=34">
 <link rel="stylesheet" href="fonts/noto-sans-sc/noto-sans-sc-wght.css?v=34">
-<link rel="stylesheet" href="css/style.css?v=34">
-<link rel="stylesheet" href="css/home.css?v=34">
+<link rel="stylesheet" href="css/style.css?v=39">
+<link rel="stylesheet" href="css/home.css?v=39">
 
 <script>document.documentElement.classList.add('js');</script>
 
@@ -17,39 +18,9 @@
 <body class="home">
 <canvas id="star-rain"></canvas>
 <nav class="nav nav-dark">
-  <a class="nav-logo" href="index.html" title="Tina贺♡严美娜" aria-label="Tina贺♡严美娜，返回首页">
-    <span class="logo-washi logo-washi-left" aria-hidden="true"></span>
-    <span class="logo-washi logo-washi-right" aria-hidden="true"></span>
-    <span class="logo-sticker">
-      <svg class="logo-pixel" viewBox="0 0 24 24" shape-rendering="crispEdges" aria-hidden="true">
-        <rect x="6" y="5" width="2" height="2" fill="#f6a8cd"/>
-        <rect x="9" y="5" width="2" height="2" fill="#f6a8cd"/>
-        <rect x="12" y="5" width="2" height="2" fill="#f6a8cd"/>
-        <rect x="15" y="5" width="2" height="2" fill="#f6a8cd"/>
-        <rect x="5" y="7" width="2" height="3" fill="#f6a8cd"/>
-        <rect x="16" y="7" width="2" height="3" fill="#f6a8cd"/>
-        <rect x="4" y="10" width="2" height="3" fill="#f6a8cd"/>
-        <rect x="17" y="10" width="2" height="3" fill="#f6a8cd"/>
-        <rect x="5" y="13" width="2" height="3" fill="#f6a8cd"/>
-        <rect x="16" y="13" width="2" height="3" fill="#f6a8cd"/>
-        <rect x="7" y="16" width="2" height="3" fill="#f6a8cd"/>
-        <rect x="14" y="16" width="2" height="3" fill="#f6a8cd"/>
-        <rect x="9" y="19" width="2" height="2" fill="#f6a8cd"/>
-        <rect x="12" y="19" width="2" height="2" fill="#f6a8cd"/>
-        <rect x="18" y="2" width="2" height="2" fill="#ffd98f"/>
-        <rect x="17" y="4" width="2" height="2" fill="#ffd98f"/>
-        <rect x="19" y="4" width="2" height="2" fill="#ffd98f"/>
-        <rect x="18" y="6" width="2" height="2" fill="#ffd98f"/>
-        <rect x="22" y="7" width="2" height="2" fill="#ffd98f"/>
-        <rect x="21" y="9" width="2" height="2" fill="#ffd98f"/>
-        <rect x="23" y="9" width="2" height="2" fill="#ffd98f"/>
-        <rect x="22" y="11" width="2" height="2" fill="#ffd98f"/>
-      </svg>
-      <span class="logo-copy">
-        <span class="logo-text">Tina贺♡严美娜</span>
-        <span class="logo-sub">ALL FOR XIANGLIN</span>
-      </span>
-    </span>
+  <a class="nav-logo" href="index.html" title="Tina ♡ Oliver · 返回首页" aria-label="Tina ♡ Oliver，返回首页">
+    <span class="logo-text">Tina <svg class="logo-heart" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 21.2 C10.8 20 7.4 17.2 5 14.2 C2.9 11.7 2.6 8.6 4.4 6.5 C5.9 4.8 8.3 4.9 9.8 6.3 C10.7 7 11.5 8.1 12 9.2 C12.5 8.1 13.3 7 14.2 6.3 C15.7 4.9 18.1 4.8 19.6 6.5 C21.4 8.6 21.1 11.7 19 14.2 C16.6 17.2 13.2 20 12 21.2 Z"/></svg> Oliver</span>
+    <span class="logo-sub">ALL FOR XIANGLIN</span>
   </a>
   <button class="nav-toggle" id="nav-toggle" type="button" aria-label="打开菜单" aria-expanded="false" aria-controls="nav-links">
     <span></span>
@@ -57,19 +28,21 @@
     <span></span>
   </button>
   <div class="nav-links" id="nav-links">
-    <a href="index.html" class="">首页</a>
-    <a href="timeline.html" class="">记忆时间轴</a>
-    <a href="gallery.html" class="">照片图库</a>
-    <a href="stages.html" class="on">舞台高光</a>
-    <a href="birthday.html" class="">生日纪念</a>
-    <a href="wall.html" class="">留言墙</a>
+    <a href="index.html" class="">Home</a>
+    <a href="timeline.html" class="">Timeline</a>
+    <a href="gallery.html" class="">Gallery</a>
+    <a href="stages.html" class="on">Stages</a>
+    <a href="birthday.html" class="">Birthday</a>
+    <a href="wall.html" class="">Wall</a>
+    <a href="about.html" class="">About</a>
   </div>
 </nav>
 
 
 <section class="section">
+  <p class="eyebrow reveal">高光时刻 · Stages</p>
   <h2 class="section-title reveal">舞台高光</h2>
-  <p class="section-sub reveal">翔霖的出名舞台与合作曲 · 点击即可观看</p>
+  <p class="section-sub reveal">每一次站在光里，都是被记住的理由 —— 点开看看</p>
   <div class="stage-grid reveal" id="stages-body"></div>
 </section>
 
@@ -93,6 +66,9 @@
     </svg>
   </span>
   <p>✦ All for XiangLin.</p>
+  <div class="twin-mark" aria-hidden="true" title="Tina ♡ Oliver">
+    <span class="tm-star"></span><span class="tm-spark s1"></span><span class="tm-link"></span><span class="tm-spark s2"></span><span class="tm-star tm-pink"></span>
+  </div>
   <p class="copyright">Copyright © KONOE. All rights reserved.</p>
 </footer>
 
@@ -107,7 +83,8 @@
 <script src="js/audio.js?v=34"></script>
 
 <script src="js/reveal.js?v=34"></script>
-<script src="js/nav.js?v=34"></script>
+<script src="js/nav.js?v=35"></script>
+<script src="js/click-spark.js?v=36"></script>
 <script src="js/gate.js?v=34"></script>
 
 </body>

@@ -235,7 +235,7 @@ const TIMELINE_DATA = [
     tag: "舞台",
     title: "《情人》意识流编舞",
     desc: "一段被反复解读的编舞，宿命感十足，是两人默契的注脚。",
-    link: { text: "看舞台 ↗", url: "https://search.bilibili.com/all?keyword=严浩翔%20贺峻霖%20情人%20舞台" }
+    link: { text: "看舞台 ↗", url: "https://search.bilibili.com/all?keyword=Oliver%20Tina%20情人%20舞台" }
   },
   {
     date: "2020.12.27",
@@ -324,7 +324,7 @@ const TIMELINE_DATA = [
     era: "重逢 · 成团与出发 (2019–2021)",
     tag: "里程碑",
     title: "首个双人外务 · 沸腾之夜",
-    desc: "首个双人主持外务，贺峻霖也由此坚定了考播音的方向。",
+    desc: "首个双人主持外务，Tina也由此坚定了考播音的方向。",
   },
   {
     date: "2021.06.01",
@@ -349,7 +349,7 @@ const TIMELINE_DATA = [
     tag: "舞台",
     title: "《十七岁的雨季》",
     desc: "播放量登顶，第三次拿下第一，也成为两人少年感的代表舞台。",
-    link: { text: "看舞台 ↗", url: "https://search.bilibili.com/all?keyword=严浩翔%20贺峻霖%20十七岁的雨季" }
+    link: { text: "看舞台 ↗", url: "https://search.bilibili.com/all?keyword=Oliver%20Tina%20十七岁的雨季" }
   },
   {
     date: "2021",
@@ -383,14 +383,14 @@ const TIMELINE_DATA = [
     era: "长情 · 成年与陪伴 (2022–2024)",
     tag: "里程碑",
     title: "高考录取 · 北电与中传",
-    desc: "严浩翔考入北京电影学院，贺峻霖考入中国传媒大学。不同的校园，同一条并肩的路。",
+    desc: "Oliver考入北京电影学院，Tina考入中国传媒大学。不同的校园，同一条并肩的路。",
   },
   {
     date: "2022.06.15",
     year: 2022,
     era: "长情 · 成年与陪伴 (2022–2024)",
     tag: "生日",
-    title: "贺峻霖 18 岁生日 · 瞬间即是永恒",
+    title: "Tina 18 岁生日 · 瞬间即是永恒",
     desc: "「瞬间即是永恒」这句话，在这一年出现，成为属于翔霖的注脚。",
   },
   {
@@ -406,7 +406,7 @@ const TIMELINE_DATA = [
     year: 2022,
     era: "长情 · 成年与陪伴 (2022–2024)",
     tag: "生日",
-    title: "严浩翔 18 岁生日",
+    title: "Oliver 18 岁生日",
     desc: "小严也成年啦，故事翻到新的篇章。",
   },
   {
@@ -446,8 +446,8 @@ const TIMELINE_DATA = [
     year: 2023,
     era: "长情 · 成年与陪伴 (2022–2024)",
     tag: "生日",
-    title: "贺峻霖生日（严拍的照片）",
-    desc: "这一年生日的照片，被粉丝确认是严浩翔拍的。",
+    title: "Tina生日（严拍的照片）",
+    desc: "这一年生日的照片，被粉丝确认是Oliver拍的。",
   },
   {
     date: "2023.07.13",
@@ -470,7 +470,7 @@ const TIMELINE_DATA = [
     year: 2023,
     era: "长情 · 成年与陪伴 (2022–2024)",
     tag: "生日",
-    title: "严浩翔生日",
+    title: "Oliver生日",
     desc: "小严的生日，粉丝照例准时赴约。",
   },
   {
@@ -480,7 +480,7 @@ const TIMELINE_DATA = [
     tag: "舞台",
     title: "《挚友》",
     desc: "双人合作舞台，把「挚友」唱给彼此听。",
-    link: { text: "看舞台 ↗", url: "https://search.bilibili.com/all?keyword=严浩翔%20贺峻霖%20挚友%20舞台" }
+    link: { text: "看舞台 ↗", url: "https://search.bilibili.com/all?keyword=Oliver%20Tina%20挚友%20舞台" }
   },
   {
     date: "2023.11.23",
@@ -512,7 +512,7 @@ const TIMELINE_DATA = [
     era: "长情 · 成年与陪伴 (2022–2024)",
     tag: "舞台",
     title: "《耻辱柱》",
-    desc: "等待三年的正式双人舞台，在严浩翔 20 岁生日这天终于到来。",
+    desc: "等待三年的正式双人舞台，在Oliver 20 岁生日这天终于到来。",
     link: { text: "看舞台 ↗", url: "https://www.bilibili.com/video/BV1mxxWeeE5r" }
   },
   {
@@ -539,7 +539,7 @@ const TIMELINE_DATA = [
     era: "未完待续 (2025– )",
     tag: "生日",
     title: "各自 21 岁生日",
-    desc: "贺峻霖与严浩翔先后迎来 21 岁，「又陪你长大了一岁」成了每年不变的仪式。",
+    desc: "Tina与Oliver先后迎来 21 岁，「又陪你长大了一岁」成了每年不变的仪式。",
   },
   {
     date: "2026.04",
@@ -554,7 +554,7 @@ const TIMELINE_DATA = [
     year: 2026,
     era: "未完待续 (2025– )",
     tag: "里程碑",
-    title: "贺峻霖本科毕业 · 保研中传",
+    title: "Tina本科毕业 · 保研中传",
     desc: "双料优秀毕业生，成为时代峰峻首位研究生艺人。翔霖的故事，一直在变得更好。",
   },
   {
@@ -562,7 +562,7 @@ const TIMELINE_DATA = [
     year: 2026,
     era: "未完待续 (2025– )",
     tag: "物料",
-    title: "「你好，星期六」一句话温暖贺峻霖",
-    desc: "节目里严浩翔一句「可以温暖贺峻霖一整天」的话登上热搜，只有两人懂的专属暗号又被印证。",
+    title: "「你好，星期六」一句话温暖Tina",
+    desc: "节目里Oliver一句「可以温暖Tina一整天」的话登上热搜，只有两人懂的专属暗号又被印证。",
   }
 ];

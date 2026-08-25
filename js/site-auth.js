@@ -45,7 +45,7 @@
       p_password: password
     });
     const data = rows && rows[0];
-    if (!data) throw new Error("注册失败，请稍后重试");
+    if (!data) throw new Error("Registration 失败 — try again");
     setSession(data);
     return data;
   }
@@ -56,7 +56,7 @@
       p_password: password
     });
     const data = rows && rows[0];
-    if (!data) throw new Error("登录失败，请稍后重试");
+    if (!data) throw new Error("Login 失败 — try again");
     setSession(data);
     return data;
   }

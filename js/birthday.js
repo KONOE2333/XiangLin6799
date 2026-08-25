@@ -5,15 +5,15 @@
 
   const fmt = (d) => { const p = d.split("-"); return p[0] + "." + p[1]; };
 
-  // 生日倒计时：并列展示严浩翔（8/16）与 贺峻霖（6/15）
+  // 生日倒计时：并列展示Oliver（8/16）与 Tina（6/15）
   (function renderCountdown() {
     const box = document.getElementById("bd-countdown");
     if (!box) return;
     const now = new Date();
     const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     const events = [
-      { name: "严浩翔", m: 7, d: 16 },   // 8/16
-      { name: "贺峻霖", m: 5, d: 15 }    // 6/15
+      { name: "Oliver", m: 7, d: 16 },   // 8/16
+      { name: "Tina", m: 5, d: 15 }    // 6/15
     ];
 
     function daysTo(ev) {
@@ -27,11 +27,11 @@
       const { diff, md } = daysTo(ev);
       if (diff === 0) {
         return '<span class="cd-unit"><b class="cd-name">' + ev.name +
-          '</b><span class="cd-text"> 今天生日 🎂</span></span>';
+          '</b><span class="cd-line"><span class="cd-text"> Birthday today 🎂</span></span></span>';
       }
       return '<span class="cd-unit"><b class="cd-name">' + ev.name +
-        '</b><span class="cd-text"> 生日还有</span><b class="cd-num">' + diff +
-        '</b><span class="cd-text">天 · ' + md + '</span></span>';
+        '</b><span class="cd-line"><span class="cd-text">Birthday in </span><b class="cd-num">' + diff +
+        '</b><span class="cd-text">days · ' + md + '</span></span></span>';
     }
 
     box.innerHTML = events.map(piece).join('<span class="cd-divider">|</span>');
@@ -45,7 +45,7 @@
   function renderPics(pics, hasVideo) {
     if (!pics || !pics.length) {
       // 有视频的卡片不显示「配图待补充」占位
-      return hasVideo ? "" : '<div class="bd-pics bd-pics--empty">（原微博配图待补充）</div>';
+      return hasVideo ? "" : '<div class="bd-pics bd-pics--empty">Original photos pending</div>';
     }
     // 配图已本地化托管：展示用压缩版 img/birthday/xxx.jpg，
     // 点击在新标签页打开原图 img/birthday/large/xxx.jpg
@@ -73,11 +73,11 @@
   // person: 寿星数据；from: 「谁写的祝福」；replyLabel: 「谁回复的」。person 为 null 时不渲染。
   function card(person, from, replyLabel) {
     if (!person) return "";
-    const who = person.name + "生日 · " + fmt(person.date);
+    const who = person.name + " · " + fmt(person.date);
     const wish = person.wish ? escapeHtml(person.wish)
-      : '<span style="opacity:.5">（该年公开原文暂未收录）</span>';
+      : '<span style="opacity:.5">No public post archived yet</span>';
     const link = person.link
-      ? '<a class="bd-link" href="' + person.link + '" target="_blank" rel="noopener">查看当天微博 →</a>'
+      ? '<a class="bd-link" href="' + person.link + '" target="_blank" rel="noopener">View Weibo →</a>'
       : "";
     const reply = person.reply
       ? '<div class="bd-reply"><span class="bd-reply-label">' + replyLabel + "：</span>" + escapeHtml(person.reply) + "</div>"
@@ -94,13 +94,13 @@
            "</div>";
   }
 
-  // 按年份倒序；每年先贺峻霖(6/15)后严浩翔(8/16)
+  // 按年份倒序；每年先Tina(6/15)后Oliver(8/16)
   BIRTHDAYS.forEach((y) => {
     const block = document.createElement("div");
     block.className = "yr-block";
     const cards =
-      card(y.jun, "严浩翔的祝福", "贺峻霖回复") +
-      card(y.xiang, "贺峻霖的祝福", "严浩翔回复");
+      card(y.jun, "From Oliver", "Tina 的回复") +
+      card(y.xiang, "From Tina", "Oliver 的回复");
     // 只有一张卡时加单卡样式（居中、不拉伸成两列）
     const single = (!y.jun || !y.xiang) ? " bd-grid--single" : "";
     block.innerHTML =

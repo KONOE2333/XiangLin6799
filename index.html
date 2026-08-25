@@ -4,12 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>翔霖小站 · 时间与星光</title>
-<meta name="description" content="严浩翔 × 贺峻霖的粉丝纪念小站，收录照片、时间轴、舞台与生日祝福。">
-<meta name="theme-color" content="#060d24">
+<meta name="description" content="Tina × Oliver的粉丝纪念小站，收录照片、时间轴、舞台与生日祝福。">
+<meta name="theme-color" content="#070b17">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="fonts/script/script-fonts.css?v=34">
 <link rel="stylesheet" href="fonts/noto-sans-sc/noto-sans-sc-wght.css?v=34">
-<link rel="stylesheet" href="css/style.css?v=34">
-<link rel="stylesheet" href="css/home.css?v=34">
+<link rel="stylesheet" href="css/style.css?v=39">
+<link rel="stylesheet" href="css/home.css?v=39">
 
 <script>document.documentElement.classList.add('js');</script>
 
@@ -17,39 +18,9 @@
 <body class="home">
 <canvas id="star-rain"></canvas>
 <nav class="nav nav-dark">
-  <a class="nav-logo" href="index.html" title="Tina贺♡严美娜" aria-label="Tina贺♡严美娜，返回首页">
-    <span class="logo-washi logo-washi-left" aria-hidden="true"></span>
-    <span class="logo-washi logo-washi-right" aria-hidden="true"></span>
-    <span class="logo-sticker">
-      <svg class="logo-pixel" viewBox="0 0 24 24" shape-rendering="crispEdges" aria-hidden="true">
-        <rect x="6" y="5" width="2" height="2" fill="#f6a8cd"/>
-        <rect x="9" y="5" width="2" height="2" fill="#f6a8cd"/>
-        <rect x="12" y="5" width="2" height="2" fill="#f6a8cd"/>
-        <rect x="15" y="5" width="2" height="2" fill="#f6a8cd"/>
-        <rect x="5" y="7" width="2" height="3" fill="#f6a8cd"/>
-        <rect x="16" y="7" width="2" height="3" fill="#f6a8cd"/>
-        <rect x="4" y="10" width="2" height="3" fill="#f6a8cd"/>
-        <rect x="17" y="10" width="2" height="3" fill="#f6a8cd"/>
-        <rect x="5" y="13" width="2" height="3" fill="#f6a8cd"/>
-        <rect x="16" y="13" width="2" height="3" fill="#f6a8cd"/>
-        <rect x="7" y="16" width="2" height="3" fill="#f6a8cd"/>
-        <rect x="14" y="16" width="2" height="3" fill="#f6a8cd"/>
-        <rect x="9" y="19" width="2" height="2" fill="#f6a8cd"/>
-        <rect x="12" y="19" width="2" height="2" fill="#f6a8cd"/>
-        <rect x="18" y="2" width="2" height="2" fill="#ffd98f"/>
-        <rect x="17" y="4" width="2" height="2" fill="#ffd98f"/>
-        <rect x="19" y="4" width="2" height="2" fill="#ffd98f"/>
-        <rect x="18" y="6" width="2" height="2" fill="#ffd98f"/>
-        <rect x="22" y="7" width="2" height="2" fill="#ffd98f"/>
-        <rect x="21" y="9" width="2" height="2" fill="#ffd98f"/>
-        <rect x="23" y="9" width="2" height="2" fill="#ffd98f"/>
-        <rect x="22" y="11" width="2" height="2" fill="#ffd98f"/>
-      </svg>
-      <span class="logo-copy">
-        <span class="logo-text">Tina贺♡严美娜</span>
-        <span class="logo-sub">ALL FOR XIANGLIN</span>
-      </span>
-    </span>
+  <a class="nav-logo" href="index.html" title="Tina ♡ Oliver · 返回首页" aria-label="Tina ♡ Oliver，返回首页">
+    <span class="logo-text">Tina <svg class="logo-heart" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 21.2 C10.8 20 7.4 17.2 5 14.2 C2.9 11.7 2.6 8.6 4.4 6.5 C5.9 4.8 8.3 4.9 9.8 6.3 C10.7 7 11.5 8.1 12 9.2 C12.5 8.1 13.3 7 14.2 6.3 C15.7 4.9 18.1 4.8 19.6 6.5 C21.4 8.6 21.1 11.7 19 14.2 C16.6 17.2 13.2 20 12 21.2 Z"/></svg> Oliver</span>
+    <span class="logo-sub">ALL FOR XIANGLIN</span>
   </a>
   <button class="nav-toggle" id="nav-toggle" type="button" aria-label="打开菜单" aria-expanded="false" aria-controls="nav-links">
     <span></span>
@@ -57,20 +28,24 @@
     <span></span>
   </button>
   <div class="nav-links" id="nav-links">
-    <a href="index.html" class="on">首页</a>
-    <a href="timeline.html" class="">记忆时间轴</a>
-    <a href="gallery.html" class="">照片图库</a>
-    <a href="stages.html" class="">舞台高光</a>
-    <a href="birthday.html" class="">生日纪念</a>
-    <a href="wall.html" class="">留言墙</a>
+    <a href="index.html" class="on">Home</a>
+    <a href="timeline.html" class="">Timeline</a>
+    <a href="gallery.html" class="">Gallery</a>
+    <a href="stages.html" class="">Stages</a>
+    <a href="birthday.html" class="">Birthday</a>
+    <a href="wall.html" class="">Wall</a>
+    <a href="about.html" class="">About</a>
   </div>
 </nav>
 
 
 <header class="hero">
-  <p class="hero-sub">XIANG LIN · MEMORY &amp; STARLIGHT</p>
-  <h1 class="hero-title">时间会记得<br>瞬间即是永恒</h1>
-  <p class="hero-desc">严浩翔 × 贺峻霖 —— 从 2015 到现在，把每一段同行的时光都收进这里。</p>
+  <div class="hero-bg" aria-hidden="true"></div>
+  <p class="hero-sub">Xiang Lin · Memory &amp; Starlight</p>
+  <h1 class="hero-title" id="particle-title" aria-label="时间会记得，瞬间即是永恒">
+    <span class="particle-title__text">时间会记得<br>瞬间即是永恒</span>
+  </h1>
+  <p class="hero-desc">Tina × Oliver —— 从 2015 到现在，把每一段同行的时光都收进这里。</p>
 
   <div class="hero-days">
     <span>他们相识已经</span>
@@ -84,20 +59,22 @@
     <span>天</span>
   </div>
 
-  <button class="hero-btn" id="moments-btn" type="button">我们的瞬间 ✦</button>
+  <button class="hero-btn" id="moments-btn" type="button">Our Moments ✦</button>
 </header>
 
 <!-- 双生星座：签名母题 -->
 <div class="twin reveal">
-  <div class="twin-node"><span class="twin-dot"></span><span class="twin-name">严浩翔</span></div>
-  <span class="twin-line"></span>
-  <div class="twin-node"><span class="twin-dot"></span><span class="twin-name">贺峻霖</span></div>
+  <div class="twin-node"><span class="twin-dot"></span><span class="twin-name">Oliver</span></div>
+  <span class="twin-line"><i class="twin-star s1"></i><i class="twin-star s2"></i></span>
+  <div class="twin-node"><span class="twin-dot"></span><span class="twin-name">Tina</span></div>
 </div>
 
 <!-- 欢迎文案 -->
 <section class="section welcome-sec reveal">
+  <p class="eyebrow">序幕 · Prologue</p>
   <h2 class="section-title">欢迎来到翔霖小站</h2>
-  <p class="welcome-text">欢迎来到本站，这里主要记录小严♡小贺的照片、舞台、物料等，欢迎每一位爱他们的你的来访，也感谢你对翔霖的爱。网站不定时更新，多多期待吧～</p>
+  <p class="section-sub">这是一本关于 Tina ♡ Oliver 的私人纪念册 —— 从相遇开始，慢慢翻下去</p>
+  <p class="welcome-text">欢迎来到本站，这里主要记录 Tina ♡ Oliver 的照片、舞台、物料等，欢迎每一位爱他们的你的来访，也感谢你对翔霖的爱。网站不定时更新，多多期待吧～</p>
 </section>
 
 <!-- 横向不规则内容区：音乐 / 状态 / 今日一句 -->
@@ -112,7 +89,7 @@
       <div class="quote-inner">
         <div class="q-text" id="quote-text"></div>
         <div class="quote-foot">
-          <button class="q-btn" id="quote-btn" type="button">抽一句 ✦</button>
+          <button class="q-btn" id="quote-btn" type="button">Draw One ✦</button>
           <div class="q-from" id="quote-from"></div>
         </div>
       </div>
@@ -129,37 +106,50 @@
         <div class="mp-main">
           <div class="mp-title" id="mp-title">—</div>
           <div class="mp-artist" id="mp-artist"></div>
-          <div class="mp-bar"><div class="mp-progress" id="mp-progress"></div></div>
+          <div class="mp-bar" id="mp-bar">
+            <div class="mp-track" id="mp-track"><div class="mp-progress" id="mp-progress"></div></div>
+          </div>
           <div class="mp-controls">
-            <button id="mp-prev" class="mp-btn" type="button" title="上一首">⏮</button>
-            <button id="mp-toggle" class="mp-toggle" type="button" title="播放/暂停">▶</button>
-            <button id="mp-next" class="mp-btn" type="button" title="下一首">⏭</button>
+            <button id="mp-prev" class="mp-btn" type="button" title="上一首" aria-label="上一首">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M6 5h2v14H6zM19 5.5v13a.5.5 0 0 1-.8.4L9.5 12.4a.5.5 0 0 1 0-.8l8.7-6.5a.5.5 0 0 1 .8.4z"/></svg>
+            </button>
+            <button id="mp-toggle" class="mp-toggle" type="button" title="播放/暂停" aria-label="播放/暂停">
+              <svg class="icon-play" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M8 5v14l11-7z"/></svg>
+              <svg class="icon-pause" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg>
+            </button>
+            <button id="mp-next" class="mp-btn" type="button" title="下一首" aria-label="下一首">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M16 5h2v14h-2zM5 5.5v13a.5.5 0 0 0 .8.4l8.7-6.5a.5.5 0 0 0 0-.8L5.8 5.1a.5.5 0 0 0-.8.4z"/></svg>
+            </button>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- 小站状态 -->
-    <div class="bento-card bento-status">
+    <!-- 去逛逛：精选高光引导卡片（替换原运营指标面板） -->
+    <div class="bento-card bento-highlights">
       <div class="bento-head">
-        <span class="bento-icon">✦</span>
-        <span class="bento-name">小站状态</span>
+        <span class="bento-icon">✧</span>
+        <span class="bento-name">去逛逛</span>
       </div>
-      <div class="status-grid">
-        <div class="stat"><div class="stat-num" id="stat-visits">··</div><div class="stat-label">累计访客</div></div>
-        <div class="stat"><div class="stat-num" id="stat-msgs">··</div><div class="stat-label">留言条数</div></div>
-        <div class="stat"><div class="stat-num" id="stat-days">··</div><div class="stat-label">建站天数</div></div>
-        <div class="stat"><div class="stat-num" id="stat-update">··</div><div class="stat-label">最近更新</div></div>
+      <div class="hl-row">
+        <a class="hl-card" href="timeline.html">
+          <span class="hl-thumb" style="background-image:url('img/moments/01.jpg')"></span>
+          <span class="hl-label">记忆时间轴</span>
+          <span class="hl-sub">相遇与至今</span>
+        </a>
+        <a class="hl-card" href="gallery.html">
+          <span class="hl-thumb" style="background-image:url('img/gallery/moments/03.jpg')"></span>
+          <span class="hl-label">照片图库</span>
+          <span class="hl-sub">高光瞬间</span>
+        </a>
+        <a class="hl-card" href="stages.html">
+          <span class="hl-thumb" style="background-image:url('img/moments/05.jpg')"></span>
+          <span class="hl-label">舞台高光</span>
+          <span class="hl-sub">每一次同框</span>
+        </a>
       </div>
     </div>
   </div>
-</section>
-
-<!-- 更新日志：放在最下方 -->
-<section class="section log-sec reveal">
-  <h2 class="section-title">更新日志</h2>
-  <p class="section-sub">小站一点点长起来的痕迹</p>
-  <ul class="changelog" id="changelog"></ul>
 </section>
 
 <div class="polaroid-layer" id="polaroid-layer"></div>
@@ -187,7 +177,16 @@
     </svg>
   </span>
   <p>✦ All for XiangLin.</p>
+  <div class="twin-mark" aria-hidden="true" title="Tina ♡ Oliver">
+    <span class="tm-star"></span><span class="tm-spark s1"></span><span class="tm-link"></span><span class="tm-spark s2"></span><span class="tm-star tm-pink"></span>
+  </div>
   <p class="copyright">Copyright © KONOE. All rights reserved.</p>
+  <div class="footer-stats" aria-label="小站数据">
+    <span><b id="stat-visits">··</b>Visits</span>
+    <span><b id="stat-msgs">··</b>Messages</span>
+    <span><b id="stat-days">··</b>Days</span>
+    <span><b id="stat-update">··</b>Updated</span>
+  </div>
 </footer>
 
 <script src="js/starrain.js?v=34"></script>
@@ -195,13 +194,17 @@
 <script src="js/photos-data.js?v=34"></script>
 <script src="js/quotes-data.js?v=34"></script>
 <script src="js/changelog-data.js?v=34"></script>
+<script src="js/changelog.js?v=37"></script>
 <script src="js/wall-config.js?v=34"></script>
 <script src="js/stats.js?v=34"></script>
 <script src="js/audio.js?v=34"></script>
 
-<script src="js/home.js?v=34"></script>
+<script src="js/home.js?v=37"></script>
+<script src="js/mp-slider.js?v=34"></script>
+<script src="js/particle-title.js?v=34"></script>
 <script src="js/reveal.js?v=34"></script>
-<script src="js/nav.js?v=34"></script>
+<script src="js/nav.js?v=35"></script>
+<script src="js/click-spark.js?v=36"></script>
 <script src="js/gate.js?v=34"></script>
 
 </body>

@@ -66,7 +66,7 @@
 
   async function callRpc(name, body) {
     const c = cfg();
-    if (!c.supabase || !c.supabase.url) throw new Error("云端未配置");
+    if (!c.supabase || !c.supabase.url) throw new Error("Cloud not configured");
     const r = await fetch(c.supabase.url + "/rest/v1/rpc/" + name, {
       method: "POST",
       headers: headers(),
@@ -76,7 +76,7 @@
     if (!r.ok) {
       let data = {};
       try { data = text ? JSON.parse(text) : {}; } catch (e) {}
-      throw new Error(data.message || (name + " 失败"));
+      throw new Error(data.message || (name + " failed"));
     }
     return text ? JSON.parse(text) : [];
   }
@@ -97,7 +97,7 @@
       },
       body: file
     });
-    if (!r.ok) throw new Error("图片上传失败");
+    if (!r.ok) throw new Error("Image upload failed");
     return s.url + "/storage/v1/object/public/photo-uploads/" + path;
   }
 
@@ -105,7 +105,7 @@
     return new Promise((resolve, reject) => {
       const img = new Image();
       img.onload = () => resolve(img);
-      img.onerror = () => reject(new Error("图片解析失败"));
+      img.onerror = () => reject(new Error("Image parse failed"));
       img.src = url;
     });
   }
@@ -125,7 +125,7 @@
       const ctx = canvas.getContext("2d");
       ctx.drawImage(img, 0, 0, w, h);
       const blob = await new Promise((resolve) => canvas.toBlob(resolve, "image/jpeg", 0.85));
-      if (!blob) throw new Error("压缩失败");
+      if (!blob) throw new Error("Compression failed");
       return new File([blob], file.name.replace(/\.[^.]+$/, ".jpg"), { type: "image/jpeg" });
     } finally {
       URL.revokeObjectURL(url);
@@ -177,7 +177,7 @@
       loaded = true;
       renderWall();
     } catch (e) {
-      console.warn("软木板加载失败：", e);
+      console.warn("Failed to load board: ", e);
     }
   }
 
@@ -210,11 +210,11 @@
     e.preventDefault();
     const file = imageInput && imageInput.files && imageInput.files[0];
     const title = titleInput ? titleInput.value.trim() : "";
-    if (!file) return setMsg("请选择一张本地图片");
-    if (file.size > MAX_SIZE) return setMsg("图片不能超过 5MB");
+    if (!file) return setMsg("Please choose an image");
+    if (file.size > MAX_SIZE) return setMsg("Image must be under 5MB");
     const btn = form.querySelector("button[type=submit]");
     btn.disabled = true;
-    setMsg("正在钉上软木板…");
+    setMsg("Pinning to board…");
     try {
       const imageUrl = await uploadImage(await compressImage(file));
       await callRpc("submit_photo_entry", {
@@ -226,9 +226,9 @@
       });
       if (form) form.reset();
       await loadWall();
-      setMsg("已经钉上软木板，拖动可以调整位置。", true);
+      setMsg("Pinned! Drag to rearrange.", true);
     } catch (err) {
-      setMsg(err && err.message ? err.message : "上传失败，请稍后重试");
+      setMsg(err && err.message ? err.message : "Upload failed — try again");
     } finally {
       btn.disabled = false;
     }
@@ -271,7 +271,7 @@
         p_rot: Number(photo.style.getPropertyValue("--rot").replace("deg", "") || 0)
       });
     } catch (err) {
-      console.warn("位置保存失败：", err);
+      console.warn("Failed to save position: ", err);
     }
   });
 
@@ -292,7 +292,7 @@
       photos = photos.filter(x => x.id !== id);
       renderWall();
     } catch (err) {
-      window.alert(err && err.message ? err.message : "删除失败");
+      window.alert(err && err.message ? err.message : "Delete failed");
     }
   });
 
@@ -300,26 +300,26 @@
     if (adminMode) {
       adminMode = false;
       adminCode = "";
-      adminToggle.textContent = "站长模式";
+      adminToggle.textContent = "Admin";
       renderWall();
       return;
     }
-    const code = window.prompt("请输入站长口令", "");
+    const code = window.prompt("Enter admin passcode", "");
     if (code === null) return;
     if (code.trim() !== (cfg().adminCode || "")) {
-      window.alert("口令错误");
+      window.alert("Wrong passcode");
       return;
     }
     adminMode = true;
     adminCode = code.trim();
-    adminToggle.textContent = "退出站长模式";
+    adminToggle.textContent = "Exit admin";
     renderWall();
   });
 
   function applyZoom() {
     if (!canvas) return;
     canvas.style.setProperty("--zoom", boardZoom);
-    if (zoomLabel) zoomLabel.textContent = "画布 " + Math.round(boardZoom * 100) + "%";
+    if (zoomLabel) zoomLabel.textContent = "Canvas " + Math.round(boardZoom * 100) + "%";
   }
 
   if (zoomIn) zoomIn.addEventListener("click", () => {

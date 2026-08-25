@@ -1,32 +1,75 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-{{head}}
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>记忆时间轴 · 翔霖小站</title>
+<meta name="description" content="从 2015 到现在的翔霖记忆时间轴，按年代与年份浏览同框、舞台与物料。">
+<meta name="theme-color" content="#070b17">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="fonts/script/script-fonts.css?v=34">
+<link rel="stylesheet" href="fonts/noto-sans-sc/noto-sans-sc-wght.css?v=34">
+<link rel="stylesheet" href="css/style.css?v=39">
+<link rel="stylesheet" href="css/home.css?v=39">
+
+<script>document.documentElement.classList.add('js');</script>
+
 </head>
 <body class="home">
 <canvas id="star-rain"></canvas>
-{{nav}}
+<nav class="nav nav-dark">
+  <a class="nav-logo" href="index.html" title="Tina ♡ Oliver · 返回首页" aria-label="Tina ♡ Oliver，返回首页">
+    <span class="logo-text">Tina <svg class="logo-heart" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 21.2 C10.8 20 7.4 17.2 5 14.2 C2.9 11.7 2.6 8.6 4.4 6.5 C5.9 4.8 8.3 4.9 9.8 6.3 C10.7 7 11.5 8.1 12 9.2 C12.5 8.1 13.3 7 14.2 6.3 C15.7 4.9 18.1 4.8 19.6 6.5 C21.4 8.6 21.1 11.7 19 14.2 C16.6 17.2 13.2 20 12 21.2 Z"/></svg> Oliver</span>
+    <span class="logo-sub">ALL FOR XIANGLIN</span>
+  </a>
+  <button class="nav-toggle" id="nav-toggle" type="button" aria-label="打开菜单" aria-expanded="false" aria-controls="nav-links">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+  <div class="nav-links" id="nav-links">
+    <a href="index.html" class="">Home</a>
+    <a href="timeline.html" class="on">Timeline</a>
+    <a href="gallery.html" class="">Gallery</a>
+    <a href="stages.html" class="">Stages</a>
+    <a href="birthday.html" class="">Birthday</a>
+    <a href="wall.html" class="">Wall</a>
+    <a href="about.html" class="">About</a>
+  </div>
+</nav>
+
 
 <section class="section">
+  <p class="eyebrow reveal">相遇与至今 · Our Story</p>
   <h2 class="section-title reveal">记忆时间轴</h2>
-  <p class="section-sub reveal">以时间为轴，从相遇到现在 · 每个节点都是被记住的瞬间</p>
+  <p class="section-sub reveal">从 2015 的初遇到今天，把同行的时光一页页翻过</p>
+  <div class="filter reveal" id="year-filter"></div>
+  <div class="timeline" id="timeline-body"></div>
   <div class="tl-contribute reveal" id="tl-contribute">
-    <div class="tl-contribute-head">
-      <div>
-        <h3>记忆投稿箱</h3>
-        <p>如果你知道值得补进时间轴的翔霖同框、舞台、物料或时间线细节，可以投稿给我们。审核通过后会自动出现在对应年份里。</p>
-      </div>
-      <div class="tl-admin-actions">
-        <button id="timeline-admin-toggle" class="tl-admin-link tl-admin-toggle" type="button">站长模式</button>
-        <a class="tl-admin-link" href="review.html">投稿审核</a>
-      </div>
+    <div class="tl-collapsed" id="tl-collapsed">
+      <h3>记忆投稿箱</h3>
+      <button id="tl-collapsed-open" class="tl-collapsed-open" type="button">我要投稿 ✦</button>
     </div>
-
-    <div class="auth-panel" id="auth-panel">
-      <div class="auth-tabs">
-        <button id="auth-tab-login" class="on" type="button">登录</button>
-        <button id="auth-tab-register" type="button">注册</button>
+    <div class="tl-expand hidden" id="tl-expand">
+      <div class="tl-contribute-head">
+        <div class="tl-contribute-text">
+          <h3>记忆投稿箱</h3>
+          <p>如果你知道值得补进时间轴的 Tina ♡ Oliver 同框、舞台、物料或时间线细节，可以投稿给我们。审核通过后会自动出现在对应年份里。</p>
+        </div>
+        <div class="tl-head-actions">
+          <div class="tl-admin-actions">
+            <button id="tl-collapsed-close" class="tl-admin-link" type="button">收起</button>
+            <button id="timeline-admin-toggle" class="tl-admin-link tl-admin-toggle" type="button">站长模式</button>
+            <a class="tl-admin-link" href="review.html">投稿审核</a>
+          </div>
+          <div class="auth-tabs">
+            <button id="auth-tab-login" class="on" type="button">登录</button>
+            <button id="auth-tab-register" type="button">注册</button>
+          </div>
+        </div>
       </div>
+
+      <div class="auth-panel" id="auth-panel">
       <span id="auth-msg" class="auth-msg"></span>
       <div class="auth-form" id="auth-login">
         <input id="login-username" type="text" placeholder="用户名" autocomplete="username" aria-label="用户名">
@@ -43,56 +86,93 @@
     <form class="tl-submit-form hidden" id="timeline-submit-form">
       <div class="tl-submit-head">
         <span id="submit-who"></span>
-        <button id="logout-btn" type="button">退出账号</button>
+        <button id="logout-btn" type="button">Log out</button>
       </div>
       <div class="tl-form-grid">
-        <label>标题
+        <label>Title
           <input id="tl-title" type="text" maxlength="80" required>
         </label>
-        <label>时间
-          <input id="tl-date" type="text" placeholder="例如 2026.08.09" maxlength="30" required>
+        <label>Date
+          <input id="tl-date" type="text" placeholder="e.g. 2026.08.09" maxlength="30" required>
           <small class="field-hint">请写成 2026.08.09，不要写成 2026.8.9 或 2026年8月9日</small>
         </label>
-        <label>年份
+        <label>Year
           <input id="tl-year" type="number" min="2000" max="2035" required>
         </label>
-        <label>分类（可选）
+        <label>Tag (optional)
           <input id="tl-tag" type="text" placeholder="同框 / 舞台 / 物料 / 里程碑…" maxlength="20">
         </label>
       </div>
-      <label>内容
+      <label>Content
         <textarea id="tl-content" maxlength="1000" rows="5" required></textarea>
       </label>
       <div class="tl-form-row">
-        <label>图片（可选，不超过 5MB）
+        <label>Image (optional, ≤ 5MB)
           <input id="tl-image" type="file" accept="image/*">
         </label>
         <span id="image-info" class="image-info"></span>
-        <img id="image-preview" class="image-preview hidden" alt="图片预览">
+        <img id="image-preview" class="image-preview hidden" alt="Image preview">
       </div>
       <div class="tl-form-grid">
-        <label>链接地址（可选）
+        <label>Link URL (optional)
           <input id="tl-link-url" type="url" placeholder="https://…" maxlength="500">
         </label>
-        <label>链接文字（可选）
+        <label>Link text (optional)
           <input id="tl-link-text" type="text" placeholder="查看原视频 / 原物料" maxlength="40">
         </label>
       </div>
       <div class="tl-submit-foot">
-        <button type="submit">提交投稿 ✦</button>
+        <button type="submit">Submit ✦</button>
         <span id="submit-msg" class="submit-msg"></span>
       </div>
     </form>
+    </div>
   </div>
-  <div class="filter reveal" id="year-filter"></div>
-  <div class="timeline" id="timeline-body"></div>
 </section>
 
-{{footer}}
+<footer class="footer footer-dark">
+  <span class="footer-mark" aria-hidden="true">
+    <svg class="footer-pixel" viewBox="0 0 24 24" shape-rendering="crispEdges">
+      <rect x="6" y="5" width="2" height="2" fill="#f6a8cd"/>
+      <rect x="9" y="5" width="2" height="2" fill="#f6a8cd"/>
+      <rect x="12" y="5" width="2" height="2" fill="#f6a8cd"/>
+      <rect x="15" y="5" width="2" height="2" fill="#f6a8cd"/>
+      <rect x="5" y="7" width="2" height="3" fill="#f6a8cd"/>
+      <rect x="16" y="7" width="2" height="3" fill="#f6a8cd"/>
+      <rect x="4" y="10" width="2" height="3" fill="#f6a8cd"/>
+      <rect x="17" y="10" width="2" height="3" fill="#f6a8cd"/>
+      <rect x="5" y="13" width="2" height="3" fill="#f6a8cd"/>
+      <rect x="16" y="13" width="2" height="3" fill="#f6a8cd"/>
+      <rect x="7" y="16" width="2" height="3" fill="#f6a8cd"/>
+      <rect x="14" y="16" width="2" height="3" fill="#f6a8cd"/>
+      <rect x="9" y="19" width="2" height="2" fill="#f6a8cd"/>
+      <rect x="12" y="19" width="2" height="2" fill="#f6a8cd"/>
+    </svg>
+  </span>
+  <p>✦ All for XiangLin.</p>
+  <div class="twin-mark" aria-hidden="true" title="Tina ♡ Oliver">
+    <span class="tm-star"></span><span class="tm-spark s1"></span><span class="tm-link"></span><span class="tm-spark s2"></span><span class="tm-star tm-pink"></span>
+  </div>
+  <p class="copyright">Copyright © KONOE. All rights reserved.</p>
+</footer>
+
 
 <audio id="bgm" loop preload="none"></audio>
 <button id="music-btn" class="music-disc" type="button" title="背景音乐">♪</button>
 
-{{scripts}}
+<script src="js/starrain.js?v=34"></script>
+
+<script src="js/wall-config.js?v=34"></script>
+<script src="js/timeline-data.js?v=34"></script>
+<script src="js/timeline.js?v=34"></script>
+<script src="js/site-auth.js?v=34"></script>
+<script src="js/timeline-submit.js?v=34"></script>
+<script src="js/audio.js?v=34"></script>
+
+<script src="js/reveal.js?v=34"></script>
+<script src="js/nav.js?v=35"></script>
+<script src="js/click-spark.js?v=36"></script>
+<script src="js/gate.js?v=34"></script>
+
 </body>
 </html>

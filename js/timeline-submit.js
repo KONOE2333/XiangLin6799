@@ -166,7 +166,7 @@
       },
       body: file
     });
-    if (!r.ok) throw new Error("图片上传失败");
+    if (!r.ok) throw new Error("Image upload 失败");
     return s.url + "/storage/v1/object/public/timeline-uploads/" + path;
   }
 
@@ -220,7 +220,7 @@
       if (imageInfo) imageInfo.textContent = "";
       setMsg(submitMsg, "投稿已提交，审核通过后会自动出现在时间轴里。", true);
     } catch (err) {
-      setMsg(submitMsg, err && err.message ? err.message : "提交失败，请稍后重试");
+      setMsg(submitMsg, err && err.message ? err.message : "Submit 失败 — try again");
     } finally {
       submitBtn.disabled = false;
     }

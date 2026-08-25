@@ -38,6 +38,11 @@
   let perspectiveDistance = 1000;
   let selected = null;
   let dragging = false;
+  let zoom = 0;
+  let zooming = false;
+  let zoomStart = 0;
+  let zoomFrom = 0;
+  let zoomTarget = 0;
   let dragged = false;
   const pointers = new Map();
   let pinchStartDist = 0;
@@ -45,10 +50,10 @@
   function layout() {
     // 球半径、照片尺寸和透视距离都集中在这里，方便后续微调。
     const R = isMobile
-      ? Math.max(220, Math.min(window.innerWidth, window.innerHeight) * 0.42)
+      ? Math.max(200, Math.min(window.innerWidth, window.innerHeight) * 0.42)
       : Math.max(320, Math.min(window.innerWidth, window.innerHeight) * 0.5);
     const size = isMobile
-      ? Math.max(84, Math.min(120, R * 0.38))
+      ? Math.max(104, Math.min(150, R * 0.52))
       : Math.max(120, Math.min(220, R * 0.46));
     centerZ = R * 0.62;
     sphere.style.setProperty("--r", R + "px");
@@ -63,8 +68,11 @@
   }
 
   function applyRotation() {
+    // 蓄力前（!open）不加 translateZ：照片墙按真实尺寸清晰展示；
+    // 展开为 3D 球后，再把球心前移让正前方照片贴近镜头。
+    const z = open ? zoom.toFixed(2) : 0;
     sphere.style.transform =
-      "translateZ(" + (perspectiveDistance - centerZ).toFixed(2) + "px) rotateX(" +
+      "translateZ(" + z + "px) rotateX(" +
       rx.toFixed(2) + "deg) rotateY(" + ry.toFixed(2) + "deg)";
   }
 
@@ -82,6 +90,11 @@
   function openSphere() {
     if (open) return;
     open = true;
+    zooming = true;
+    zoomFrom = zoom;
+    zoomStart = performance.now();
+    zoomTarget = perspectiveDistance - centerZ;
+    applyRotation();
     if (coreWrap) coreWrap.classList.add("hidden");
     if (memoryCore) memoryCore.classList.remove("active");
     if (hint) hint.style.display = "none";
@@ -167,10 +180,11 @@
     photo.style.setProperty("--delay", (i * 45) + "ms");
     photo.style.setProperty("--launch-delay", (i * 20) + "ms");
     const restAngle = (i / Math.max(1, count)) * Math.PI * 2 + (i % 3) * 0.35;
-    const restRadius = 92 + (i % 5) * 22;
+    const maxRestR = Math.min(window.innerWidth * 0.34, 260);
+    const restRadius = Math.min(maxRestR, 118 + (i % 7) * 22);
     photo.style.setProperty("--rest-x", (Math.cos(restAngle) * restRadius).toFixed(0) + "px");
     photo.style.setProperty("--rest-y", (Math.sin(restAngle) * restRadius * 0.82).toFixed(0) + "px");
-    photo.style.setProperty("--rest-scale", (0.5 + (i % 5) * 0.055).toFixed(2));
+    photo.style.setProperty("--rest-scale", (0.82 + (i % 5) * 0.04).toFixed(2));
     photo.style.setProperty("--rest-rot", ((i % 5) * 6 - 12).toFixed(1) + "deg");
     photo.innerHTML =
       '<img src="' + item.src + '" alt="' + (item.alt || "") + '" decoding="async">';
@@ -246,6 +260,10 @@
 
   document.addEventListener("pointerup", releasePointer);
   document.addEventListener("pointercancel", releasePointer);
+  stage.addEventListener("contextmenu", (e) => e.preventDefault());
+  document.addEventListener("contextmenu", (e) => {
+    if (e.target.closest && e.target.closest(".sphere-stage, .memory-core, .sphere-photo, .sticky-photo")) e.preventDefault();
+  });
   stage.addEventListener("click", (e) => {
     if (!e.target.closest(".sphere-photo")) deselect();
   });
@@ -286,7 +304,7 @@
   setTimeout(() => {
     if (!open && coreWrap) {
       coreWrap.classList.add("show");
-      if (hint) hint.textContent = "长按记忆核心 · 蓄力充能";
+      if (hint) hint.textContent = "Press & hold to charge";
     }
   }, 1300);
 
@@ -300,6 +318,17 @@
     if (e.key === "ArrowDown") { rx = Math.min(30, rx + 3); applyRotation(); }
   });
   window.addEventListener("resize", layout);
+
+  // 滚离照片球（下行至简介/页脚）时，收起固定悬浮的蓄力核心、提示与操作按钮
+  let scrollTicking = false;
+  window.addEventListener("scroll", () => {
+    if (scrollTicking) return;
+    scrollTicking = true;
+    requestAnimationFrame(() => {
+      document.body.classList.toggle("scrolled", window.scrollY > window.innerHeight * 0.5);
+      scrollTicking = false;
+    });
+  }, { passive: true });
 
   layout();
   applyRotation();
@@ -317,6 +346,13 @@
         spawnParticle();
       }
       if (charge >= 1) completeCharge();
+    }
+    if (zooming) {
+      const zp = Math.min(1, (performance.now() - zoomStart) / 750);
+      const ease = 1 - Math.pow(1 - zp, 3);
+      zoom = zoomFrom + (zoomTarget - zoomFrom) * ease;
+      applyRotation();
+      if (zp >= 1) zooming = false;
     }
     if (open && !dragging) {
       const speed = selected ? 0.03 : (isMobile ? 0.06 : 0.12);

@@ -20,26 +20,31 @@ function escapeHtml2(s) {
   // 重逢总天数
   const reunionDays = Math.floor((Date.now() - new Date(REUNION_DATE).getTime()) / 86400000);
 
-  // 第一段：相识年月从 0 涨到目标
+  // 第一段：相识年月从 0 涨到目标（按真实耗时推进，不因低帧率/卡顿变慢）
   let cur = 0;
-  const timer = setInterval(() => {
-    cur += 1;
-    if (cur >= totalMonths) { cur = totalMonths; clearInterval(timer); showReunion(); }
+  const cStart = performance.now();
+  const cDur = Math.max(1, totalMonths) * 14;
+  (function frame(now) {
+    const p = Math.min(1, (now - cStart) / cDur);
+    cur = Math.round(totalMonths * p);
     yEl.textContent = Math.floor(cur / 12);
     mEl.textContent = cur % 12;
-  }, 14);
+    if (p < 1) requestAnimationFrame(frame);
+    else showReunion();
+  })(performance.now());
 
-  // 第二段：重逢天数从无到有出现并跳动到目标
+  // 第二段：重逢天数跳动到目标（同样按真实耗时）
   function showReunion() {
     setTimeout(() => {
       reunionLine.classList.add("show");
-      let d = 0;
-      const step = Math.max(1, Math.floor(reunionDays / 110));
-      const t2 = setInterval(() => {
-        d += step;
-        if (d >= reunionDays) { d = reunionDays; clearInterval(t2); }
+      const rStart = performance.now();
+      const rDur = 110 * 16;
+      (function frame2(now) {
+        const p = Math.min(1, (now - rStart) / rDur);
+        const d = Math.round(reunionDays * p);
         rEl.textContent = d.toLocaleString();
-      }, 16);
+        if (p < 1) requestAnimationFrame(frame2);
+      })(performance.now());
     }, 350);
   }
 })();
@@ -90,7 +95,8 @@ function escapeHtml2(s) {
 
       const place = (ar) => {
         ar = ar > 0 ? ar : 0.8;                 // ar = 宽/高
-        let w = Math.min(cellW * 0.82, 26 * vw);
+        const vwCap = window.innerWidth < 600 ? 38 : 26;   // 手机端照片更大
+        let w = Math.min(cellW * 0.86, vwCap * vw);
         let h = w / ar;
         if (h > cellH * 0.82) { h = cellH * 0.82; w = h * ar; }   // 超高图按高度收住，保证完整可见
         const cx = (cell.c + 0.5) * cellW;
@@ -135,10 +141,10 @@ function escapeHtml2(s) {
     shown = !shown;
     if (shown) {
       show();
-      btn.textContent = "收起瞬间 ✧";
+      btn.textContent = "Hide ✧";
     } else {
       hide();
-      btn.textContent = "我们的瞬间 ✦";
+      btn.textContent = "Our Moments ✦";
     }
   });
 })();
@@ -220,23 +226,7 @@ function escapeHtml2(s) {
   btn.addEventListener("click", () => render(pick(), true));
 })();
 
-// ===================== 更新日志 =====================
-(function () {
-  const updateEl = document.getElementById("stat-update");
-  if (updateEl && window.CHANGELOG && window.CHANGELOG.length) {
-    const d = String(window.CHANGELOG[0].date || "");
-    updateEl.textContent = d ? d.slice(5) : "··";
-  }
-
-  const ul = document.getElementById("changelog");
-  if (!ul || typeof CHANGELOG === "undefined" || !CHANGELOG.length) return;
-  CHANGELOG.forEach((it) => {
-    const li = document.createElement("li");
-    li.className = "log-item";
-    li.innerHTML = '<span class="log-date">' + it.date + '</span><span class="log-text">' + escapeHtml2(it.text) + "</span>";
-    ul.appendChild(li);
-  });
-})();
+// 更新日志渲染已迁移至 js/changelog.js（首页状态栏 + About 页列表共用）
 
 // ===================== 音乐播放器 UI =====================
 (function () {
@@ -262,8 +252,8 @@ function escapeHtml2(s) {
   function update(info) {
     titleEl.textContent = info.title;
     if (artistEl) artistEl.textContent = info.artist || "";
-    if (btnToggle) btnToggle.textContent = info.playing ? "⏸" : "▶";
-    if (progress) progress.style.width = (info.duration ? (info.time / info.duration * 100) : 0) + "%";
+    if (btnToggle) btnToggle.classList.toggle("playing", !!info.playing);
+    if (progress && !window.__xlSeeking) progress.style.width = (info.duration ? (info.time / info.duration * 100) : 0) + "%";
     if (list) Array.prototype.forEach.call(list.children, (li, i) => li.classList.toggle("active", i === info.index));
   }
   A.onChange(update);

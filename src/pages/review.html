@@ -1,13 +1,46 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-{{head}}
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>投稿审核 · 翔霖小站</title>
+<meta name="description" content="审核时间轴与照片投稿，通过后自动加入对应板块。">
+<meta name="theme-color" content="#070b17">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="fonts/script/script-fonts.css?v=34">
+<link rel="stylesheet" href="fonts/noto-sans-sc/noto-sans-sc-wght.css?v=34">
+<link rel="stylesheet" href="css/style.css?v=39">
+<link rel="stylesheet" href="css/home.css?v=39">
+
+<script>document.documentElement.classList.add('js');</script>
+
 </head>
 <body class="home">
 <canvas id="star-rain"></canvas>
-{{nav}}
+<nav class="nav nav-dark">
+  <a class="nav-logo" href="index.html" title="Tina ♡ Oliver · 返回首页" aria-label="Tina ♡ Oliver，返回首页">
+    <span class="logo-text">Tina <svg class="logo-heart" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 21.2 C10.8 20 7.4 17.2 5 14.2 C2.9 11.7 2.6 8.6 4.4 6.5 C5.9 4.8 8.3 4.9 9.8 6.3 C10.7 7 11.5 8.1 12 9.2 C12.5 8.1 13.3 7 14.2 6.3 C15.7 4.9 18.1 4.8 19.6 6.5 C21.4 8.6 21.1 11.7 19 14.2 C16.6 17.2 13.2 20 12 21.2 Z"/></svg> Oliver</span>
+    <span class="logo-sub">ALL FOR XIANGLIN</span>
+  </a>
+  <button class="nav-toggle" id="nav-toggle" type="button" aria-label="打开菜单" aria-expanded="false" aria-controls="nav-links">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+  <div class="nav-links" id="nav-links">
+    <a href="index.html" class="">Home</a>
+    <a href="timeline.html" class="">Timeline</a>
+    <a href="gallery.html" class="">Gallery</a>
+    <a href="stages.html" class="">Stages</a>
+    <a href="birthday.html" class="">Birthday</a>
+    <a href="wall.html" class="">Wall</a>
+    <a href="about.html" class="">About</a>
+  </div>
+</nav>
+
 
 <section class="section review-section">
+  <p class="eyebrow reveal">Review</p>
   <h2 class="section-title reveal">投稿审核</h2>
   <p class="section-sub reveal">审核通过后，投稿会自动加入对应板块</p>
   <div class="review-toolbar">
@@ -17,18 +50,53 @@
 
   <div class="review-login" id="review-login">
     <input id="review-code" type="password" placeholder="站长口令" maxlength="32" autocomplete="off" aria-label="站长口令">
-    <button id="review-enter" type="button">进入审核</button>
+    <button id="review-enter" type="button">Enter Review</button>
     <span id="review-msg" class="review-msg"></span>
   </div>
 
   <div class="review-list hidden" id="review-body"></div>
 </section>
 
-{{footer}}
+<footer class="footer footer-dark">
+  <span class="footer-mark" aria-hidden="true">
+    <svg class="footer-pixel" viewBox="0 0 24 24" shape-rendering="crispEdges">
+      <rect x="6" y="5" width="2" height="2" fill="#f6a8cd"/>
+      <rect x="9" y="5" width="2" height="2" fill="#f6a8cd"/>
+      <rect x="12" y="5" width="2" height="2" fill="#f6a8cd"/>
+      <rect x="15" y="5" width="2" height="2" fill="#f6a8cd"/>
+      <rect x="5" y="7" width="2" height="3" fill="#f6a8cd"/>
+      <rect x="16" y="7" width="2" height="3" fill="#f6a8cd"/>
+      <rect x="4" y="10" width="2" height="3" fill="#f6a8cd"/>
+      <rect x="17" y="10" width="2" height="3" fill="#f6a8cd"/>
+      <rect x="5" y="13" width="2" height="3" fill="#f6a8cd"/>
+      <rect x="16" y="13" width="2" height="3" fill="#f6a8cd"/>
+      <rect x="7" y="16" width="2" height="3" fill="#f6a8cd"/>
+      <rect x="14" y="16" width="2" height="3" fill="#f6a8cd"/>
+      <rect x="9" y="19" width="2" height="2" fill="#f6a8cd"/>
+      <rect x="12" y="19" width="2" height="2" fill="#f6a8cd"/>
+    </svg>
+  </span>
+  <p>✦ All for XiangLin.</p>
+  <div class="twin-mark" aria-hidden="true" title="Tina ♡ Oliver">
+    <span class="tm-star"></span><span class="tm-spark s1"></span><span class="tm-link"></span><span class="tm-spark s2"></span><span class="tm-star tm-pink"></span>
+  </div>
+  <p class="copyright">Copyright © KONOE. All rights reserved.</p>
+</footer>
+
 
 <audio id="bgm" loop preload="none"></audio>
 <button id="music-btn" class="music-disc" type="button" title="背景音乐">♪</button>
 
-{{scripts}}
+<script src="js/starrain.js?v=34"></script>
+
+<script src="js/wall-config.js?v=34"></script>
+<script src="js/timeline-review.js?v=34"></script>
+<script src="js/audio.js?v=34"></script>
+
+<script src="js/reveal.js?v=34"></script>
+<script src="js/nav.js?v=35"></script>
+<script src="js/click-spark.js?v=36"></script>
+<script src="js/gate.js?v=34"></script>
+
 </body>
 </html>

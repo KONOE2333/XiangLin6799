@@ -5,11 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>留言墙 · 翔霖小站</title>
 <meta name="description" content="写下你想对翔霖或同担说的话，贴在这面墙上。">
-<meta name="theme-color" content="#060d24">
+<meta name="theme-color" content="#070b17">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="fonts/script/script-fonts.css?v=34">
 <link rel="stylesheet" href="fonts/noto-sans-sc/noto-sans-sc-wght.css?v=34">
-<link rel="stylesheet" href="css/style.css?v=34">
-<link rel="stylesheet" href="css/home.css?v=34">
+<link rel="stylesheet" href="css/style.css?v=39">
+<link rel="stylesheet" href="css/home.css?v=39">
 
 <script>document.documentElement.classList.add('js');</script>
 
@@ -17,39 +18,9 @@
 <body class="home">
 <canvas id="star-rain"></canvas>
 <nav class="nav nav-dark">
-  <a class="nav-logo" href="index.html" title="Tina贺♡严美娜" aria-label="Tina贺♡严美娜，返回首页">
-    <span class="logo-washi logo-washi-left" aria-hidden="true"></span>
-    <span class="logo-washi logo-washi-right" aria-hidden="true"></span>
-    <span class="logo-sticker">
-      <svg class="logo-pixel" viewBox="0 0 24 24" shape-rendering="crispEdges" aria-hidden="true">
-        <rect x="6" y="5" width="2" height="2" fill="#f6a8cd"/>
-        <rect x="9" y="5" width="2" height="2" fill="#f6a8cd"/>
-        <rect x="12" y="5" width="2" height="2" fill="#f6a8cd"/>
-        <rect x="15" y="5" width="2" height="2" fill="#f6a8cd"/>
-        <rect x="5" y="7" width="2" height="3" fill="#f6a8cd"/>
-        <rect x="16" y="7" width="2" height="3" fill="#f6a8cd"/>
-        <rect x="4" y="10" width="2" height="3" fill="#f6a8cd"/>
-        <rect x="17" y="10" width="2" height="3" fill="#f6a8cd"/>
-        <rect x="5" y="13" width="2" height="3" fill="#f6a8cd"/>
-        <rect x="16" y="13" width="2" height="3" fill="#f6a8cd"/>
-        <rect x="7" y="16" width="2" height="3" fill="#f6a8cd"/>
-        <rect x="14" y="16" width="2" height="3" fill="#f6a8cd"/>
-        <rect x="9" y="19" width="2" height="2" fill="#f6a8cd"/>
-        <rect x="12" y="19" width="2" height="2" fill="#f6a8cd"/>
-        <rect x="18" y="2" width="2" height="2" fill="#ffd98f"/>
-        <rect x="17" y="4" width="2" height="2" fill="#ffd98f"/>
-        <rect x="19" y="4" width="2" height="2" fill="#ffd98f"/>
-        <rect x="18" y="6" width="2" height="2" fill="#ffd98f"/>
-        <rect x="22" y="7" width="2" height="2" fill="#ffd98f"/>
-        <rect x="21" y="9" width="2" height="2" fill="#ffd98f"/>
-        <rect x="23" y="9" width="2" height="2" fill="#ffd98f"/>
-        <rect x="22" y="11" width="2" height="2" fill="#ffd98f"/>
-      </svg>
-      <span class="logo-copy">
-        <span class="logo-text">Tina贺♡严美娜</span>
-        <span class="logo-sub">ALL FOR XIANGLIN</span>
-      </span>
-    </span>
+  <a class="nav-logo" href="index.html" title="Tina ♡ Oliver · 返回首页" aria-label="Tina ♡ Oliver，返回首页">
+    <span class="logo-text">Tina <svg class="logo-heart" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 21.2 C10.8 20 7.4 17.2 5 14.2 C2.9 11.7 2.6 8.6 4.4 6.5 C5.9 4.8 8.3 4.9 9.8 6.3 C10.7 7 11.5 8.1 12 9.2 C12.5 8.1 13.3 7 14.2 6.3 C15.7 4.9 18.1 4.8 19.6 6.5 C21.4 8.6 21.1 11.7 19 14.2 C16.6 17.2 13.2 20 12 21.2 Z"/></svg> Oliver</span>
+    <span class="logo-sub">ALL FOR XIANGLIN</span>
   </a>
   <button class="nav-toggle" id="nav-toggle" type="button" aria-label="打开菜单" aria-expanded="false" aria-controls="nav-links">
     <span></span>
@@ -57,30 +28,32 @@
     <span></span>
   </button>
   <div class="nav-links" id="nav-links">
-    <a href="index.html" class="">首页</a>
-    <a href="timeline.html" class="">记忆时间轴</a>
-    <a href="gallery.html" class="">照片图库</a>
-    <a href="stages.html" class="">舞台高光</a>
-    <a href="birthday.html" class="">生日纪念</a>
-    <a href="wall.html" class="on">留言墙</a>
+    <a href="index.html" class="">Home</a>
+    <a href="timeline.html" class="">Timeline</a>
+    <a href="gallery.html" class="">Gallery</a>
+    <a href="stages.html" class="">Stages</a>
+    <a href="birthday.html" class="">Birthday</a>
+    <a href="wall.html" class="on">Wall</a>
+    <a href="about.html" class="">About</a>
   </div>
 </nav>
 
 
 <section class="section">
+  <p class="eyebrow reveal">你的声音 · Wall</p>
   <h2 class="section-title reveal">粉丝留言墙</h2>
-  <p class="section-sub reveal">把想说的话、发现的问题和新的想法，都留在这面墙上</p>
+  <p class="section-sub reveal">这面墙，留给每一个爱他们的你 —— 贴上你的声音</p>
 
   <div class="wall-tabs reveal">
-    <button id="tab-message" class="on" type="button">留言</button>
-    <button id="tab-suggestion" type="button">建议</button>
+    <button id="tab-message" class="on" type="button">Messages</button>
+    <button id="tab-suggestion" type="button">Ideas</button>
   </div>
 
   <div id="message-panel" class="wall-panel">
     <form class="msg-form" id="msg-form">
       <input type="text" id="msg-name" maxlength="16" placeholder="你的昵称（必填）" required>
-      <textarea id="msg-text" maxlength="120" placeholder="写下你想对翔霖或同担说的话，贴在这面墙上" required></textarea>
-      <button type="submit">贴上便签 ✦</button>
+      <textarea id="msg-text" maxlength="120" placeholder="写下你想对 Tina ♡ Oliver 或同担说的话，贴在这面墙上" required></textarea>
+      <button type="submit">Pin ✦</button>
     </form>
     <div class="wall" id="message-wall"></div>
     <div class="wall-pager" id="message-pager"></div>
@@ -90,7 +63,7 @@
     <form class="msg-form" id="suggestion-form">
       <input type="text" id="suggestion-name" maxlength="16" placeholder="你的昵称（必填）" required>
       <textarea id="suggestion-text" maxlength="300" placeholder="网站有没有问题？想新增什么板块？写在这里，站长会看到" required></textarea>
-      <button type="submit">贴上建议 ✦</button>
+      <button type="submit">Pin ✦</button>
     </form>
     <div class="wall" id="suggestion-wall"></div>
     <div class="wall-pager" id="suggestion-pager"></div>
@@ -98,9 +71,9 @@
 </section>
 
 <div class="admin-soft" id="admin-bar">
-  <span class="admin-label" id="admin-label">站长管理</span>
-  <input id="admin-code" class="admin-code" type="password" placeholder="输入口令" maxlength="32" autocomplete="off">
-  <button id="admin-enter" class="admin-enter" type="button">进入</button>
+  <span class="admin-label" id="admin-label">Admin</span>
+  <input id="admin-code" class="admin-code" type="password" placeholder="Passcode" maxlength="32" autocomplete="off">
+  <button id="admin-enter" class="admin-enter" type="button">Enter</button>
   <span id="admin-hint" class="admin-hint"></span>
 </div>
 
@@ -124,6 +97,9 @@
     </svg>
   </span>
   <p>✦ All for XiangLin.</p>
+  <div class="twin-mark" aria-hidden="true" title="Tina ♡ Oliver">
+    <span class="tm-star"></span><span class="tm-spark s1"></span><span class="tm-link"></span><span class="tm-spark s2"></span><span class="tm-star tm-pink"></span>
+  </div>
   <p class="copyright">Copyright © KONOE. All rights reserved.</p>
 </footer>
 
@@ -139,7 +115,8 @@
 <script src="js/audio.js?v=34"></script>
 
 <script src="js/reveal.js?v=34"></script>
-<script src="js/nav.js?v=34"></script>
+<script src="js/nav.js?v=35"></script>
+<script src="js/click-spark.js?v=36"></script>
 <script src="js/gate.js?v=34"></script>
 
 </body>

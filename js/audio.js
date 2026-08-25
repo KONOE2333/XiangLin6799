@@ -52,7 +52,7 @@
     return audio.play()
       .then(() => { if (btn) btn.classList.add("playing"); notify(); })
       .catch(() => {
-        if (!hasFile) toast("音乐文件不存在或暂时无法播放，稍后再试试～");
+        if (!hasFile) toast("Audio unavailable — try again later");
       });
   }
   function setTrack(i, autoplay) {

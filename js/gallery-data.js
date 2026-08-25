@@ -25,7 +25,7 @@
       if (!person || !person.pics || !person.pics.length) return;
       person.pics.forEach((url, idx) => {
         const title = y.year + " · " + person.name + "生日 · " +
-          (key === "jun" ? "严浩翔的祝福配图" : "贺峻霖的祝福配图");
+          (key === "jun" ? "Oliver的祝福配图" : "Tina的祝福配图");
         items.push({
           id: "birthday-" + y.year + "-" + key + "-" + idx,
           src: url.replace("img/birthday/", GALLERY_ROOT + "birthday/"),

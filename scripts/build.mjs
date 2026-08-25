@@ -6,23 +6,29 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const srcDir = path.join(root, "src");
 const pagesDir = path.join(srcDir, "pages");
 const partialsDir = path.join(srcDir, "partials");
-const STAR_RAIN_SCRIPT = '<script src="js/starrain.js?v=5"></script>';
-const CACHE_VERSION = "34";
+const STAR_RAIN_SCRIPT = '<script src="js/starrain.js?v=34"></script>';
+// 说明：src/pages 现已同步为各页面的“成品”拷贝（含真实 ?v= 版本号，无 {{...}} 占位符），
+// 因此下方 replaceAll("v=5", ...) 实际为 no-op，构建只是把 src/pages 原样写出到根目录。
+// 若以后重新启用模板（用 {{head}}/{{nav}}/{{footer}}/{{scripts}} 占位），再统一改为 v=5 占位即可。
+const CACHE_VERSION = "39";
 
 const pages = {
   "index.html": {
     title: "翔霖小站 · 时间与星光",
-    description: "严浩翔 × 贺峻霖的粉丝纪念小站，收录照片、时间轴、舞台与生日祝福。",
+    description: "Tina × Oliver的粉丝纪念小站，收录照片、时间轴、舞台与生日祝福。",
     active: "index.html",
     pageStyles: "",
     preScripts: `
-<script src="js/photos-data.js?v=5"></script>
-<script src="js/quotes-data.js?v=5"></script>
-<script src="js/changelog-data.js?v=5"></script>
-<script src="js/wall-config.js?v=5"></script>
-<script src="js/stats.js?v=5"></script>`,
+<script src="js/photos-data.js?v=34"></script>
+<script src="js/quotes-data.js?v=34"></script>
+<script src="js/changelog-data.js?v=34"></script>
+<script src="js/changelog.js?v=37"></script>
+<script src="js/wall-config.js?v=34"></script>
+<script src="js/stats.js?v=34"></script>`,
     postScripts: `
-<script src="js/home.js?v=5"></script>`
+<script src="js/home.js?v=37"></script>
+<script src="js/mp-slider.js?v=34"></script>
+<script src="js/particle-title.js?v=34"></script>`
   },
   "timeline.html": {
     title: "记忆时间轴 · 翔霖小站",
@@ -30,11 +36,11 @@ const pages = {
     active: "timeline.html",
     pageStyles: "",
     preScripts: `
-<script src="js/wall-config.js?v=5"></script>
-<script src="js/timeline-data.js?v=5"></script>
-<script src="js/timeline.js?v=5"></script>
-<script src="js/site-auth.js?v=5"></script>
-<script src="js/timeline-submit.js?v=5"></script>`,
+<script src="js/wall-config.js?v=34"></script>
+<script src="js/timeline-data.js?v=34"></script>
+<script src="js/timeline.js?v=34"></script>
+<script src="js/site-auth.js?v=34"></script>
+<script src="js/timeline-submit.js?v=34"></script>`,
     postScripts: ""
   },
   "review.html": {
@@ -43,24 +49,24 @@ const pages = {
     active: "review.html",
     pageStyles: "",
     preScripts: `
-<script src="js/wall-config.js?v=5"></script>
-<script src="js/timeline-review.js?v=5"></script>`,
+<script src="js/wall-config.js?v=34"></script>
+<script src="js/timeline-review.js?v=34"></script>`,
     postScripts: ""
   },
   "gallery.html": {
     title: "照片球 · 翔霖小站",
     description: "翔霖 3D 照片球，照片从四周汇聚后散开，可拖拽旋转与点选查看。",
     active: "gallery.html",
-    pageStyles: '\n<link rel="stylesheet" href="css/gallery.css?v=5">',
+    pageStyles: '\n<link rel="stylesheet" href="css/gallery.css?v=36">',
     starRain: STAR_RAIN_SCRIPT,
     preScripts: `
-<script src="js/wall-config.js?v=5"></script>
-<script src="js/photos-data.js?v=5"></script>
-<script src="js/birthday-data.js?v=5"></script>
-<script src="js/gallery-extra-data.js?v=5"></script>
-<script src="js/gallery-data.js?v=5"></script>
-<script src="js/gallery.js?v=5"></script>
-<script src="js/gallery-community.js?v=5"></script>`,
+<script src="js/wall-config.js?v=34"></script>
+<script src="js/photos-data.js?v=34"></script>
+<script src="js/birthday-data.js?v=34"></script>
+<script src="js/gallery-extra-data.js?v=34"></script>
+<script src="js/gallery-data.js?v=34"></script>
+<script src="js/gallery.js?v=36"></script>
+<script src="js/gallery-community.js?v=34"></script>`,
     postScripts: ""
   },
   "stages.html": {
@@ -69,8 +75,8 @@ const pages = {
     active: "stages.html",
     pageStyles: "",
     preScripts: `
-<script src="js/videos-data.js?v=5"></script>
-<script src="js/stages.js?v=5"></script>`,
+<script src="js/videos-data.js?v=34"></script>
+<script src="js/stages.js?v=34"></script>`,
     postScripts: ""
   },
   "birthday.html": {
@@ -79,8 +85,8 @@ const pages = {
     active: "birthday.html",
     pageStyles: "",
     preScripts: `
-<script src="js/birthday-data.js?v=5"></script>
-<script src="js/birthday.js?v=5"></script>`,
+<script src="js/birthday-data.js?v=34"></script>
+<script src="js/birthday.js?v=34"></script>`,
     postScripts: ""
   },
   "wall.html": {
@@ -89,9 +95,19 @@ const pages = {
     active: "wall.html",
     pageStyles: "",
     preScripts: `
-<script src="js/wall-config.js?v=5"></script>
-<script src="js/wall-backend.js?v=5"></script>
-<script src="js/wall.js?v=5"></script>`,
+<script src="js/wall-config.js?v=34"></script>
+<script src="js/wall-backend.js?v=34"></script>
+<script src="js/wall.js?v=34"></script>`,
+    postScripts: ""
+  },
+  "about.html": {
+    title: "关于本站 · 翔霖小站",
+    description: "关于翔霖小站 —— 一个把喜欢慢慢收起来的地方，记录 Tina ♡ Oliver 的同行的时光。",
+    active: "about.html",
+    pageStyles: "",
+    preScripts: `
+<script src="js/changelog-data.js?v=34"></script>
+<script src="js/changelog.js?v=37"></script>`,
     postScripts: ""
   }
 };
@@ -123,7 +139,7 @@ function renderHead(cfg) {
 
 function renderNav(active) {
   let html = read(path.join(partialsDir, "nav.html"));
-  const links = ["index", "timeline", "gallery", "stages", "birthday", "wall"];
+  const links = ["index", "timeline", "gallery", "stages", "birthday", "wall", "about"];
   links.forEach((name) => {
     html = html.replaceAll(
       "{{" + name + "Class}}",
