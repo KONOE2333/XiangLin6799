@@ -9,7 +9,6 @@
   const messageForm = document.getElementById("msg-form");
   const suggestionForm = document.getElementById("suggestion-form");
   const adminBar = document.getElementById("admin-bar");
-  const codeInput = document.getElementById("admin-code");
   const adminEnter = document.getElementById("admin-enter");
   const adminHint = document.getElementById("admin-hint");
   const tabMessage = document.getElementById("tab-message");
@@ -30,7 +29,7 @@
   ];
   const BANDED = ["傻逼", "妈的", "滚蛋", "去死", "脑残", "垃圾团", "塌房"];
   const cloud = (window.WallBackend && window.WallBackend.isConfigured()) ? window.WallBackend : null;
-  let adminMode = (function () { try { return localStorage.getItem("xl_admin") === "1"; } catch { return false; } })();
+  let adminMode = false;
 
   const seed = [
     { id: "seed1", name: "KONOE", text: "2026年才开始喜欢上你们，体会到了太多幸福与痛苦的经历，谢谢你们让我更加懂得感情的复杂，未来也请一起走吧", time: "2026/07/28", likes: 0, kind: "message" }
@@ -237,7 +236,6 @@
   }
 
   if (adminBar) {
-    const cfg = window.WALL_CONFIG || {};
     function applyAdmin() {
       if (adminMode) {
         if (adminHint) adminHint.textContent = "站长模式已开启";
@@ -247,27 +245,26 @@
         if (adminHint) adminHint.textContent = "";
         if (adminEnter) adminEnter.textContent = "进入站长模式";
         adminBar.classList.remove("on");
-        if (codeInput) codeInput.value = "";
       }
       render();
     }
     applyAdmin();
-    adminEnter.addEventListener("click", () => {
+    adminEnter.addEventListener("click", async () => {
       if (adminMode) {
         adminMode = false;
-        try { localStorage.removeItem("xl_admin"); } catch {}
+        if (window.XLAdminAuth) window.XLAdminAuth.clear();
         applyAdmin();
         return;
       }
-      if (codeInput && codeInput.value.trim() === (cfg.adminCode || "")) {
+      try {
+        if (!window.XLAdminAuth) throw new Error("站长登录模块未加载");
+        await window.XLAdminAuth.ensure();
         adminMode = true;
-        try { localStorage.setItem("xl_admin", "1"); } catch {}
         applyAdmin();
-      } else if (adminHint) {
-        adminHint.textContent = "口令错误";
+      } catch (error) {
+        if (adminHint) adminHint.textContent = error && error.message ? error.message : "登录失败";
       }
     });
-    if (codeInput) codeInput.addEventListener("keydown", e => { if (e.key === "Enter") adminEnter.click(); });
   }
 
   init();

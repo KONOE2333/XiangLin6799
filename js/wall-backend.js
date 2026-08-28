@@ -58,21 +58,22 @@
       const x = rows[0];
       return { id: x.id, name: x.name, text: x.text, time: fmtTime(x.created_at), likes: x.likes || 0, kind: x.kind || "message" };
     },
-    async like(id, likes) {
-      const r = await fetch(cfg.supabase.url + "/rest/v1/wall_messages?id=eq." + encodeURIComponent(id), {
-        method: "PATCH",
+    async like(id) {
+      const r = await fetch(cfg.supabase.url + "/rest/v1/rpc/like_wall_message", {
+        method: "POST",
         headers: Object.assign(this.headers(), {
-          "Content-Type": "application/json",
-          "Prefer": "return=representation"
+          "Content-Type": "application/json"
         }),
-        body: JSON.stringify({ likes })
+        body: JSON.stringify({ target: id })
       });
       if (!r.ok) throw new Error("like " + r.status);
     },
     async remove(id) {
+      if (!window.XLAdminAuth) throw new Error("站长登录模块未加载");
+      const adminHeaders = await window.XLAdminAuth.headers();
       const r = await fetch(cfg.supabase.url + "/rest/v1/rpc/soft_delete_wall_message", {
         method: "POST",
-        headers: Object.assign(this.headers(), {
+        headers: Object.assign(adminHeaders, {
           "Content-Type": "application/json",
           "Prefer": "return=minimal"
         }),

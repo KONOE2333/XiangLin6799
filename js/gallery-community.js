@@ -16,11 +16,11 @@
   const zoomReset = $("board-zoom-reset");
   const zoomLabel = $("board-zoom-label");
   const GUEST_KEY = "xl_photo_guest_id";
+  const OWN_IDS_KEY = "xl_photo_owned_ids";
   const MAX_SIZE = 5 * 1024 * 1024;
   let photos = [];
   let loaded = false;
   let adminMode = false;
-  let adminCode = "";
   let dragPhoto = null;
   let dragOffsetX = 0;
   let dragOffsetY = 0;
@@ -37,6 +37,18 @@
     } catch (e) {
       return "g_" + Date.now().toString(36);
     }
+  }
+
+  function getOwnedIds() {
+    try { return new Set(JSON.parse(localStorage.getItem(OWN_IDS_KEY) || "[]")); }
+    catch (e) { return new Set(); }
+  }
+
+  function rememberOwnedId(id) {
+    if (!id) return;
+    const ids = getOwnedIds();
+    ids.add(String(id));
+    try { localStorage.setItem(OWN_IDS_KEY, JSON.stringify(Array.from(ids))); } catch (e) {}
   }
 
   function esc(s) {
@@ -139,17 +151,17 @@
       canvas.innerHTML = '<p class="board-empty">还没有照片上墙，先贴第一张吧～</p>';
       return;
     }
-    const guestId = getGuestId();
+    const ownedIds = getOwnedIds();
     photos.forEach((item) => {
       const photo = document.createElement("div");
       photo.className = "sticky-photo";
       photo.dataset.id = item.id;
-      photo.dataset.owner = item.owner_key || "";
+      photo.dataset.own = ownedIds.has(String(item.id)) ? "1" : "0";
       photo.style.left = (item.pos_x == null ? 50 : Number(item.pos_x)) + "%";
       photo.style.top = (item.pos_y == null ? 35 : Number(item.pos_y)) + "%";
       const rot = (Number(item.rot || 0) + (Math.random() * 6 - 3));
       photo.style.setProperty("--rot", rot.toFixed(1) + "deg");
-      const own = item.owner_key && item.owner_key === guestId;
+      const own = photo.dataset.own === "1";
       const del = own
         ? '<button class="sticky-del" type="button" data-id="' + esc(item.id) + '" data-own="1" aria-label="删除粘贴照片">✕</button>'
         : (adminMode ? '<button class="sticky-del" type="button" data-id="' + esc(item.id) + '" aria-label="删除粘贴照片">✕</button>' : "");
@@ -166,7 +178,7 @@
     if (!c.supabase || !c.supabase.url) return;
     try {
       const r = await fetch(c.supabase.url +
-        "/rest/v1/photo_submissions?select=id,title,image_url,owner_key,pos_x,pos_y,rot&status=eq.approved&order=created_at.desc", {
+        "/rest/v1/photo_submissions?select=id,title,image_url,pos_x,pos_y,rot&status=eq.approved&order=created_at.desc", {
           headers: {
             "apikey": c.supabase.anonKey,
             "Authorization": "Bearer " + c.supabase.anonKey
@@ -217,13 +229,14 @@
     setMsg("Pinning to board…");
     try {
       const imageUrl = await uploadImage(await compressImage(file));
-      await callRpc("submit_photo_entry", {
+      const newId = await callRpc("submit_photo_entry", {
         p_owner_key: getGuestId(),
         p_title: title || "小海盐的照片",
         p_content: "小海盐的照片",
         p_category: null,
         p_image_url: imageUrl
       });
+      rememberOwnedId(newId);
       if (form) form.reset();
       await loadWall();
       setMsg("Pinned! Drag to rearrange.", true);
@@ -238,8 +251,8 @@
     if (e.target.closest(".sticky-del")) return;
     const photo = e.target.closest(".sticky-photo");
     if (!photo) return;
-    const own = photo.dataset.owner === getGuestId();
-    if (!own && !adminMode) return;
+    const own = photo.dataset.own === "1";
+    if (!own) return;
     const rect = photo.getBoundingClientRect();
     dragPhoto = photo;
     dragOffsetX = e.clientX - rect.left;
@@ -285,7 +298,13 @@
       if (own) {
         await callRpc("delete_own_photo_submission", { p_target_id: id, p_owner_key: getGuestId() });
       } else if (adminMode) {
-        await callRpc("delete_photo_submission", { p_target_id: id, p_admin_code: adminCode });
+        const c = cfg();
+        const response = await fetch(c.supabase.url + "/rest/v1/rpc/delete_photo_submission", {
+          method: "POST",
+          headers: await window.XLAdminAuth.headers(),
+          body: JSON.stringify({ p_target_id: id })
+        });
+        if (!response.ok) throw new Error("Delete failed");
       } else {
         return;
       }
@@ -296,24 +315,23 @@
     }
   });
 
-  if (adminToggle) adminToggle.addEventListener("click", () => {
+  if (adminToggle) adminToggle.addEventListener("click", async () => {
     if (adminMode) {
       adminMode = false;
-      adminCode = "";
+      if (window.XLAdminAuth) window.XLAdminAuth.clear();
       adminToggle.textContent = "Admin";
       renderWall();
       return;
     }
-    const code = window.prompt("Enter admin passcode", "");
-    if (code === null) return;
-    if (code.trim() !== (cfg().adminCode || "")) {
-      window.alert("Wrong passcode");
-      return;
+    try {
+      if (!window.XLAdminAuth) throw new Error("站长登录模块未加载");
+      await window.XLAdminAuth.ensure();
+      adminMode = true;
+      adminToggle.textContent = "Exit admin";
+      renderWall();
+    } catch (error) {
+      window.alert(error && error.message ? error.message : "登录失败");
     }
-    adminMode = true;
-    adminCode = code.trim();
-    adminToggle.textContent = "Exit admin";
-    renderWall();
   });
 
   function applyZoom() {

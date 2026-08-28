@@ -1214,6 +1214,34 @@ textarea:focus {
 .admin-code { flex: 0 1 200px; padding: 9px 14px !important; }
 .admin-hint { color: var(--danger); font-size: 12px; }
 
+.admin-auth-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgba(3, 6, 15, 0.78);
+  backdrop-filter: blur(12px);
+}
+.admin-auth-card {
+  width: min(420px, 100%);
+  display: grid;
+  gap: 14px;
+  padding: 30px;
+  border: 1px solid var(--glass-border);
+  border-radius: var(--r-lg);
+  background: var(--glass-strong);
+  box-shadow: var(--glass-hi), 0 24px 80px rgba(0, 0, 0, 0.45);
+}
+.admin-auth-card h2 { margin: 0; font-family: var(--font-cn); font-weight: 500; }
+.admin-auth-card > p { margin: 0; color: var(--text-dim); font-size: 13px; line-height: 1.7; }
+.admin-auth-card .admin-auth-kicker { color: var(--cyan); letter-spacing: 0.18em; font-size: 10px; }
+.admin-auth-card input { width: 100%; }
+.admin-auth-msg { min-height: 20px; color: var(--danger) !important; }
+.admin-auth-actions { display: flex; justify-content: flex-end; gap: 10px; }
+.admin-auth-actions button:last-child { border-color: rgba(127, 216, 255, 0.55); color: var(--cyan); }
+
 /* ============================================================
    投稿审核
    ============================================================ */

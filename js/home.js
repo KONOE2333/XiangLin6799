@@ -9,6 +9,7 @@ function escapeHtml2(s) {
   const mEl = document.getElementById("met-months");
   const reunionLine = document.getElementById("reunion-line");
   const rEl = document.getElementById("reunion-days");
+  if (!yEl || !mEl || !reunionLine || !rEl) return;
 
   const now = new Date();
   const meet = new Date(MEET_DATE);
@@ -25,7 +26,7 @@ function escapeHtml2(s) {
   const cStart = performance.now();
   const cDur = Math.max(1, totalMonths) * 14;
   (function frame(now) {
-    const p = Math.min(1, (now - cStart) / cDur);
+    const p = Math.max(0, Math.min(1, (now - cStart) / cDur));
     cur = Math.round(totalMonths * p);
     yEl.textContent = Math.floor(cur / 12);
     mEl.textContent = cur % 12;
@@ -40,7 +41,7 @@ function escapeHtml2(s) {
       const rStart = performance.now();
       const rDur = 110 * 16;
       (function frame2(now) {
-        const p = Math.min(1, (now - rStart) / rDur);
+        const p = Math.max(0, Math.min(1, (now - rStart) / rDur));
         const d = Math.round(reunionDays * p);
         rEl.textContent = d.toLocaleString();
         if (p < 1) requestAnimationFrame(frame2);

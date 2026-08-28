@@ -1,5 +1,6 @@
 -- ===================== 时间轴 / 照片图库投稿 · 轻量账号 · 审核 =====================
--- 在 Supabase SQL Editor 中整段执行一次即可。
+-- 在 Supabase SQL Editor 中执行本文件后，必须继续执行
+-- `supabase-security-hardening.sql`，以启用 Supabase Auth 管理员校验并收紧匿名权限。
 
 create extension if not exists pgcrypto;
 
@@ -224,7 +225,8 @@ begin
 end
 $$;
 
--- 站长审核：口令校验后读取待审 / 已拒绝投稿
+-- 站长审核：旧版口令函数仅为兼容已有数据库对象，执行后续
+-- `supabase-security-hardening.sql` 会删除这些签名并替换为 Supabase Auth 管理员函数。
 create or replace function public.list_timeline_submissions_for_review(p_admin_code text)
 returns table(
   id uuid,
@@ -243,9 +245,7 @@ returns table(
 language plpgsql security definer set search_path = public
 as $$
 begin
-  if p_admin_code <> 'yjn030218' then
-    raise exception '口令错误';
-  end if;
+  raise exception '请先执行 supabase-security-hardening.sql';
 
   return query
     select t.id, t.submitter_name, t.title, t.event_date, t.year,
@@ -262,9 +262,7 @@ returns void
 language plpgsql security definer set search_path = public
 as $$
 begin
-  if p_admin_code <> 'yjn030218' then
-    raise exception '口令错误';
-  end if;
+  raise exception '请先执行 supabase-security-hardening.sql';
 
   update public.timeline_submissions
   set status = 'approved', reviewed_at = now()
@@ -280,9 +278,7 @@ create or replace function public.reject_timeline_submission(
 language plpgsql security definer set search_path = public
 as $$
 begin
-  if p_admin_code <> 'yjn030218' then
-    raise exception '口令错误';
-  end if;
+  raise exception '请先执行 supabase-security-hardening.sql';
 
   update public.timeline_submissions
   set status = 'rejected', reviewer_note = nullif(trim(p_note), ''), reviewed_at = now()
@@ -295,9 +291,7 @@ returns void
 language plpgsql security definer set search_path = public
 as $$
 begin
-  if p_admin_code <> 'yjn030218' then
-    raise exception '口令错误';
-  end if;
+  raise exception '请先执行 supabase-security-hardening.sql';
 
   delete from public.timeline_submissions where id = p_target_id;
 end
@@ -392,9 +386,7 @@ returns table(
 language plpgsql security definer set search_path = public
 as $$
 begin
-  if p_admin_code <> 'yjn030218' then
-    raise exception '口令错误';
-  end if;
+  raise exception '请先执行 supabase-security-hardening.sql';
 
   return query
     select t.id, t.submitter_name, t.title, t.content,
@@ -410,9 +402,7 @@ returns void
 language plpgsql security definer set search_path = public
 as $$
 begin
-  if p_admin_code <> 'yjn030218' then
-    raise exception '口令错误';
-  end if;
+  raise exception '请先执行 supabase-security-hardening.sql';
 
   update public.photo_submissions
   set status = 'approved', reviewed_at = now()
@@ -428,9 +418,7 @@ create or replace function public.reject_photo_submission(
 language plpgsql security definer set search_path = public
 as $$
 begin
-  if p_admin_code <> 'yjn030218' then
-    raise exception '口令错误';
-  end if;
+  raise exception '请先执行 supabase-security-hardening.sql';
 
   update public.photo_submissions
   set status = 'rejected', reviewer_note = nullif(trim(p_note), ''), reviewed_at = now()
@@ -443,9 +431,7 @@ returns void
 language plpgsql security definer set search_path = public
 as $$
 begin
-  if p_admin_code <> 'yjn030218' then
-    raise exception '口令错误';
-  end if;
+  raise exception '请先执行 supabase-security-hardening.sql';
 
   delete from public.photo_submissions where id = p_target_id;
 end

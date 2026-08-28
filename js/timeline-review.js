@@ -2,13 +2,11 @@
 (function () {
   "use strict";
   const $ = (id) => document.getElementById(id);
-  const codeInput = $("review-code");
   const enterBtn = $("review-enter");
   const msgEl = $("review-msg");
   const loginBox = $("review-login");
   const body = $("review-body");
   const cfg = window.WALL_CONFIG || {};
-  let adminCode = "";
 
   function esc(s) {
     return String(s || "").replace(/[&<>"']/g, c => ({
@@ -16,20 +14,12 @@
     }[c]));
   }
 
-  function headers() {
-    const s = cfg.supabase || {};
-    return {
-      "apikey": s.anonKey,
-      "Authorization": "Bearer " + s.anonKey,
-      "Content-Type": "application/json"
-    };
-  }
-
   async function rpc(name, payload) {
     if (!cfg.supabase || !cfg.supabase.url) throw new Error("云端未配置");
+    if (!window.XLAdminAuth) throw new Error("站长登录模块未加载");
     const r = await fetch(cfg.supabase.url + "/rest/v1/rpc/" + name, {
       method: "POST",
-      headers: headers(),
+      headers: await window.XLAdminAuth.headers(),
       body: JSON.stringify(payload || {})
     });
     const text = await r.text();
@@ -80,7 +70,7 @@
   async function load() {
     setMsg("正在读取投稿…");
     try {
-      const list = await rpc("list_timeline_submissions_for_review", { p_admin_code: adminCode });
+      const list = await rpc("list_timeline_submissions_for_review", {});
       renderList(list || []);
       setMsg("");
     } catch (e) {
@@ -89,13 +79,15 @@
   }
 
   if (enterBtn) enterBtn.addEventListener("click", async () => {
-    const code = codeInput ? codeInput.value.trim() : "";
-    if (!code) return setMsg("请输入站长口令");
-    if (code !== (cfg.adminCode || "")) return setMsg("口令错误");
-    adminCode = code;
-    if (loginBox) loginBox.classList.add("hidden");
-    if (body) body.classList.remove("hidden");
-    await load();
+    try {
+      if (!window.XLAdminAuth) throw new Error("站长登录模块未加载");
+      await window.XLAdminAuth.ensure();
+      if (loginBox) loginBox.classList.add("hidden");
+      if (body) body.classList.remove("hidden");
+      await load();
+    } catch (error) {
+      setMsg(error && error.message ? error.message : "登录失败");
+    }
   });
 
   if (body) body.addEventListener("click", async (e) => {
@@ -107,7 +99,7 @@
     if (approveBtn) {
       approveBtn.disabled = true;
       try {
-        await rpc("approve_timeline_submission", { p_target_id: id, p_admin_code: adminCode });
+        await rpc("approve_timeline_submission", { p_target_id: id });
         if (card) card.remove();
         if (body && !body.querySelector(".review-card")) renderList([]);
         setMsg("已通过，并自动加入记忆时间轴。", true);
@@ -123,7 +115,6 @@
       try {
         await rpc("reject_timeline_submission", {
           p_target_id: id,
-          p_admin_code: adminCode,
           p_note: note || ""
         });
         if (card) card.remove();
