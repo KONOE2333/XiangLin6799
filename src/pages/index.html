@@ -123,7 +123,9 @@
 <div class="polaroid-layer" id="polaroid-layer"></div>
 
 <audio id="bgm" loop preload="none"></audio>
-<button id="music-btn" class="music-disc" type="button" title="背景音乐">♪</button>
+<button id="music-btn" class="music-disc" type="button" title="背景音乐" aria-label="背景音乐：播放或暂停">
+  <svg class="music-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 18.5a3.5 3.5 0 1 1-2-3.17V5l10-2v11.33a3.5 3.5 0 1 1-2-3.16V6.63L9 8v10.5Z"/></svg>
+</button>
 
 {{footer}}
 {{scripts}}

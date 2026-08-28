@@ -18,6 +18,10 @@
   let hasFile = true;
   let suspendedByVideo = false;
   let wasPlayingBeforeVideo = false;
+  let autoplayBlocked = false;
+  let state = null;
+  let userVolume = 1;
+  let lastSavedAt = 0;
   const listeners = [];
 
   function notify() {
@@ -27,7 +31,8 @@
       artist: PLAYLIST[cur].artist || "",
       playing: !audio.paused,
       duration: audio.duration || 0,
-      time: audio.currentTime || 0
+      time: audio.currentTime || 0,
+      volume: userVolume
     };
     listeners.forEach((fn) => { try { fn(info); } catch (e) {} });
   }
@@ -43,30 +48,53 @@
   function loadState() {
     try { return JSON.parse(localStorage.getItem(KEY)); } catch { return null; }
   }
-  function saveState() {
-    try {
-      localStorage.setItem(KEY, JSON.stringify({ playing: !audio.paused, time: audio.currentTime, index: cur }));
-    } catch {}
+  function saveState(force) {
+    const now = Date.now();
+    // 时间更新很频繁，限制写入频率；离开页面时用 force 确保记录最新位置。
+    if (!force && now - lastSavedAt < 800) return;
+    const next = {
+      playing: !audio.paused,
+      time: audio.currentTime || 0,
+      index: cur,
+      volume: userVolume
+    };
+    state = next;
+    lastSavedAt = now;
+    try { localStorage.setItem(KEY, JSON.stringify(next)); } catch {}
   }
   function tryPlay() {
     return audio.play()
-      .then(() => { if (btn) btn.classList.add("playing"); notify(); })
-      .catch(() => {
-        if (!hasFile) toast("Audio unavailable — try again later");
+      .then(() => {
+        autoplayBlocked = false;
+        if (btn) btn.classList.add("playing");
+        saveState(true);
+        notify();
+      })
+      .catch((err) => {
+        if (err && err.name === "NotAllowedError") {
+          if (!autoplayBlocked) toast("请点击页面继续播放音乐");
+          autoplayBlocked = true;
+        } else if (!hasFile) {
+          toast("Audio unavailable — try again later");
+        }
       });
   }
   function setTrack(i, autoplay) {
     cur = (i % PLAYLIST.length + PLAYLIST.length) % PLAYLIST.length;
     audio.src = PLAYLIST[cur].src;
     if (autoplay) tryPlay(); else notify();
-    saveState();
+    saveState(true);
   }
 
   audio.addEventListener("error", () => { hasFile = false; });
 
-  let state = loadState();
+  state = loadState();
   if (!state) state = { playing: true, time: 0, index: 0 };
   cur = state.index || 0;
+  userVolume = Number.isFinite(Number(state.volume))
+    ? Math.min(1, Math.max(0, Number(state.volume)))
+    : 1;
+  audio.volume = userVolume;
   audio.src = PLAYLIST[cur].src;
 
   if (state.playing && hasFile) {
@@ -87,12 +115,19 @@
   if (state.playing && hasFile) document.addEventListener("pointerdown", resume);
 
   if (btn) btn.addEventListener("click", () => {
-    if (audio.paused) tryPlay().then(saveState);
-    else { audio.pause(); if (btn) btn.classList.remove("playing"); saveState(); }
+    if (audio.paused) tryPlay().then(() => saveState(true));
+    else { audio.pause(); if (btn) btn.classList.remove("playing"); saveState(true); }
     notify();
   });
 
-  audio.addEventListener("timeupdate", notify);
+  audio.addEventListener("timeupdate", () => {
+    notify();
+    saveState();
+  });
+  audio.addEventListener("volumechange", () => {
+    if (!suspendedByVideo) userVolume = audio.volume;
+    saveState();
+  });
   audio.addEventListener("ended", () => setTrack(cur + 1, true));
 
   // ---- 暴露控制接口（供首页音乐播放器与各页视频暂停恢复使用） ----
@@ -102,11 +137,11 @@
   window.XLAudio.playFromEntry = function () {
     state.playing = true;
     tryPlay();
-    saveState();
+    saveState(true);
   };
   window.XLAudio.toggle = function () {
-    if (audio.paused) tryPlay().then(saveState);
-    else { audio.pause(); if (btn) btn.classList.remove("playing"); saveState(); }
+    if (audio.paused) tryPlay().then(() => saveState(true));
+    else { audio.pause(); if (btn) btn.classList.remove("playing"); saveState(true); }
     notify();
   };
   window.XLAudio.next = function () { setTrack(cur + 1, true); };
@@ -124,13 +159,13 @@
   };
   window.XLAudio.resumeAfterVideo = function () {
     suspendedByVideo = false;
-    audio.volume = 1;
+    audio.volume = userVolume;
     if (wasPlayingBeforeVideo && audio.paused) tryPlay().then(saveState);
     notify();
   };
   window.XLAudio.isPlaying = function () { return !audio.paused; };
 
-  function persist() { saveState(); }
+  function persist() { saveState(true); }
   window.addEventListener("pagehide", persist);
   document.addEventListener("visibilitychange", () => { if (document.hidden) persist(); });
 })();
